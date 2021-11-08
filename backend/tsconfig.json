@@ -1,14 +1,11 @@
 {
-    "compilerOptions": {
-        "module": "commonjs",
-        "outDir": "dist",
-        "esModuleInterop": true,
-        "lib": [
-            "ES2015",
-            "DOM"
-        ]
-    },
-    "exclude": [
-        "node_modules"
-    ]
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "outDir": "dist",
+    "sourceMap": true,
+    "esModuleInterop": true
+  },
+  "include": ["src/**/*.ts"],
+  "exclude": ["node_modules", ".vscode"]
 }

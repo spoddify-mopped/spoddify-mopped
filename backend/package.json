@@ -2,9 +2,10 @@
   "name": "spotify",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node --inspect=5858 -r ts-node/register ./src/index.ts",
+    "start:watch": "nodemon",
+    "build": "tsc"
   },
   "keywords": [],
   "author": "",
@@ -19,6 +20,21 @@
     "@types/node": "^16.11.7",
     "@types/spotify-api": "^0.0.11",
     "@types/spotify-web-api-node": "^5.0.3",
+    "nodemon": "^2.0.14",
+    "ts-node": "^10.4.0",
     "typescript": "^4.4.4"
+  },
+  "nodemonConfig": {
+    "ignore": [
+      "**/*.test.ts",
+      "**/*.spec.ts",
+      ".git",
+      "node_modules"
+    ],
+    "watch": [
+      "src"
+    ],
+    "exec": "npm start",
+    "ext": "ts"
   }
 }
