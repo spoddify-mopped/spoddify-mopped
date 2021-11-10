@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors"
 import AuthController from "./controllers/AuthController";
 import PlayerController from "./controllers/PlayerController";
+import EventController from "./controllers/EventsController";
 
 export default class App {
     public app: express.Application;
@@ -17,11 +18,13 @@ export default class App {
 
     private initializeMiddleware(): void {
         this.app.use(cors());
+        this.app.use(express.json());
     }
 
     private initializeControllers(): void {
         this.app.use('', new AuthController().router);
         this.app.use('', new PlayerController().router);
+        this.app.use('', new EventController().router);
     }
 
     public listen(): void {
