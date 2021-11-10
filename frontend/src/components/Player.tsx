@@ -8,6 +8,8 @@ import "./Player.css"
 
 import socketIOClient from "socket.io-client";
 
+const API_URL = process.env.REACT_APP_API_URL || "http://localhost:8080";
+
 interface Metadata {
     artist?: string,
     track?: string,
@@ -23,7 +25,7 @@ export default function Player(): ReactElement {
     });
 
     useEffect(() => {
-        const socket = socketIOClient("http://localhost:8080");
+        const socket = socketIOClient(API_URL);
         socket.on("player", (response) => {
             setPlaying(response.is_playing)
             const meta: Metadata = { artist: response.item.artists.map((artist: any) => artist.name).join(", "), track: response.item.name, url: response.item.album.images[0].url }
@@ -38,7 +40,7 @@ export default function Player(): ReactElement {
     }, [])
 
     function refresh() {
-        axios.get("http://localhost:8080/player/")
+        axios.get(`${API_URL}/player`)
             .then((response) => {
                 setPlaying(response.data.is_playing)
                 const meta: Metadata = { artist: response.data.item.artists.map((artist: any) => artist.name).join(", "), track: response.data.item.name, url: response.data.item.album.images[0].url }
@@ -50,14 +52,14 @@ export default function Player(): ReactElement {
     }
 
     function play() {
-        axios.post("http://localhost:8080/pause")
+        axios.post(`${API_URL}/pause`)
             .then((response) => {
                 setPlaying(!playing)
             })
     }
 
     function next() {
-        axios.post("http://localhost:8080/forwards")
+        axios.post(`${API_URL}/forwards`)
             .catch((error) => {
                 console.log("EIN FEHLER: " + error)
             })
@@ -67,7 +69,7 @@ export default function Player(): ReactElement {
     }
 
     function prev() {
-        axios.post("http://localhost:8080/previous")
+        axios.post(`${API_URL}/previous`)
             .catch((error) => {
                 console.log("EIN FEHLER: " + error)
             })
