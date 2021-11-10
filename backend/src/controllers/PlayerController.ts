@@ -117,7 +117,7 @@ export default class PlayerController {
   private findDevice = async (): Promise<SpotifyApi.UserDevice> => {
     const devices = await spotifyApi.getMyDevices();
     for (const device of devices.body.devices) {
-      if (device.name === "Spotifyd@david-arch") {
+      if (device.name === "SpoddifyMopped") {
         this.targetDevice = device;
         return device;
       }
