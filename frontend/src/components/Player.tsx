@@ -31,6 +31,10 @@ export default function Player(): ReactElement {
         });
 
         refresh();
+
+        return () => {
+            socket.close();
+        }
     }, [])
 
     function refresh() {
