@@ -24,13 +24,11 @@ export default class App {
         this.app = express();
         this.port = port;
         this.server = http.createServer(this.app)
-        this.io = new Server(this.server, {
-            cors: socketIoCors
-        });
 
+
+        this.initializeSocketIo();
         this.initializeMiddleware();
 		this.initializeControllers();
-        this.initializeSocketIo();
     }
 
     private initializeMiddleware(): void {
@@ -45,6 +43,10 @@ export default class App {
     }
 
     private initializeSocketIo(): void {
+        this.io = new Server(this.server, {
+            cors: socketIoCors
+        });
+
         this.io.on("connection", (socket) => {
             console.log(`New socket.io connection with id: ${socket.id}`);
         });
