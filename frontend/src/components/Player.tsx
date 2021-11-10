@@ -5,11 +5,8 @@ import { ReactComponent as Play } from "../resources/play-circle-solid.svg"
 import { ReactComponent as Next } from "../resources/step-forward-solid.svg"
 import { ReactComponent as Prev } from "../resources/step-backward-solid.svg"
 import "./Player.css"
-import { setInterval } from 'timers'
 
-interface Props {
-
-}
+import socketIOClient from "socket.io-client";
 
 interface Metadata {
     artist?: string,
@@ -17,7 +14,7 @@ interface Metadata {
     url?: string
 }
 
-export default function Player({ }: Props): ReactElement {
+export default function Player(): ReactElement {
     const [playing, setPlaying] = useState(false);
     const [metadata, setMetadata] = useState<Metadata>({
         artist: undefined,
@@ -26,8 +23,14 @@ export default function Player({ }: Props): ReactElement {
     });
 
     useEffect(() => {
-        refresh()
-        setInterval(refresh, 1000)
+        const socket = socketIOClient("http://localhost:8080");
+        socket.on("player", (response) => {
+            setPlaying(response.is_playing)
+            const meta: Metadata = { artist: response.item.artists.map((artist: any) => artist.name).join(", "), track: response.item.name, url: response.item.album.images[0].url }
+            setMetadata(meta)
+        });
+
+        refresh();
     }, [])
 
     function refresh() {
@@ -71,7 +74,7 @@ export default function Player({ }: Props): ReactElement {
     return (
         <div className="player">
             <div className="metadata">
-                <img className="coverart" src={metadata.url}></img>
+                <img className="coverart" src={metadata.url} alt="Cover" />
                 <p>{metadata.track}</p>
                 <p>{metadata.artist}</p>
             </div>
