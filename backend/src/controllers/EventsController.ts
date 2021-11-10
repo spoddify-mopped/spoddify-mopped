@@ -1,11 +1,15 @@
 import { spotifyApi } from "./../index";
 import express from "express";
+import { Server } from "socket.io";
 
 export default class EventController {
   public path = "/event";
   public router = express.Router();
 
-  constructor() {
+  private io: Server;
+
+  constructor(io: Server) {
+    this.io = io;
     this.initializeRoutes();
   }
 
@@ -17,11 +21,9 @@ export default class EventController {
     _request: express.Request,
     response: express.Response
   ): void => {
-    console.log("New Event");
-
     spotifyApi.getMyCurrentPlaybackState().then((spotifyResponse) => {
-		console.log(spotifyResponse.body)
-	});
+      this.io.emit("player", spotifyResponse.body);
+    });
 
     response.sendStatus(204);
   };
