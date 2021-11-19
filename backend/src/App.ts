@@ -7,6 +7,7 @@ import { Server } from 'socket.io';
 import AuthController from "./controllers/AuthController";
 import PlayerController from "./controllers/PlayerController";
 import EventController from "./controllers/EventsController";
+import PlaylistController from "./controllers/PlaylistController";
 
 const socketIoCors = {
     allowedHeaders: "*",
@@ -40,6 +41,7 @@ export default class App {
         this.app.use('', new AuthController().router);
         this.app.use('', new PlayerController().router);
         this.app.use('', new EventController(this.io).router);
+        this.app.use('', new PlaylistController().router);
     }
 
     private initializeSocketIo(): void {
