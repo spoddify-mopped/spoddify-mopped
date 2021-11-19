@@ -13,6 +13,8 @@ export default class PlaylistController {
 
   public initializeRoutes(): void {
     this.router.post(`${this.path}`, this.addTrack);
+    this.router.get(`${this.path}`, this.getPlaylists);
+    this.router.get(`${this.path}/:id`, this.getPlaylist);
   }
 
   private addTrack = async (
@@ -43,14 +45,10 @@ export default class PlaylistController {
         }
       );
 
-      console.log("Playlist", genre, playlist);
-
       if (!playlist) {
         playlist = new Playlist();
         playlist.name = genre;
         playlist.tracks = [track];
-
-        console.log("New playlist", genre, playlist);
       } else {
         playlist.tracks.push(track);
       }
@@ -59,5 +57,29 @@ export default class PlaylistController {
     }
 
     response.sendStatus(204);
+  };
+
+  private getPlaylists = async (
+    _request: express.Request,
+    response: express.Response
+  ): Promise<void> => {
+    const playlist = await Playlist.find();
+
+    response.send(playlist);
+  };
+
+  private getPlaylist = async (
+    request: express.Request,
+    response: express.Response
+  ): Promise<void> => {
+    const { params } = request;
+    const playlist = await Playlist.findOne(
+      { id: Number.parseInt(params.id) },
+      {
+        relations: ["tracks"],
+      }
+    );
+
+    response.send(playlist);
   };
 }
