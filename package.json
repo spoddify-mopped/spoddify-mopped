@@ -10,6 +10,9 @@
   ],
   "scripts": {
     "backend": "yarn workspace @spoddify-mopped/backend",
-    "frontend": "yarn workspace @spoddify-mopped/frontend"
+    "frontend": "yarn workspace @spoddify-mopped/frontend",
+    "lint": "yarn backend lint & yarn frontend lint",
+    "format": "yarn backend format & yarn frontend format",
+    "start": "yarn backend start & yarn frontend start"
   }
 }
