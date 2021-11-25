@@ -1,1 +1,0 @@
-# spoddify-mopped backend

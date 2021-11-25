@@ -1,0 +1,13 @@
+{
+  "name": "@spoddify-mopped/prettier-config",
+  "version": "1.0.0",
+  "description": "Prettier config for spoddify-mopped.",
+  "main": "index.js",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "import-sort-style-eslint": "^6.0.0",
+    "prettier": "^2.4.1",
+    "prettier-plugin-import-sort": "^0.0.7"
+  }
+}

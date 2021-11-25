@@ -1,0 +1,15 @@
+{
+  "name": "spoddify-mopped",
+  "version": "1.0.0",
+  "description": "A spotify player for office use with a voting system to select music and automatic song sorting.",
+  "repository": "git@github.com:davidborzek/spoddify-mopped.git",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "backend": "yarn workspace @spoddify-mopped/backend",
+    "frontend": "yarn workspace @spoddify-mopped/frontend"
+  }
+}
