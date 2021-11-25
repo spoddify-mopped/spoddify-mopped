@@ -15,6 +15,7 @@ export default class PlaylistController {
     this.router.post(`${this.path}`, this.addTrack);
     this.router.get(`${this.path}`, this.getPlaylists);
     this.router.get(`${this.path}/:id`, this.getPlaylist);
+    this.router.get(`${this.path}/:id/play`, this.playPlaylist);
   }
 
   private addTrack = async (
@@ -79,6 +80,32 @@ export default class PlaylistController {
         relations: ["tracks"],
       }
     );
+
+    response.send(playlist);
+  };
+
+  private playPlaylist = async (
+    request: express.Request,
+    response: express.Response
+  ): Promise<void> => {
+    const { params } = request;
+    const playlist = await Playlist.findOne(
+      { id: Number.parseInt(params.id) },
+      {
+        relations: ["tracks"],
+      }
+    );
+
+    const tracks = playlist.tracks.sort(() => Math.random() - 0.5);
+    for (const track of tracks) {
+      spotifyApi.addToQueue(`spotify:track:${track.id}`);
+    }
+
+    spotifyApi.getMyCurrentPlaybackState().then((promise) => {
+      if (!promise.body.is_playing) {
+        spotifyApi.play();
+      }
+    });
 
     response.send(playlist);
   };
