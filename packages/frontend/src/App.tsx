@@ -1,11 +1,11 @@
 import './App.css';
 
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import React, { ReactElement } from 'react';
 
 import Player from './components/Player';
-import React from 'react';
 
-export default function App() {
+export default function App(): ReactElement {
   return (
     <BrowserRouter>
       <Routes>

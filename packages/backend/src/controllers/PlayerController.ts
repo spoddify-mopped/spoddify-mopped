@@ -77,7 +77,7 @@ export default class PlayerController {
     request: express.Request,
     response: express.Response
   ): Promise<void> => {
-    if (this.targetDevice == null) {
+    if (this.targetDevice === null) {
       await this.findDevice();
     }
     const uri = request.query['uri'] as string;
@@ -93,7 +93,7 @@ export default class PlayerController {
     request: express.Request,
     response: express.Response
   ): Promise<void> => {
-    if (this.targetDevice == null) {
+    if (this.targetDevice === null) {
       await this.findDevice();
     }
     const uri = request.query['uri'] as string;

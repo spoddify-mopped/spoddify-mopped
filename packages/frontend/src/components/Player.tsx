@@ -61,7 +61,7 @@ export default function Player(): ReactElement {
         setMetadata(meta);
       })
       .catch((error) => {
-        console.log('EIN FEHLER: ' + error);
+        console.log(`EIN FEHLER: ${error}`);
       });
   }
 
@@ -75,7 +75,7 @@ export default function Player(): ReactElement {
     axios
       .post(`${API_URL}/forwards`)
       .catch((error) => {
-        console.log('EIN FEHLER: ' + error);
+        console.log(`EIN FEHLER: ${error}`);
       })
       .finally(() => {
         setTimeout(refresh, 100);
@@ -86,7 +86,7 @@ export default function Player(): ReactElement {
     axios
       .post(`${API_URL}/previous`)
       .catch((error) => {
-        console.log('EIN FEHLER: ' + error);
+        console.log(`EIN FEHLER: ${error}`);
       })
       .finally(() => {
         setTimeout(refresh, 100);

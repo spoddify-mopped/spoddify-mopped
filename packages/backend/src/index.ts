@@ -12,10 +12,10 @@ export const spotifyApi = new SpotifyWebApi({
 });
 
 const databaseConnectionOptions: ConnectionOptions = {
-  type: 'better-sqlite3',
   database: 'database.sqlite',
   entities: [Track, Playlist],
   synchronize: true,
+  type: 'better-sqlite3',
 };
 
 createConnection(databaseConnectionOptions)

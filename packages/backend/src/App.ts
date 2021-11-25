@@ -9,8 +9,8 @@ import http from 'http';
 
 const socketIoCors = {
   allowedHeaders: '*',
-  origin: '*',
   methods: '*',
+  origin: '*',
 };
 
 export default class App {
