@@ -13,6 +13,17 @@
     "frontend": "yarn workspace @spoddify-mopped/frontend",
     "lint": "yarn backend lint & yarn frontend lint",
     "format": "yarn backend format & yarn frontend format",
-    "start": "yarn backend start & yarn frontend start"
+    "start": "yarn backend start & yarn frontend start",
+    "postinstall": "husky install"
+  },
+  "devDependencies": {
+    "husky": "^7.0.4",
+    "lint-staged": "^12.1.2"
+  },
+  "lint-staged": {
+    "./packages/{backend,frontend}/src/**/*.{ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
+    ]
   }
 }
