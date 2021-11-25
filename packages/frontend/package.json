@@ -36,9 +36,9 @@
   "prettier": "@spoddify-mopped/prettier-config",
   "eslintConfig": {
     "extends": [
-      "@spoddify-mopped/eslint-config",
       "react-app",
-      "react-app/jest"
+      "react-app/jest",
+      "@spoddify-mopped/eslint-config"
     ]
   },
   "browserslist": {
