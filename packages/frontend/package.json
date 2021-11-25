@@ -26,8 +26,8 @@
     "@spoddify-mopped/eslint-config": "1.0.0"
   },
   "scripts": {
-    "format": "eslint --fix src",
-    "lint": "prettier --write src",
+    "lint": "eslint --fix src",
+    "format": "prettier --write src",
     "start": "REACT_APP_API_URL=http://localhost:8080 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
