@@ -92,7 +92,7 @@ export default class PlaylistController {
     const playlist = await Playlist.findOne(
       { id: Number.parseInt(params.id) },
       {
-        relations: ["tracks"],
+        relations: ['tracks'],
       }
     );
 
