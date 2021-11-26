@@ -1,0 +1,56 @@
+{
+  "name": "@spoddify-mopped/frontend",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "@mui/icons-material": "^5.0.5",
+    "@testing-library/jest-dom": "^5.15.0",
+    "@testing-library/react": "^11.2.7",
+    "@testing-library/user-event": "^12.8.3",
+    "@types/jest": "^26.0.24",
+    "@types/node": "^12.20.36",
+    "@types/react": "^17.0.34",
+    "@types/react-dom": "^17.0.11",
+    "axios": "^0.24.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-router": "^6.0.1",
+    "react-router-dom": "^6.0.1",
+    "react-scripts": "4.0.3",
+    "socket.io-client": "^4.3.2",
+    "typescript": "^4.4.4",
+    "web-vitals": "^1.1.2"
+  },
+  "devDependencies": {
+    "@spoddify-mopped/prettier-config": "1.0.0",
+    "@spoddify-mopped/eslint-config": "1.0.0"
+  },
+  "scripts": {
+    "lint": "eslint --fix src",
+    "format": "prettier --write src",
+    "start": "REACT_APP_API_URL=http://localhost:8080 react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "prettier": "@spoddify-mopped/prettier-config",
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest",
+      "@spoddify-mopped/eslint-config"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
