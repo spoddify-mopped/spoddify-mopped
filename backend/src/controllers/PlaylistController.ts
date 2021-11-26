@@ -97,14 +97,8 @@ export default class PlaylistController {
     );
 
     const tracks = playlist.tracks.sort(() => Math.random() - 0.5);
-    for (const track of tracks) {
-      spotifyApi.addToQueue(`spotify:track:${track.id}`);
-    }
-
-    spotifyApi.getMyCurrentPlaybackState().then((promise) => {
-      if (!promise.body.is_playing) {
-        spotifyApi.play();
-      }
+    await spotifyApi.play({
+      uris: tracks.map((track) => `spotify:track:${track.id}`),
     });
 
     response.send(playlist);
