@@ -18,7 +18,6 @@ export default class PlayerController {
     this.router.post(`${this.path}/previous`, this.previous);
     this.router.post(`${this.path}/play`, this.play);
     this.router.post(`${this.path}/queue`, this.queue);
-    this.router.get(`${this.path}/search`, this.search);
   }
 
   private getPlayer = (
@@ -102,16 +101,6 @@ export default class PlayerController {
     });
 
     response.sendStatus(204);
-  };
-
-  private search = async (
-    request: express.Request,
-    response: express.Response
-  ): Promise<void> => {
-    const query = request.query['query'] as string;
-    spotifyApi.searchTracks(query).then((spotifyResponse) => {
-      response.send(spotifyResponse.body);
-    });
   };
 
   private findDevice = async (): Promise<SpotifyApi.UserDevice> => {
