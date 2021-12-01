@@ -1,0 +1,9 @@
+.category {
+  padding: 1rem 5rem;
+}
+
+.categoryHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}

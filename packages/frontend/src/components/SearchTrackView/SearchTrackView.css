@@ -1,0 +1,43 @@
+.trackSearchViewContainer {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.trackSearchEntryContainer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.trackSearchEntry {
+  display: flex;
+  align-items: center;
+  display: flex;
+  margin-bottom: 1rem;
+}
+
+.trackSearchEntry img {
+  width: 60px;
+  height: 60px;
+  margin-right: 1rem;
+  border-radius: 10px;
+}
+
+.trackImgReplacement {
+  width: 60px;
+  height: 60px;
+}
+
+.trackInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.trackInfo .trackTitle {
+  font-weight: 600;
+}
+
+.addTrackButton {
+  cursor: pointer;
+}

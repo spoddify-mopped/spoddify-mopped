@@ -1,0 +1,29 @@
+.searchCoverViewContainer {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.coverViewEntry {
+  display: flex;
+  flex-direction: column;
+  width: 160px;
+  margin-right: 2rem;
+}
+
+.coverViewImgReplacement {
+  width: 160px;
+  height: 160px;
+  background-color: blue;
+}
+
+.coverViewEntry img {
+  width: 160px;
+  height: 160px;
+  border-radius: 20px;
+}
+
+.coverViewEntry span {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
