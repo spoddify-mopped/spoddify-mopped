@@ -25,7 +25,12 @@ const SearchTrackView = (props: Props): ReactElement => {
               {track.name}
             </span>
             <span>
-              {track.artists.map((trackArtist) => trackArtist.name).join(', ')}
+              {track.artists.map((trackArtist, index) => (
+                <span className="trackArtist">
+                  {trackArtist.name}
+                  {index !== track.artists.length - 1 ? ', ' : ''}
+                </span>
+              ))}
             </span>
           </div>
         </div>

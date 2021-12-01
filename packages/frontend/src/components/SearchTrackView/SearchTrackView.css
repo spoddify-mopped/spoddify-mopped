@@ -38,6 +38,10 @@
   font-weight: 600;
 }
 
+.trackInfo .trackArtist:hover {
+  text-decoration: underline;
+}
+
 .addTrackButton {
   cursor: pointer;
   height: 2rem;
