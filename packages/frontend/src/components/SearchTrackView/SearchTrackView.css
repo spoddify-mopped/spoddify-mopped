@@ -40,4 +40,9 @@
 
 .addTrackButton {
   cursor: pointer;
+  height: 2rem;
+}
+
+.addTrackButton:hover {
+  opacity: 0.5;
 }

@@ -2,10 +2,12 @@ import './SearchTrackView.css';
 
 import React, { ReactElement } from 'react';
 
+import { ReactComponent as AddImage } from '../../resources/add.svg';
 import { Track } from '../../clients/api.types';
 
 interface Props {
   tracks: Track[];
+  onAddTrackClick: (track: Track) => void;
 }
 
 const SearchTrackView = (props: Props): ReactElement => {
@@ -27,7 +29,10 @@ const SearchTrackView = (props: Props): ReactElement => {
             </span>
           </div>
         </div>
-        <span className="addTrackButton">Add (+)</span>
+        <AddImage
+          className="addTrackButton"
+          onClick={() => props.onAddTrackClick(track)}
+        />
       </div>
     ));
   };

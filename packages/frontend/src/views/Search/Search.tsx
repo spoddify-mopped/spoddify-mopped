@@ -51,7 +51,12 @@ export const Search = (): ReactElement => {
             <h3>Tracks</h3>
             <span>show more</span>
           </div>
-          <SearchTrackView tracks={result.tracks} />
+          <SearchTrackView
+            tracks={result.tracks}
+            onAddTrackClick={async (track) => {
+              await ApiClient.addTrack(track.id);
+            }}
+          />
         </div>
       </div>
     );

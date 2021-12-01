@@ -22,4 +22,10 @@ export default class ApiClient {
 
     return data;
   };
+
+  public static addTrack = async (id: string): Promise<void> => {
+    await axios.post(`${API_URL}/playlist`, {
+      id,
+    });
+  };
 }
