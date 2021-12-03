@@ -45,7 +45,13 @@ export default class ApiClient {
   };
 
   public static addTrack = async (id: string): Promise<void> => {
-    await axios.post(`${API_URL}/playlist`, {
+    await axios.post(`${API_URL}/playlist/add/track`, {
+      id,
+    });
+  };
+
+  public static addAlbum = async (id: string): Promise<void> => {
+    await axios.post(`${API_URL}/playlist/add/album`, {
       id,
     });
   };

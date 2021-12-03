@@ -24,6 +24,8 @@ export const Search = (): ReactElement => {
     ArtistTopTracksResponse | undefined
   >(undefined);
 
+  const [albumId, setAlbumId] = useState<string | undefined>(undefined);
+
   const handleSearchInputChange = async (
     evt: React.ChangeEvent<HTMLInputElement>
   ) => {
@@ -83,7 +85,16 @@ export const Search = (): ReactElement => {
             visible={showAlbumTracks}
             onClose={() => setShowAlbumTracks(false)}
           >
-            <h3>Album track's</h3>
+            <div className="albumModalHeader">
+              <h3>Album track's</h3>
+              <span
+                onClick={async () => {
+                  albumId && (await ApiClient.addAlbum(albumId));
+                }}
+              >
+                Add album
+              </span>
+            </div>
             {albumTracks ? (
               <SearchTrackView
                 tracks={albumTracks.tracks}
@@ -96,6 +107,7 @@ export const Search = (): ReactElement => {
           <SearchCoverView
             onCoverClick={async (id) => {
               const artistTopTracks = await ApiClient.getAlbumTracks(id);
+              setAlbumId(id);
               setAlbumTracks(artistTopTracks);
               setShowAlbumTracks(true);
             }}

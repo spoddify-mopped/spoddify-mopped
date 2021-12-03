@@ -11,7 +11,7 @@ export default class PlaylistController {
   }
 
   public initializeRoutes(): void {
-    this.router.post(`${this.path}`, this.addTrack);
+    this.router.post(`${this.path}/add/track`, this.addTrack);
     this.router.post(`${this.path}/add/album`, this.addAlbum);
     this.router.get(`${this.path}`, this.getPlaylists);
     this.router.get(`${this.path}/:id`, this.getPlaylist);
