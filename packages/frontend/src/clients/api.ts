@@ -1,4 +1,5 @@
-import { SearchResponse } from './api.types';
+import { ArtistTopTracksResponse, SearchResponse } from './api.types';
+
 import axios from 'axios';
 
 type SearchOptions = {
@@ -19,6 +20,26 @@ export default class ApiClient {
         ...options,
       },
     });
+
+    return data;
+  };
+
+  public static getArtistTopTracks = async (
+    id: string
+  ): Promise<ArtistTopTracksResponse> => {
+    const { data } = await axios.get<ArtistTopTracksResponse>(
+      `${API_URL}/api/artist/${id}/tracks`
+    );
+
+    return data;
+  };
+
+  public static getAlbumTracks = async (
+    id: string
+  ): Promise<ArtistTopTracksResponse> => {
+    const { data } = await axios.get<ArtistTopTracksResponse>(
+      `${API_URL}/api/album/${id}/tracks`
+    );
 
     return data;
   };

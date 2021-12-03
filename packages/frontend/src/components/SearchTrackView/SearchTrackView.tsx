@@ -15,11 +15,7 @@ const SearchTrackView = (props: Props): ReactElement => {
     return props.tracks.map((track) => (
       <div className="trackSearchEntryContainer">
         <div className="trackSearchEntry">
-          {track.imageUrl ? (
-            <img alt="" src={track.imageUrl} />
-          ) : (
-            <div className="trackImgReplacement"></div>
-          )}
+          {track.imageUrl ? <img alt="" src={track.imageUrl} /> : undefined}
           <div className="trackInfo">
             <span className="trackTitle" title={track.name}>
               {track.name}

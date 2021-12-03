@@ -18,7 +18,7 @@ type Track = {
   id: string;
   name: string;
   artists: Artist[];
-  album: Album;
+  album?: Album;
   imageUrl?: string;
 };
 
@@ -48,12 +48,12 @@ const mapSpotifyAlbumToAlbum = (
 const mapSpotifyTrackToTrack = (
   spotifyTrack: SpotifyApi.TrackObjectFull
 ): Track => ({
-  album: mapSpotifyAlbumToAlbum(
-    spotifyTrack.album as SpotifyApi.AlbumObjectFull
-  ),
+  album: spotifyTrack.album
+    ? mapSpotifyAlbumToAlbum(spotifyTrack.album as SpotifyApi.AlbumObjectFull)
+    : undefined,
   artists: spotifyTrack.artists.map(mapSpotifyArtistToArtist),
   id: spotifyTrack.id,
-  imageUrl: spotifyTrack.album.images?.[0].url,
+  imageUrl: spotifyTrack.album ? spotifyTrack.album.images?.[0].url : undefined,
   name: spotifyTrack.name,
 });
 
@@ -85,6 +85,8 @@ export default class SearchController {
 
   public initializeRoutes(): void {
     this.router.get(`${this.path}/search`, this.search);
+    this.router.get(`${this.path}/artist/:id/tracks`, this.getArtistTopTracks);
+    this.router.get(`${this.path}/album/:id/tracks`, this.getAlbumTracks);
   }
 
   private search = async (
@@ -127,5 +129,40 @@ export default class SearchController {
     };
 
     response.send(searchResponse);
+  };
+
+  private getArtistTopTracks = async (
+    request: express.Request,
+    response: express.Response
+  ) => {
+    const { params } = request;
+
+    const artistTopTracksResponse = await spotifyApi.getArtistTopTracks(
+      params.id,
+      'DE'
+    );
+
+    const tracks: Track[] = artistTopTracksResponse.body.tracks.map(
+      mapSpotifyTrackToTrack
+    );
+
+    response.send({ tracks });
+  };
+
+  private getAlbumTracks = async (
+    request: express.Request,
+    response: express.Response
+  ) => {
+    const { params } = request;
+
+    const albumTracksResponse = await spotifyApi.getAlbumTracks(params.id, {
+      limit: 50,
+    });
+
+    const tracks: Track[] = albumTracksResponse.body.items.map(
+      mapSpotifyTrackToTrack
+    );
+
+    response.send({ tracks });
   };
 }

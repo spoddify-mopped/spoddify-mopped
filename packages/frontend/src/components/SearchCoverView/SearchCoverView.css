@@ -8,6 +8,11 @@
   flex-direction: column;
   width: 160px;
   margin-right: 2rem;
+  cursor: pointer;
+}
+
+.coverViewEntry:hover {
+  opacity: 0.7;
 }
 
 .coverViewImgReplacement {

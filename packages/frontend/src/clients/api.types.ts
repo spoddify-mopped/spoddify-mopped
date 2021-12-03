@@ -24,3 +24,7 @@ export type SearchResponse = {
   albums: Album[];
   tracks: Track[];
 };
+
+export type ArtistTopTracksResponse = {
+  tracks: Track[];
+};

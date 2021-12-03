@@ -5,12 +5,16 @@ import React, { ReactElement } from 'react';
 
 interface Props {
   items: Album[] | Artist[];
+  onCoverClick?: (id: string) => void;
 }
 
 const SearchCoverView = (props: Props): ReactElement => {
   const renderItems = () => {
     return props.items.map((item) => (
-      <div className="coverViewEntry">
+      <div
+        className="coverViewEntry"
+        onClick={() => props.onCoverClick && props.onCoverClick(item.id)}
+      >
         {item.imageUrl ? (
           <img alt="" src={item.imageUrl} />
         ) : (
