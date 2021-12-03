@@ -1,7 +1,6 @@
-import Playlist from '../entities/Playlist';
-import Track from '../entities/Track';
+import { DeviceNotFoundError } from '../services/SpotifyPlayerService';
 import express from 'express';
-import { spotifyApi } from '../index';
+import { playlistService } from './../index';
 
 export default class PlaylistController {
   public path = '/playlist';
@@ -18,89 +17,76 @@ export default class PlaylistController {
     this.router.get(`${this.path}/:id/play`, this.playPlaylist);
   }
 
+  private handleError = (error: Error, response: express.Response) => {
+    if (error instanceof DeviceNotFoundError) {
+      response.status(503).send({
+        msg: 'Player not found',
+      });
+    } else {
+      response.status(503).send({
+        msg: 'Internal Server Error',
+      });
+    }
+  };
+
   private addTrack = async (
     request: express.Request,
     response: express.Response
   ): Promise<void> => {
     const { body } = request;
 
-    let track = await Track.findOne({ id: body.id });
-
-    if (!track) {
-      track = new Track();
-      track.id = body.id;
-
-      await track.save();
+    if (!body.id) {
+      response.sendStatus(400);
+      return;
     }
 
-    const spotifyTrackResponse = await spotifyApi.getTrack(body.id);
-    const spotifyArtistResponse = await spotifyApi.getArtist(
-      spotifyTrackResponse.body.artists[0].id
-    );
-
-    for (const genre of spotifyArtistResponse.body.genres) {
-      let playlist = await Playlist.findOne(
-        { name: genre },
-        {
-          relations: ['tracks'],
-        }
-      );
-
-      if (!playlist) {
-        playlist = new Playlist();
-        playlist.name = genre;
-        playlist.tracks = [track];
-      } else {
-        playlist.tracks.push(track);
-      }
-
-      await playlist.save();
-    }
-
-    response.sendStatus(204);
+    await playlistService
+      .sortInTrack(body.id)
+      .then(() => response.sendStatus(204))
+      .catch((error) => this.handleError(error, response));
   };
 
   private getPlaylists = async (
     _request: express.Request,
     response: express.Response
   ): Promise<void> => {
-    const playlist = await Playlist.find();
-
-    response.send(playlist);
+    await playlistService
+      .getPlaylists()
+      .then((playlists) => response.send(playlists))
+      .catch((error) => this.handleError(error, response));
   };
 
   private getPlaylist = async (
     request: express.Request,
     response: express.Response
   ): Promise<void> => {
-    const { params } = request;
-    const playlist = await Playlist.findOne(
-      { id: Number.parseInt(params.id) },
-      {
-        relations: ['tracks'],
-      }
-    );
+    const id = Number.parseInt(request.params.id);
 
-    response.send(playlist);
+    if (!id) {
+      response.sendStatus(400);
+      return;
+    }
+
+    await playlistService
+      .getPlaylist(id)
+      .then((playlist) => response.send(playlist))
+      .catch((error) => this.handleError(error, response));
   };
 
   private playPlaylist = async (
     request: express.Request,
     response: express.Response
   ): Promise<void> => {
-    const { params } = request;
-    const playlist = await Playlist.findOne(
-      { id: Number.parseInt(params.id) },
-      {
-        relations: ['tracks'],
-      }
-    );
+    const id = Number.parseInt(request.params.id);
 
-    const tracks = playlist.tracks.sort(() => Math.random() - 0.5);
-    await spotifyApi.play({
-      uris: tracks.map((track) => `spotify:track:${track.id}`),
-    });
+    if (!id) {
+      response.sendStatus(400);
+      return;
+    }
 
-    response.send(playlist);
+    await playlistService
+      .playPlaylist(id)
+      .then(() => response.sendStatus(204))
+      .catch((error) => this.handleError(error, response));
   };
 }
