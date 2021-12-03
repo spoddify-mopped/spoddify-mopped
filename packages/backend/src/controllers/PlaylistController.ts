@@ -12,6 +12,7 @@ export default class PlaylistController {
 
   public initializeRoutes(): void {
     this.router.post(`${this.path}`, this.addTrack);
+    this.router.post(`${this.path}/add/album`, this.addAlbum);
     this.router.get(`${this.path}`, this.getPlaylists);
     this.router.get(`${this.path}/:id`, this.getPlaylist);
     this.router.get(`${this.path}/:id/play`, this.playPlaylist);
@@ -42,6 +43,23 @@ export default class PlaylistController {
 
     await playlistService
       .sortInTrack(body.id)
+      .then(() => response.sendStatus(204))
+      .catch((error) => this.handleError(error, response));
+  };
+
+  private addAlbum = async (
+    request: express.Request,
+    response: express.Response
+  ): Promise<void> => {
+    const { body } = request;
+
+    if (!body.id) {
+      response.sendStatus(400);
+      return;
+    }
+
+    await playlistService
+      .sortInAlbum(body.id)
       .then(() => response.sendStatus(204))
       .catch((error) => this.handleError(error, response));
   };
