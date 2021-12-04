@@ -3,7 +3,7 @@ import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import React, { ReactElement } from 'react';
 
-import Player from './components/Player';
+import Player from './views/Player/Player';
 import { Search } from './views/Search/Search';
 
 export default function App(): ReactElement {

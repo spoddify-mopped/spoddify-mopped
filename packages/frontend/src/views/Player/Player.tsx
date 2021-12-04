@@ -2,10 +2,10 @@ import './Player.css';
 
 import React, { ReactElement, useEffect, useState } from 'react';
 
-import { ReactComponent as Next } from '../resources/step-forward-solid.svg';
-import { ReactComponent as Pause } from '../resources/pause-circle-solid.svg';
-import { ReactComponent as Play } from '../resources/play-circle-solid.svg';
-import { ReactComponent as Prev } from '../resources/step-backward-solid.svg';
+import { ReactComponent as Next } from '../../resources/step-forward-solid.svg';
+import { ReactComponent as Pause } from '../../resources/pause-circle-solid.svg';
+import { ReactComponent as Play } from '../../resources/play-circle-solid.svg';
+import { ReactComponent as Prev } from '../../resources/step-backward-solid.svg';
 import axios from 'axios';
 import socketIOClient from 'socket.io-client';
 
