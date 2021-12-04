@@ -2,6 +2,7 @@ import AuthController from './controllers/AuthController';
 import EventController from './controllers/EventsController';
 import PlayerController from './controllers/PlayerController';
 import PlaylistController from './controllers/PlaylistController';
+import SearchController from './controllers/SearchController';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import express from 'express';
@@ -38,6 +39,7 @@ export default class App {
   private initializeControllers(): void {
     this.app.use('', new AuthController().router);
     this.app.use('', new PlayerController().router);
+    this.app.use('/api', new SearchController().router);
     this.app.use('', new EventController(this.io).router);
     this.app.use('', new PlaylistController().router);
   }

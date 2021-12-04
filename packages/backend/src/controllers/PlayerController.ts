@@ -1,11 +1,10 @@
+import { DeviceNotFoundError } from '../services/SpotifyPlayerService';
 import express from 'express';
-import { spotifyApi } from './../index';
+import { spotifyPlayerService } from './../index';
 
 export default class PlayerController {
   public path = '';
   public router = express.Router();
-
-  private targetDevice: SpotifyApi.UserDevice;
 
   constructor() {
     this.initializeRoutes();
@@ -13,114 +12,99 @@ export default class PlayerController {
 
   public initializeRoutes(): void {
     this.router.get(`${this.path}/player`, this.getPlayer);
-    this.router.post(`${this.path}/pause`, this.pause);
-    this.router.post(`${this.path}/forwards`, this.forwards);
+    this.router.post(`${this.path}/pause`, this.playPause);
+    this.router.post(`${this.path}/forwards`, this.next);
     this.router.post(`${this.path}/previous`, this.previous);
     this.router.post(`${this.path}/play`, this.play);
-    this.router.post(`${this.path}/queue`, this.queue);
-    this.router.get(`${this.path}/search`, this.search);
+    this.router.post(`${this.path}/queue`, this.addQueue);
   }
 
-  private getPlayer = (
-    _request: express.Request,
-    response: express.Response
-  ): void => {
-    spotifyApi
-      .getMyCurrentPlaybackState()
-      .then((spotifyResponse) => {
-        response.send(spotifyResponse.body);
-      })
-      .catch((error) => {
-        response.send(error);
+  private handleError = (error: Error, response: express.Response) => {
+    if (error instanceof DeviceNotFoundError) {
+      response.status(503).send({
+        msg: 'Player not found',
       });
-  };
-
-  private pause = async (
-    _request: express.Request,
-    response: express.Response
-  ): Promise<void> => {
-    if (!this.targetDevice) {
-      await this.findDevice();
+    } else {
+      response.status(503).send({
+        msg: 'Internal Server Error',
+      });
     }
-    spotifyApi.getMyCurrentPlaybackState().then((promise) => {
-      if (promise.body.is_playing) {
-        spotifyApi.pause({
-          device_id: this.targetDevice.id,
-        });
-      } else {
-        spotifyApi.play({
-          device_id: this.targetDevice.id,
-        });
-      }
-    });
-
-    response.sendStatus(204);
   };
 
-  private forwards = async (
+  private getPlayer = async (
     _request: express.Request,
     response: express.Response
   ): Promise<void> => {
-    spotifyApi.skipToNext();
-    response.sendStatus(204);
+    await spotifyPlayerService
+      .getPlayer()
+      .then((player) => response.send(player))
+      .catch((error) => this.handleError(error, response));
+  };
+
+  private playPause = async (
+    _request: express.Request,
+    response: express.Response
+  ): Promise<void> => {
+    await spotifyPlayerService
+      .playPause()
+      .then(() => response.sendStatus(204))
+      .catch((error) => this.handleError(error, response));
+  };
+
+  private next = async (
+    _request: express.Request,
+    response: express.Response
+  ): Promise<void> => {
+    await spotifyPlayerService
+      .next()
+      .then(() => response.sendStatus(204))
+      .catch((error) => this.handleError(error, response));
   };
 
   private previous = async (
     _request: express.Request,
     response: express.Response
   ): Promise<void> => {
-    spotifyApi.skipToPrevious();
-    response.sendStatus(204);
+    await spotifyPlayerService
+      .previous()
+      .then(() => response.sendStatus(204))
+      .catch((error) => this.handleError(error, response));
   };
 
   private play = async (
     request: express.Request,
     response: express.Response
   ): Promise<void> => {
-    if (this.targetDevice === null) {
-      await this.findDevice();
-    }
-    const uri = request.query['uri'] as string;
-    spotifyApi.play({
-      device_id: this.targetDevice.id,
-      uris: [uri],
-    });
+    let uris = request.query['uri'] as string | string[];
 
-    response.sendStatus(204);
+    if (!uris) {
+      uris = [];
+    }
+
+    if (!Array.isArray(uris)) {
+      uris = [uris];
+    }
+
+    await spotifyPlayerService
+      .play(uris)
+      .then(() => response.sendStatus(204))
+      .catch((error) => this.handleError(error, response));
   };
 
-  private queue = async (
+  private addQueue = async (
     request: express.Request,
     response: express.Response
   ): Promise<void> => {
-    if (this.targetDevice === null) {
-      await this.findDevice();
-    }
     const uri = request.query['uri'] as string;
-    spotifyApi.addToQueue(uri, {
-      device_id: this.targetDevice.id,
-    });
 
-    response.sendStatus(204);
-  };
-
-  private search = async (
-    request: express.Request,
-    response: express.Response
-  ): Promise<void> => {
-    const query = request.query['query'] as string;
-    spotifyApi.searchTracks(query).then((spotifyResponse) => {
-      response.send(spotifyResponse.body);
-    });
-  };
-
-  private findDevice = async (): Promise<SpotifyApi.UserDevice> => {
-    const devices = await spotifyApi.getMyDevices();
-    for (const device of devices.body.devices) {
-      if (device.name === 'SpoddifyMopped') {
-        this.targetDevice = device;
-        return device;
-      }
+    if (!uri) {
+      response.sendStatus(400);
+      return;
     }
+
+    await spotifyPlayerService
+      .addQueue(uri)
+      .then(() => response.sendStatus(204))
+      .catch((error) => this.handleError(error, response));
   };
 }
