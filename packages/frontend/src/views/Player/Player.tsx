@@ -100,13 +100,13 @@ export default function Player(): ReactElement {
         <p>{metadata.artist}</p>
       </div>
       <div className="control">
-        <button className="button" onClick={prev}>
+        <button className="playerButton" onClick={prev}>
           <Prev />
         </button>
-        <button className="button pausebutton" onClick={play}>
+        <button className="playerButton pausebutton" onClick={play}>
           {playing ? <Pause /> : <Play />}
         </button>
-        <button className="button" onClick={next}>
+        <button className="playerButton" onClick={next}>
           <Next />
         </button>
       </div>
