@@ -48,7 +48,7 @@ export default function Player(): ReactElement {
 
   function refresh() {
     axios
-      .get(`${API_URL}/player`)
+      .get(`${API_URL}/api//player`)
       .then((response) => {
         setPlaying(response.data.is_playing);
         const meta: Metadata = {
@@ -66,14 +66,14 @@ export default function Player(): ReactElement {
   }
 
   function play() {
-    axios.post(`${API_URL}/pause`).then((response) => {
+    axios.post(`${API_URL}/api//pause`).then((response) => {
       setPlaying(!playing);
     });
   }
 
   function next() {
     axios
-      .post(`${API_URL}/forwards`)
+      .post(`${API_URL}/api//forwards`)
       .catch((error) => {
         console.log(`EIN FEHLER: ${error}`);
       })
@@ -84,7 +84,7 @@ export default function Player(): ReactElement {
 
   function prev() {
     axios
-      .post(`${API_URL}/previous`)
+      .post(`${API_URL}/api//previous`)
       .catch((error) => {
         console.log(`EIN FEHLER: ${error}`);
       })

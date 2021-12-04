@@ -8,9 +8,9 @@ import SpotifyWebApi from 'spotify-web-api-node';
 import Track from './entities/Track';
 
 export const spotifyApi = new SpotifyWebApi({
-  clientId: 'd6d7c9814a064d51b3cedebdb6dd2275',
-  clientSecret: 'f4eda3c7b0584cafa20aa6d448a4c60f',
-  redirectUri: 'http://localhost:8080/callback',
+  clientId: '82cee3b12c81432bb0fc7efddffd94d4',
+  clientSecret: '88d72d2562cb41afa7c7f05c1fbd6cbb',
+  redirectUri: 'http://localhost:8080/api/callback',
 });
 
 export const spotifyPlayerService = new SpotifyPlayerService(

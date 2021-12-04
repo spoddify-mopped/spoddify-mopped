@@ -22,7 +22,7 @@ export default function PlaylistView() {
 
   function refresh() {
     axios
-      .get(`${API_URL}/playlist`)
+      .get(`${API_URL}/api/playlist`)
       .then((response) => {
         setPlaylists(response.data);
         console.log(response.data);
@@ -38,7 +38,7 @@ export default function PlaylistView() {
 
   function play(id?: number) {
     if (!id) return;
-    axios.get(`${API_URL}/playlist/${id}/play`);
+    axios.get(`${API_URL}/api/playlist/${id}/play`);
   }
 
   const playlistRows = [];

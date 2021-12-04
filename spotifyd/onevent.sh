@@ -1,3 +1,3 @@
 #!/bin/bash
 
-curl -X POST http://localhost:8080/event
+curl -X POST http://localhost:8080/api/event

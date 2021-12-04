@@ -37,11 +37,11 @@ export default class App {
   }
 
   private initializeControllers(): void {
-    this.app.use('', new AuthController().router);
-    this.app.use('', new PlayerController().router);
+    this.app.use('/api', new AuthController().router);
+    this.app.use('/api', new PlayerController().router);
     this.app.use('/api', new SearchController().router);
-    this.app.use('', new EventController(this.io).router);
-    this.app.use('', new PlaylistController().router);
+    this.app.use('/api', new EventController(this.io).router);
+    this.app.use('/api', new PlaylistController().router);
   }
 
   private initializeSocketIo(): void {
