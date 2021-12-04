@@ -2,7 +2,7 @@ import './PlaylistView.css';
 
 import React, { useEffect, useState } from 'react';
 
-import { ReactComponent as Play } from '../resources/play-solid.svg';
+import { ReactComponent as Play } from '../../resources/play-solid.svg';
 import axios from 'axios';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
