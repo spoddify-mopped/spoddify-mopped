@@ -1,61 +1,18 @@
+import {
+  Album,
+  Artist,
+  Track,
+  spotifyResponseMapper,
+} from '../utils/spotifyResponseMapper';
+
 import express from 'express';
 import { spotifyApi } from './../index';
-
-type Artist = {
-  id: string;
-  name: string;
-  imageUrl?: string;
-};
-
-type Album = {
-  id: string;
-  name: string;
-  artists: Artist[];
-  imageUrl?: string;
-};
-
-type Track = {
-  id: string;
-  name: string;
-  artists: Artist[];
-  album?: Album;
-  imageUrl?: string;
-};
 
 type SearchResponse = {
   artists: Artist[];
   albums: Album[];
   tracks: Track[];
 };
-
-const mapSpotifyArtistToArtist = (
-  spotifyArtist: SpotifyApi.ArtistObjectFull
-): Artist => ({
-  id: spotifyArtist.id,
-  imageUrl: spotifyArtist.images?.[0]?.url,
-  name: spotifyArtist.name,
-});
-
-const mapSpotifyAlbumToAlbum = (
-  spotifyAlbum: SpotifyApi.AlbumObjectFull
-): Album => ({
-  artists: spotifyAlbum.artists.map(mapSpotifyArtistToArtist),
-  id: spotifyAlbum.id,
-  imageUrl: spotifyAlbum.images?.[0]?.url,
-  name: spotifyAlbum.name,
-});
-
-const mapSpotifyTrackToTrack = (
-  spotifyTrack: SpotifyApi.TrackObjectFull
-): Track => ({
-  album: spotifyTrack.album
-    ? mapSpotifyAlbumToAlbum(spotifyTrack.album as SpotifyApi.AlbumObjectFull)
-    : undefined,
-  artists: spotifyTrack.artists.map(mapSpotifyArtistToArtist),
-  id: spotifyTrack.id,
-  imageUrl: spotifyTrack.album ? spotifyTrack.album.images?.[0].url : undefined,
-  name: spotifyTrack.name,
-});
 
 type SpotifySearchType = 'album' | 'artist' | 'track';
 
@@ -118,13 +75,13 @@ export default class SearchController {
 
     const searchResponse: SearchResponse = {
       albums: spotifyRes.body.albums
-        ? spotifyRes.body.albums.items.map(mapSpotifyAlbumToAlbum)
+        ? spotifyRes.body.albums.items.map(spotifyResponseMapper.mapToAlbum)
         : [],
       artists: spotifyRes.body.artists
-        ? spotifyRes.body.artists.items.map(mapSpotifyArtistToArtist)
+        ? spotifyRes.body.artists.items.map(spotifyResponseMapper.mapToArtist)
         : [],
       tracks: spotifyRes.body.tracks
-        ? spotifyRes.body.tracks.items.map(mapSpotifyTrackToTrack)
+        ? spotifyRes.body.tracks.items.map(spotifyResponseMapper.mapToTrack)
         : [],
     };
 
@@ -143,7 +100,7 @@ export default class SearchController {
     );
 
     const tracks: Track[] = artistTopTracksResponse.body.tracks.map(
-      mapSpotifyTrackToTrack
+      spotifyResponseMapper.mapToTrack
     );
 
     response.send({ tracks });
@@ -160,7 +117,7 @@ export default class SearchController {
     });
 
     const tracks: Track[] = albumTracksResponse.body.items.map(
-      mapSpotifyTrackToTrack
+      spotifyResponseMapper.mapToTrack
     );
 
     response.send({ tracks });
