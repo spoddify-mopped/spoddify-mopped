@@ -51,7 +51,6 @@ export const Search = (): ReactElement => {
         <div className="category">
           <div className="categoryHeader">
             <h3>Artists</h3>
-            <span>show more</span>
           </div>
           <Modal
             visible={showArtistInfo}
@@ -79,7 +78,6 @@ export const Search = (): ReactElement => {
         <div className="category">
           <div className="categoryHeader">
             <h3>Albums</h3>
-            <span>show more</span>
           </div>
           <Modal
             visible={showAlbumTracks}
@@ -117,7 +115,6 @@ export const Search = (): ReactElement => {
         <div className="category">
           <div className="categoryHeader">
             <h3>Tracks</h3>
-            <span>show more</span>
           </div>
           <SearchTrackView
             tracks={result.tracks}
