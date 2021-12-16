@@ -22,8 +22,15 @@
     "web-vitals": "^1.1.2"
   },
   "devDependencies": {
-    "@spoddify-mopped/prettier-config": "1.0.0",
-    "@spoddify-mopped/eslint-config": "1.0.0"
+    "import-sort-style-eslint": "^6.0.0",
+    "prettier": "^2.4.1",
+    "prettier-plugin-import-sort": "^0.0.7",
+    "@typescript-eslint/eslint-plugin": "^4.15.0",
+    "@typescript-eslint/parser": "^4.15.0",
+    "eslint": "^7.20.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-prettier": "^4.0.0"
   },
   "scripts": {
     "lint": "eslint --fix src",
@@ -32,14 +39,6 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
-  },
-  "prettier": "@spoddify-mopped/prettier-config",
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest",
-      "@spoddify-mopped/eslint-config"
-    ]
   },
   "browserslist": {
     "production": [

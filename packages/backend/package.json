@@ -28,8 +28,15 @@
     "nodemon": "^2.0.14",
     "ts-node": "^10.4.0",
     "typescript": "4.4.4",
-    "@spoddify-mopped/prettier-config": "1.0.0",
-    "@spoddify-mopped/eslint-config": "1.0.0"
+    "import-sort-style-eslint": "^6.0.0",
+    "prettier": "^2.4.1",
+    "prettier-plugin-import-sort": "^0.0.7",
+    "@typescript-eslint/eslint-plugin": "^4.15.0",
+    "@typescript-eslint/parser": "^4.15.0",
+    "eslint": "^7.20.0",
+    "eslint-config-prettier": "^8.3.0",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-prettier": "^4.0.0"
   },
   "nodemonConfig": {
     "ignore": [
@@ -43,6 +50,5 @@
     ],
     "exec": "npm start",
     "ext": "ts"
-  },
-  "prettier": "@spoddify-mopped/prettier-config"
+  }
 }
