@@ -29,3 +29,14 @@ COPY packages/frontend/public ./public
 COPY packages/frontend/tsconfig.json ./
 
 RUN yarn build
+
+FROM node:14-alpine as runner
+
+WORKDIR /usr/src/app
+
+COPY --from=builder /tmp/node_modules ./node_modules
+COPY --from=builder /build/backend/package.json ./
+COPY --from=builder /build/backend/dist ./dist/
+COPY --from=builder /build/frontend/build ./public/
+
+CMD [ "node", "dist/index.js" ]
