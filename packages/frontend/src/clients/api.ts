@@ -9,8 +9,32 @@ type SearchOptions = {
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
-export default class ApiClient {
-  public static search = async (
+const ApiClient = {
+  addAlbum: async (id: string): Promise<void> => {
+    await axios.post(`${API_URL}/api/playlist/add/album`, {
+      id,
+    });
+  },
+  addTrack: async (id: string): Promise<void> => {
+    await axios.post(`${API_URL}/api/playlist/add/track`, {
+      id,
+    });
+  },
+  getAlbumTracks: async (id: string): Promise<ArtistTopTracksResponse> => {
+    const { data } = await axios.get<ArtistTopTracksResponse>(
+      `${API_URL}/api/album/${id}/tracks`
+    );
+
+    return data;
+  },
+  getArtistTopTracks: async (id: string): Promise<ArtistTopTracksResponse> => {
+    const { data } = await axios.get<ArtistTopTracksResponse>(
+      `${API_URL}/api/artist/${id}/tracks`
+    );
+
+    return data;
+  },
+  search: async (
     query: string,
     options?: SearchOptions
   ): Promise<SearchResponse> => {
@@ -22,37 +46,7 @@ export default class ApiClient {
     });
 
     return data;
-  };
+  },
+};
 
-  public static getArtistTopTracks = async (
-    id: string
-  ): Promise<ArtistTopTracksResponse> => {
-    const { data } = await axios.get<ArtistTopTracksResponse>(
-      `${API_URL}/api/artist/${id}/tracks`
-    );
-
-    return data;
-  };
-
-  public static getAlbumTracks = async (
-    id: string
-  ): Promise<ArtistTopTracksResponse> => {
-    const { data } = await axios.get<ArtistTopTracksResponse>(
-      `${API_URL}/api/album/${id}/tracks`
-    );
-
-    return data;
-  };
-
-  public static addTrack = async (id: string): Promise<void> => {
-    await axios.post(`${API_URL}/api/playlist/add/track`, {
-      id,
-    });
-  };
-
-  public static addAlbum = async (id: string): Promise<void> => {
-    await axios.post(`${API_URL}/api/playlist/add/album`, {
-      id,
-    });
-  };
-}
+export default ApiClient;
