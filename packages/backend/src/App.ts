@@ -7,6 +7,7 @@ import { Server } from 'socket.io';
 import cors from 'cors';
 import express from 'express';
 import http from 'http';
+import path from 'path';
 
 const socketIoCors = {
   allowedHeaders: '*',
@@ -34,6 +35,7 @@ export default class App {
   private initializeMiddleware(): void {
     this.app.use(cors());
     this.app.use(express.json());
+    this.app.use(express.static(path.join(__dirname, '..', 'public')));
   }
 
   private initializeControllers(): void {
@@ -42,6 +44,13 @@ export default class App {
     this.app.use('/api', new SearchController().router);
     this.app.use('/api', new EventController(this.io).router);
     this.app.use('/api', new PlaylistController().router);
+
+    this.app.use(
+      '*',
+      (_request: express.Request, response: express.Response): void => {
+        response.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+      }
+    );
   }
 
   private initializeSocketIo(): void {
