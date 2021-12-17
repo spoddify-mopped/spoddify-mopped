@@ -24,7 +24,7 @@ const databaseConnectionOptions: ConnectionOptions = {
   database: 'database.sqlite',
   entities: [Track, Playlist],
   synchronize: true,
-  type: 'better-sqlite3',
+  type: 'sqlite',
 };
 
 createConnection(databaseConnectionOptions)
