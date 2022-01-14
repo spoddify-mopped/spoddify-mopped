@@ -1,5 +1,7 @@
 # spoddify-mopped
 
+![](docs/architecture.png)
+
 ## Local setup
 
 Install yarn with:
