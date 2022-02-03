@@ -26,6 +26,10 @@ const Home = (): ReactElement => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    if (location.pathname === '/') {
+      navigate(asideItems[0].path, { replace: true });
+    }
+
     const item = asideItems.find(
       (item) => item.path.toLowerCase() === location.pathname.toLowerCase()
     );
@@ -33,7 +37,7 @@ const Home = (): ReactElement => {
     if (item) {
       setActivePage(item.name);
     }
-  }, [location]);
+  }, [location, navigate]);
 
   return (
     <div className="home">
