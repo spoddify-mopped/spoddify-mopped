@@ -1,0 +1,59 @@
+div.playerbar {
+  background-color: #0e0e0e;
+  height: 5rem;
+  width: 100%;
+  border-top: 1px solid rgba(180, 180, 180, 0.3);
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  .infoContainer {
+    flex: 1;
+    margin-left: 1rem;
+    display: flex;
+    align-items: center;
+
+    img {
+      width: 50px;
+      margin-right: 1rem;
+      border-radius: 5px;
+    }
+
+    div.info {
+      display: flex;
+      flex-direction: column;
+
+      .track {
+        font-weight: 500;
+      }
+
+      .artist {
+        font-size: 0.7rem;
+      }
+    }
+  }
+
+  div.controls {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+
+    svg.next,
+    svg.prev {
+      width: 14px;
+      cursor: pointer;
+    }
+
+    svg.play,
+    svg.pause {
+      width: 30px;
+      margin: 0 0.5rem;
+      cursor: pointer;
+    }
+  }
+
+  div.volume {
+    flex: 1;
+  }
+}
