@@ -34,6 +34,15 @@ const ApiClient = {
 
     return data;
   },
+  next: async (): Promise<void> => {
+    await axios.post(`${API_URL}/api/forwards`);
+  },
+  playPause: async (): Promise<void> => {
+    await axios.post(`${API_URL}/api/pause`);
+  },
+  previous: async (): Promise<void> => {
+    await axios.post(`${API_URL}/api/previous`);
+  },
   search: async (
     query: string,
     options?: SearchOptions

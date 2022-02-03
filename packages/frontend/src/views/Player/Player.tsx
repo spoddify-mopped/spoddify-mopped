@@ -2,6 +2,7 @@ import './Player.css';
 
 import React, { ReactElement, useEffect, useState } from 'react';
 
+import ApiClient from '../../clients/api';
 import { ReactComponent as Next } from '../../resources/step-forward-solid.svg';
 import { ReactComponent as Pause } from '../../resources/pause-circle-solid.svg';
 import { ReactComponent as Play } from '../../resources/play-circle-solid.svg';
@@ -65,33 +66,6 @@ export default function Player(): ReactElement {
       });
   }
 
-  function play() {
-    axios.post(`${API_URL}/api//pause`).then((response) => {
-      setPlaying(!playing);
-    });
-  }
-
-  function next() {
-    axios
-      .post(`${API_URL}/api//forwards`)
-      .catch((error) => {
-        console.log(`EIN FEHLER: ${error}`);
-      })
-      .finally(() => {
-        setTimeout(refresh, 100);
-      });
-  }
-
-  function prev() {
-    axios
-      .post(`${API_URL}/api//previous`)
-      .catch((error) => {
-        console.log(`EIN FEHLER: ${error}`);
-      })
-      .finally(() => {
-        setTimeout(refresh, 100);
-      });
-  }
   return (
     <div className="player">
       <div className="metadata">
@@ -100,13 +74,28 @@ export default function Player(): ReactElement {
         <p>{metadata.artist}</p>
       </div>
       <div className="control">
-        <button className="playerButton" onClick={prev}>
+        <button
+          className="playerButton"
+          onClick={() => {
+            ApiClient.previous();
+          }}
+        >
           <Prev />
         </button>
-        <button className="playerButton pausebutton" onClick={play}>
+        <button
+          className="playerButton pausebutton"
+          onClick={() => {
+            ApiClient.playPause().then(() => setPlaying(!playing));
+          }}
+        >
           {playing ? <Pause /> : <Play />}
         </button>
-        <button className="playerButton" onClick={next}>
+        <button
+          className="playerButton"
+          onClick={() => {
+            ApiClient.next();
+          }}
+        >
           <Next />
         </button>
       </div>
