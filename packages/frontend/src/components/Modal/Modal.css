@@ -7,15 +7,17 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.8);
 }
 
 .modalCard {
   display: flex;
-  background-color: #fff;
-  padding: 1rem;
+  background-color: #121212;
+  padding: 1rem 2rem;
   flex-direction: column;
   align-items: flex-end;
+  max-height: 40rem;
+  border-radius: 20px;
 }
 
 .modalCloseButton {
