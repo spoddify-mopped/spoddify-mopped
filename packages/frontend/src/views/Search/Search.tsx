@@ -128,8 +128,14 @@ export const Search = (): ReactElement => {
   };
 
   return (
-    <div>
-      <input onChange={handleSearchInputChange} />
+    <div className="searchView">
+      <div className="searchInputContainer">
+        <input
+          className="searchInput"
+          placeholder="Search"
+          onChange={handleSearchInputChange}
+        />
+      </div>
       {renderResult()}
     </div>
   );
