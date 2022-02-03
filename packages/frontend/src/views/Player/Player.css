@@ -1,18 +1,20 @@
+.player {
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+
 .playerButton {
   background-color: transparent;
   border: none;
   outline: none;
   cursor: pointer;
   width: 32px;
+  color: white;
 }
 
 .coverart {
   width: 300px;
-}
-
-.player {
-  display: flex;
-  flex-direction: column;
 }
 
 .control {
