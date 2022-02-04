@@ -9,6 +9,7 @@ import React, { ReactElement, useState } from 'react';
 import ApiClient from '../../clients/api';
 import { Modal } from '../../components/Modal/Modal';
 import SearchCoverView from '../../components/SearchCoverView/SearchCoverView';
+import { ReactComponent as SearchIcon } from '../../resources/search.svg';
 import SearchTrackView from '../../components/SearchTrackView/SearchTrackView';
 
 export const Search = (): ReactElement => {
@@ -130,11 +131,14 @@ export const Search = (): ReactElement => {
   return (
     <div className="searchView">
       <div className="searchInputContainer">
-        <input
-          className="searchInput"
-          placeholder="Search"
-          onChange={handleSearchInputChange}
-        />
+        <div className="searchInputWrapper">
+          <SearchIcon className="searchIcon" />
+          <input
+            className="searchInput"
+            placeholder="Search"
+            onChange={handleSearchInputChange}
+          />
+        </div>
       </div>
       {renderResult()}
     </div>

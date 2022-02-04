@@ -9,8 +9,22 @@ div.searchInputContainer {
   justify-content: center;
 }
 
+div.searchInputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+svg.searchIcon {
+  fill: rgba(180, 180, 180, 0.7);
+  width: 1.2rem;
+  position: absolute;
+  left: 1rem;
+}
+
 input.searchInput {
   padding: 0.5rem 1rem;
+  padding-left: 3rem;
   border-radius: 15px;
   border: 1px solid rgba(180, 180, 180, 0.3);
   background-color: #121212;
