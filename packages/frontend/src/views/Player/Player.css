@@ -9,6 +9,19 @@
   color: white;
 }
 
+.playerBackButton {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  cursor: pointer;
+  font-size: 2rem;
+  font-weight: 500;
+}
+
+.playerBackButton:hover {
+  opacity: 0.5;
+}
+
 .playerButton {
   background-color: transparent;
   border: none;

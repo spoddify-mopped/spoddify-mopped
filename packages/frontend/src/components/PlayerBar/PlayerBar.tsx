@@ -5,6 +5,7 @@ import { ReactComponent as Pause } from '../../resources/pause-circle-solid.svg'
 import { ReactComponent as Play } from '../../resources/play-circle-solid.svg';
 import { ReactComponent as Prev } from '../../resources/step-backward-solid.svg';
 import styles from './PlayerBar.module.scss';
+import { useNavigate } from 'react-router';
 
 export type PlayerInformation = {
   coverImgUri?: string;
@@ -24,10 +25,16 @@ type Props = {
 };
 
 const PlayerBar = (props: Props): ReactElement => {
+  const navigate = useNavigate();
+
   return (
     <div className={styles.playerbar}>
       <div className={styles.infoContainer}>
-        <img src={props.playerInformation.coverImgUri || ''} alt="Cover" />
+        <img
+          onClick={() => navigate('/player')}
+          src={props.playerInformation.coverImgUri || ''}
+          alt="Cover"
+        />
         <div className={styles.info}>
           <span className={styles.track}>
             {props.playerInformation.trackName || ''}

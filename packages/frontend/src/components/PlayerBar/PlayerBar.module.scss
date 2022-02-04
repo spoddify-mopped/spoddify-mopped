@@ -18,6 +18,11 @@ div.playerbar {
       width: 50px;
       margin-right: 1rem;
       border-radius: 5px;
+      cursor: pointer;
+
+      &:hover {
+        opacity: 0.5;
+      }
     }
 
     div.info {

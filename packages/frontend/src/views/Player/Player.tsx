@@ -8,13 +8,18 @@ import { ReactComponent as Next } from '../../resources/step-forward-solid.svg';
 import { ReactComponent as Pause } from '../../resources/pause-circle-solid.svg';
 import { ReactComponent as Play } from '../../resources/play-circle-solid.svg';
 import { ReactComponent as Prev } from '../../resources/step-backward-solid.svg';
+import { useNavigate } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 
 export default function Player(): ReactElement {
+  const navigate = useNavigate();
   const player = useSelector((state: AppState) => state.player);
 
   return (
     <div className="player">
+      <span className="playerBackButton" onClick={() => navigate(-1)}>
+        &larr;
+      </span>
       <div className="metadata">
         <img className="coverart" src={player.coverUrl} alt="Cover" />
         <p>{player.track}</p>
