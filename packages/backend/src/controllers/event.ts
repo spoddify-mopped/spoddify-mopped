@@ -1,15 +1,18 @@
 import { Server } from 'socket.io';
+import SpotifyClient from '../clients/spotify/spotify';
 import express from 'express';
-import { spotifyClient } from './../index';
 
 export default class EventController {
   public path = '/event';
   public router = express.Router();
 
   private io: Server;
+  private spotifyClient: SpotifyClient;
 
-  constructor(io: Server) {
+  public constructor(io: Server, spotifyClient: SpotifyClient) {
     this.io = io;
+    this.spotifyClient = spotifyClient;
+
     this.initializeRoutes();
   }
 
@@ -21,7 +24,7 @@ export default class EventController {
     _request: express.Request,
     response: express.Response
   ): void => {
-    spotifyClient.getPlayer().then((data) => {
+    this.spotifyClient.getPlayer().then((data) => {
       this.io.emit('action', {
         payload: {
           album: data.item.album.name,

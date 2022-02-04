@@ -1,12 +1,16 @@
 import { DeviceNotFoundError } from '../services/player';
+import PlaylistService from '../services/playlist';
 import express from 'express';
-import { playlistService } from './../index';
 
 export default class PlaylistController {
   public path = '/playlist';
   public router = express.Router();
 
-  constructor() {
+  private playlistService: PlaylistService;
+
+  public constructor(playlistService: PlaylistService) {
+    this.playlistService = playlistService;
+
     this.initializeRoutes();
   }
 
@@ -41,7 +45,7 @@ export default class PlaylistController {
       return;
     }
 
-    await playlistService
+    await this.playlistService
       .sortInTrack(body.id)
       .then(() => response.sendStatus(204))
       .catch((error) => this.handleError(error, response));
@@ -58,7 +62,7 @@ export default class PlaylistController {
       return;
     }
 
-    await playlistService
+    await this.playlistService
       .sortInAlbum(body.id)
       .then(() => response.sendStatus(204))
       .catch((error) => this.handleError(error, response));
@@ -68,7 +72,7 @@ export default class PlaylistController {
     _request: express.Request,
     response: express.Response
   ): Promise<void> => {
-    await playlistService
+    await this.playlistService
       .getPlaylists()
       .then((playlists) => response.send(playlists))
       .catch((error) => this.handleError(error, response));
@@ -85,7 +89,7 @@ export default class PlaylistController {
       return;
     }
 
-    await playlistService
+    await this.playlistService
       .getPlaylist(id)
       .then((playlist) => response.send(playlist))
       .catch((error) => this.handleError(error, response));
@@ -102,7 +106,7 @@ export default class PlaylistController {
       return;
     }
 
-    await playlistService
+    await this.playlistService
       .playPlaylist(id)
       .then(() => response.sendStatus(204))
       .catch((error) => this.handleError(error, response));

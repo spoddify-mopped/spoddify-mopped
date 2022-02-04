@@ -1,12 +1,16 @@
-import { DeviceNotFoundError } from '../services/player';
+import SpotifyPlayerService, { DeviceNotFoundError } from '../services/player';
+
 import express from 'express';
-import { spotifyPlayerService } from './../index';
 
 export default class PlayerController {
   public path = '';
   public router = express.Router();
 
-  constructor() {
+  private spotifyPlayerService: SpotifyPlayerService;
+
+  public constructor(spotifyPlayerService: SpotifyPlayerService) {
+    this.spotifyPlayerService = spotifyPlayerService;
+
     this.initializeRoutes();
   }
 
@@ -35,7 +39,7 @@ export default class PlayerController {
     _request: express.Request,
     response: express.Response
   ): Promise<void> => {
-    await spotifyPlayerService
+    await this.spotifyPlayerService
       .getPlayer()
       .then((player) => response.send(player))
       .catch((error) => this.handleError(error, response));
@@ -45,7 +49,7 @@ export default class PlayerController {
     _request: express.Request,
     response: express.Response
   ): Promise<void> => {
-    await spotifyPlayerService
+    await this.spotifyPlayerService
       .playPause()
       .then(() => response.sendStatus(204))
       .catch((error) => this.handleError(error, response));
@@ -55,7 +59,7 @@ export default class PlayerController {
     _request: express.Request,
     response: express.Response
   ): Promise<void> => {
-    await spotifyPlayerService
+    await this.spotifyPlayerService
       .next()
       .then(() => response.sendStatus(204))
       .catch((error) => this.handleError(error, response));
@@ -65,7 +69,7 @@ export default class PlayerController {
     _request: express.Request,
     response: express.Response
   ): Promise<void> => {
-    await spotifyPlayerService
+    await this.spotifyPlayerService
       .previous()
       .then(() => response.sendStatus(204))
       .catch((error) => this.handleError(error, response));
@@ -85,7 +89,7 @@ export default class PlayerController {
       uris = [uris];
     }
 
-    await spotifyPlayerService
+    await this.spotifyPlayerService
       .play(uris)
       .then(() => response.sendStatus(204))
       .catch((error) => this.handleError(error, response));
@@ -102,7 +106,7 @@ export default class PlayerController {
       return;
     }
 
-    await spotifyPlayerService
+    await this.spotifyPlayerService
       .addQueue(uri)
       .then(() => response.sendStatus(204))
       .catch((error) => this.handleError(error, response));

@@ -2,14 +2,16 @@ import AuthController from './controllers/auth';
 import EventController from './controllers/event';
 import PlayerController from './controllers/player';
 import PlaylistController from './controllers/playlist';
+import PlaylistService from './services/playlist';
 import SearchController from './controllers/search';
 import { Server } from 'socket.io';
+import SpotifyClient from './clients/spotify/spotify';
+import SpotifyPlayerService from './services/player';
 import SpotifySearchService from './services/search';
 import cors from 'cors';
 import express from 'express';
 import http from 'http';
 import path from 'path';
-import { spotifyClient } from './index';
 
 const socketIoCors = {
   allowedHeaders: '*',
@@ -24,14 +26,31 @@ export default class App {
   private io: Server;
 
   private searchController: SearchController;
+  private playlistController: PlaylistController;
+  private playerController: PlayerController;
+  private eventController: EventController;
+  private authController: AuthController;
 
-  public constructor(spotifySearchService: SpotifySearchService) {
+  private spotifyClient: SpotifyClient;
+
+  public constructor(
+    spotifySearchService: SpotifySearchService,
+    playlistService: PlaylistService,
+    spotifyPlayerService: SpotifyPlayerService,
+    spotifyClient: SpotifyClient
+  ) {
     this.app = express();
     this.server = http.createServer(this.app);
+    this.initializeSocketIo();
+
+    this.spotifyClient = spotifyClient;
 
     this.searchController = new SearchController(spotifySearchService);
+    this.playlistController = new PlaylistController(playlistService);
+    this.playerController = new PlayerController(spotifyPlayerService);
+    this.eventController = new EventController(this.io, spotifyClient);
+    this.authController = new AuthController(spotifyClient);
 
-    this.initializeSocketIo();
     this.initializeMiddleware();
     this.initializeControllers();
   }
@@ -43,11 +62,11 @@ export default class App {
   }
 
   private initializeControllers(): void {
-    this.app.use('/api', new AuthController().router);
-    this.app.use('/api', new PlayerController().router);
+    this.app.use('/api', this.authController.router);
+    this.app.use('/api', this.playerController.router);
     this.app.use('/api', this.searchController.router);
-    this.app.use('/api', new EventController(this.io).router);
-    this.app.use('/api', new PlaylistController().router);
+    this.app.use('/api', this.eventController.router);
+    this.app.use('/api', this.playlistController.router);
 
     this.app.use(
       '*',
@@ -66,7 +85,7 @@ export default class App {
       console.log(`New socket.io connection with id: ${socket.id}`);
 
       socket.on('action', () => {
-        spotifyClient.getPlayer().then((data) => {
+        this.spotifyClient.getPlayer().then((data) => {
           this.io.emit('action', {
             payload: {
               album: data.item.album.name,

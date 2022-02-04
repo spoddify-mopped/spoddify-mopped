@@ -9,19 +9,21 @@ import SpotifyPlayerService from './services/player';
 import SpotifySearchService from './services/search';
 import Track from './entities/track';
 
-export const spotifyClient = new SpotifyClient({
+const spotifyClient = new SpotifyClient({
   clientId: '82cee3b12c81432bb0fc7efddffd94d4',
   clientSecret: '88d72d2562cb41afa7c7f05c1fbd6cbb',
   redirectUri: 'http://localhost:8080/api/callback',
 });
 
-export const spotifyPlayerService = new SpotifyPlayerService(
+const spotifyPlayerService = new SpotifyPlayerService(
   spotifyClient,
   'SpoddifyMopped'
 );
 
-export const playlistService = new PlaylistService(spotifyClient);
-
+const playlistService = new PlaylistService(
+  spotifyClient,
+  spotifyPlayerService
+);
 const spotifySearchService = new SpotifySearchService(spotifyClient);
 
 const databaseConnectionOptions: ConnectionOptions = {
@@ -39,7 +41,12 @@ createConnection(databaseConnectionOptions)
       spotifyClient.setRefreshToken(spotifyAuth.tokenValue);
     }
 
-    const app = new App(spotifySearchService);
+    const app = new App(
+      spotifySearchService,
+      playlistService,
+      spotifyPlayerService,
+      spotifyClient
+    );
     app.listen(8080);
   })
   .catch((error) => console.error('TypeORM connection error: ', error.message));

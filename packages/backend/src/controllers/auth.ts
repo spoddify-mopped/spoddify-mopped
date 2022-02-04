@@ -1,12 +1,16 @@
 import SpotifyAuth from '../entities/spotify_auth';
+import SpotifyClient from '../clients/spotify/spotify';
 import express from 'express';
-import { spotifyClient } from './../index';
 
 export default class AuthController {
   public path = '';
   public router = express.Router();
 
-  constructor() {
+  private spotifyClient: SpotifyClient;
+
+  public constructor(spotifyClient: SpotifyClient) {
+    this.spotifyClient = spotifyClient;
+
     this.initializeRoutes();
   }
 
@@ -17,7 +21,7 @@ export default class AuthController {
 
   private login = (_: express.Request, response: express.Response): void => {
     response.redirect(
-      spotifyClient.getOAuthUrl([
+      this.spotifyClient.getOAuthUrl([
         'user-read-playback-state',
         'user-modify-playback-state',
       ])
@@ -30,7 +34,7 @@ export default class AuthController {
   ): void => {
     const code = request.query.code as string;
 
-    spotifyClient
+    this.spotifyClient
       .authorizationCodeGrant(code)
       .then(async (data) => {
         const spotifyAuth = new SpotifyAuth();
@@ -38,8 +42,8 @@ export default class AuthController {
         spotifyAuth.tokenValue = data.refresh_token;
         await spotifyAuth.save();
 
-        spotifyClient.setRefreshToken(data.refresh_token);
-        spotifyClient.setAccessToken(data.access_token);
+        this.spotifyClient.setRefreshToken(data.refresh_token);
+        this.spotifyClient.setAccessToken(data.access_token);
         response.sendStatus(204);
       })
       .catch(() => {

@@ -1,15 +1,20 @@
+import SpotifyPlayerService, { SpotifyApiError } from './player';
+
 import { FullArtist } from '../clients/spotify/responses';
 import Playlist from '../entities/playlist';
-import { SpotifyApiError } from './player';
 import SpotifyClient from '../clients/spotify/spotify';
 import Track from '../entities/track';
-import { spotifyPlayerService } from '..';
 
 export default class PlaylistService {
   private spotifyClient: SpotifyClient;
+  private spotifyPlayerService: SpotifyPlayerService;
 
-  public constructor(spotifyClient: SpotifyClient) {
+  public constructor(
+    spotifyClient: SpotifyClient,
+    spotifyPlayerService: SpotifyPlayerService
+  ) {
     this.spotifyClient = spotifyClient;
+    this.spotifyPlayerService = spotifyPlayerService;
   }
 
   public sortInTrack = async (spotifyTrackId: string): Promise<void> => {
@@ -85,6 +90,6 @@ export default class PlaylistService {
       .sort(() => Math.random() - 0.5)
       .map((track) => `spotify:track:${track.id}`);
 
-    await spotifyPlayerService.play(tracks);
+    await this.spotifyPlayerService.play(tracks);
   };
 }
