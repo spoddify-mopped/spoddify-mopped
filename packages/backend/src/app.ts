@@ -4,6 +4,7 @@ import PlayerController from './controllers/player';
 import PlaylistController from './controllers/playlist';
 import SearchController from './controllers/search';
 import { Server } from 'socket.io';
+import SpotifySearchService from './services/search';
 import cors from 'cors';
 import express from 'express';
 import http from 'http';
@@ -18,15 +19,17 @@ const socketIoCors = {
 
 export default class App {
   private app: express.Application;
-  private port: number;
 
   private server: http.Server;
   private io: Server;
 
-  public constructor(port: number) {
+  private searchController: SearchController;
+
+  public constructor(spotifySearchService: SpotifySearchService) {
     this.app = express();
-    this.port = port;
     this.server = http.createServer(this.app);
+
+    this.searchController = new SearchController(spotifySearchService);
 
     this.initializeSocketIo();
     this.initializeMiddleware();
@@ -42,7 +45,7 @@ export default class App {
   private initializeControllers(): void {
     this.app.use('/api', new AuthController().router);
     this.app.use('/api', new PlayerController().router);
-    this.app.use('/api', new SearchController().router);
+    this.app.use('/api', this.searchController.router);
     this.app.use('/api', new EventController(this.io).router);
     this.app.use('/api', new PlaylistController().router);
 
@@ -81,9 +84,9 @@ export default class App {
     });
   }
 
-  public listen(): void {
-    this.server.listen(this.port, () => {
-      console.info(`Server is running at http://localhost:${this.port}`);
+  public listen(port: number): void {
+    this.server.listen(port, () => {
+      console.info(`Server is running at http://localhost:${port}`);
     });
   }
 }

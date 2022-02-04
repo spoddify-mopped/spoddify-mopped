@@ -6,6 +6,7 @@ import PlaylistService from './services/playlist';
 import SpotifyAuth from './entities/spotify_auth';
 import SpotifyClient from './clients/spotify/spotify';
 import SpotifyPlayerService from './services/player';
+import SpotifySearchService from './services/search';
 import Track from './entities/track';
 
 export const spotifyClient = new SpotifyClient({
@@ -20,6 +21,8 @@ export const spotifyPlayerService = new SpotifyPlayerService(
 );
 
 export const playlistService = new PlaylistService(spotifyClient);
+
+const spotifySearchService = new SpotifySearchService(spotifyClient);
 
 const databaseConnectionOptions: ConnectionOptions = {
   database: 'database.sqlite',
@@ -36,7 +39,7 @@ createConnection(databaseConnectionOptions)
       spotifyClient.setRefreshToken(spotifyAuth.tokenValue);
     }
 
-    const app = new App(8080);
-    app.listen();
+    const app = new App(spotifySearchService);
+    app.listen(8080);
   })
   .catch((error) => console.error('TypeORM connection error: ', error.message));

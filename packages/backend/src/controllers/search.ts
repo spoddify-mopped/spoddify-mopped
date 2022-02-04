@@ -1,18 +1,5 @@
-import {
-  Album,
-  Artist,
-  Track,
-  spotifyResponseMapper,
-} from '../utils/spotify_response_mapper';
-
+import SpotifySearchService from '../services/search';
 import express from 'express';
-import { spotifyClient } from './../index';
-
-type SearchResponse = {
-  artists: Artist[];
-  albums: Album[];
-  tracks: Track[];
-};
 
 type SpotifySearchType = 'album' | 'artist' | 'track';
 
@@ -36,7 +23,11 @@ export default class SearchController {
   public path = '';
   public router = express.Router();
 
-  constructor() {
+  private spotifySearchService: SpotifySearchService;
+
+  public constructor(spotifySearchService: SpotifySearchService) {
+    this.spotifySearchService = spotifySearchService;
+
     this.initializeRoutes();
   }
 
@@ -69,23 +60,14 @@ export default class SearchController {
       return;
     }
 
-    const res = await spotifyClient.search(query, type, {
-      limit,
-    });
-
-    const searchResponse: SearchResponse = {
-      albums: res.albums
-        ? res.albums.items.map(spotifyResponseMapper.mapToAlbum)
-        : [],
-      artists: res.artists
-        ? res.artists.items.map(spotifyResponseMapper.mapToArtist)
-        : [],
-      tracks: res.tracks
-        ? res.tracks.items.map(spotifyResponseMapper.mapToTrack)
-        : [],
-    };
-
-    response.send(searchResponse);
+    await this.spotifySearchService
+      .search(query, type, limit)
+      .then((result) => {
+        response.send(result);
+      })
+      .catch(() => {
+        response.sendStatus(503);
+      });
   };
 
   private getArtistTopTracks = async (
@@ -94,16 +76,14 @@ export default class SearchController {
   ) => {
     const { params } = request;
 
-    const artistTopTracksResponse = await spotifyClient.getArtistTopTracks(
-      params.id,
-      'DE'
-    );
-
-    const tracks: Track[] = artistTopTracksResponse.tracks.map(
-      spotifyResponseMapper.mapToTrack
-    );
-
-    response.send({ tracks });
+    await this.spotifySearchService
+      .getArtistTopTracks(params.id)
+      .then((tracks) => {
+        response.send({ tracks });
+      })
+      .catch(() => {
+        response.sendStatus(503);
+      });
   };
 
   private getAlbumTracks = async (
@@ -112,15 +92,13 @@ export default class SearchController {
   ) => {
     const { params } = request;
 
-    const albumTracksResponse = await spotifyClient.getAlbumTracks(params.id, {
-      limit: 50,
-      market: 'DE',
-    });
-
-    const tracks: Track[] = albumTracksResponse.items.map(
-      spotifyResponseMapper.mapToTrack
-    );
-
-    response.send({ tracks });
+    await this.spotifySearchService
+      .getAlbumTracks(params.id)
+      .then((tracks) => {
+        response.send({ tracks });
+      })
+      .catch(() => {
+        response.sendStatus(503);
+      });
   };
 }
