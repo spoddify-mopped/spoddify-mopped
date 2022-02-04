@@ -21,7 +21,6 @@ const asideItems = [
 
 const Home = (): ReactElement => {
   const [activePage, setActivePage] = useState('');
-
   const location = useLocation();
   const navigate = useNavigate();
 

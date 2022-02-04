@@ -8,6 +8,7 @@ import cors from 'cors';
 import express from 'express';
 import http from 'http';
 import path from 'path';
+import { spotifyApi } from '.';
 
 const socketIoCors = {
   allowedHeaders: '*',
@@ -60,6 +61,23 @@ export default class App {
 
     this.io.on('connection', (socket) => {
       console.log(`New socket.io connection with id: ${socket.id}`);
+
+      socket.on('action', () => {
+        spotifyApi.getMyCurrentPlaybackState().then((spotifyResponse) => {
+          this.io.emit('action', {
+            payload: {
+              album: spotifyResponse.body.item['album'].name,
+              artist: spotifyResponse.body.item['artists'][0].name,
+              coverUrl: spotifyResponse.body.item['album']['images'][0].url,
+              duration: spotifyResponse.body.item.duration_ms,
+              isPlaying: spotifyResponse.body.is_playing,
+              progress: spotifyResponse.body.progress_ms,
+              track: spotifyResponse.body.item.name,
+            },
+            type: 'WS_TO_CLIENT_SET_PLAYER_STATE',
+          });
+        });
+      });
     });
   }
 

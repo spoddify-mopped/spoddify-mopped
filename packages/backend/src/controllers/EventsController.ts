@@ -22,7 +22,18 @@ export default class EventController {
     response: express.Response
   ): void => {
     spotifyApi.getMyCurrentPlaybackState().then((spotifyResponse) => {
-      this.io.emit('player', spotifyResponse.body);
+      this.io.emit('action', {
+        payload: {
+          album: spotifyResponse.body.item['album'].name,
+          artist: spotifyResponse.body.item['artists'][0].name,
+          coverUrl: spotifyResponse.body.item['album']['images'][0].url,
+          duration: spotifyResponse.body.item.duration_ms,
+          isPlaying: spotifyResponse.body.is_playing,
+          progress: spotifyResponse.body.progress_ms,
+          track: spotifyResponse.body.item.name,
+        },
+        type: 'WS_TO_CLIENT_SET_PLAYER_STATE',
+      });
     });
 
     response.sendStatus(204);
