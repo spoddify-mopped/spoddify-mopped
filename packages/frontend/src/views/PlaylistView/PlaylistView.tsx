@@ -12,7 +12,7 @@ interface Playlist {
   name?: string;
 }
 
-export default function PlaylistView() {
+export default function PlaylistView(): React.ReactElement {
   const [playlists, setPlaylists] = useState<Playlist[]>([
     {
       id: undefined,
@@ -25,7 +25,6 @@ export default function PlaylistView() {
       .get(`${API_URL}/api/playlist`)
       .then((response) => {
         setPlaylists(response.data);
-        console.log(response.data);
       })
       .catch((error) => {
         console.log(`EIN FEHLER: ${error}`);
@@ -44,7 +43,7 @@ export default function PlaylistView() {
   const playlistRows = [];
   for (const playlist of playlists) {
     playlistRows.push(
-      <div className="singlePlaylist">
+      <div className="singlePlaylist" key={playlist.id}>
         <p>{playlist.name}</p>
         <button className="button" onClick={() => play(playlist.id)}>
           <Play />
