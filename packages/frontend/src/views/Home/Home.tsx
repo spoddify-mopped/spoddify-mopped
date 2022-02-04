@@ -13,13 +13,13 @@ import { playerActions } from '../../redux/player/actions';
 const asideItems = [
   {
     image: <></>,
-    name: 'Search',
-    path: '/search',
+    name: 'Playlists',
+    path: '/playlists',
   },
   {
     image: <></>,
-    name: 'Playlists',
-    path: '/playlists',
+    name: 'Search',
+    path: '/search',
   },
 ];
 
