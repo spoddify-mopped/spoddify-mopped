@@ -1,6 +1,6 @@
 div.playerbar {
   background-color: #0e0e0e;
-  height: 5rem;
+  height: 6rem;
   width: 100%;
   border-top: 1px solid rgba(180, 180, 180, 0.3);
 
@@ -37,6 +37,13 @@ div.playerbar {
         font-size: 0.7rem;
       }
     }
+  }
+
+  div.player {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 
   div.controls {

@@ -1,6 +1,7 @@
 import './Player.css';
 
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import ApiClient from '../../clients/api';
 import { AppState } from '../../redux/reducers';
@@ -8,12 +9,18 @@ import { ReactComponent as Next } from '../../resources/step-forward-solid.svg';
 import { ReactComponent as Pause } from '../../resources/pause-circle-solid.svg';
 import { ReactComponent as Play } from '../../resources/play-circle-solid.svg';
 import { ReactComponent as Prev } from '../../resources/step-backward-solid.svg';
+import ProgressBar from '../../components/ProgressBar/ProgressBar';
+import { playerActions } from '../../redux/player/actions';
 import { useNavigate } from 'react-router-dom';
-import { useSelector } from 'react-redux';
 
 export default function Player(): ReactElement {
   const navigate = useNavigate();
   const player = useSelector((state: AppState) => state.player);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(playerActions.getPlayer());
+  }, [dispatch]);
 
   return (
     <div className="player">
@@ -22,7 +29,7 @@ export default function Player(): ReactElement {
       </span>
       <div className="metadata">
         <img className="coverart" src={player.coverUrl} alt="Cover" />
-        <p>{player.track}</p>
+        <p className="playerTrack">{player.track}</p>
         <p>{player.artist}</p>
       </div>
       <div className="control">
@@ -51,6 +58,11 @@ export default function Player(): ReactElement {
           <Next />
         </button>
       </div>
+      <ProgressBar
+        duration={player.duration}
+        isPlaying={player.isPlaying}
+        startProgress={player.progress}
+      />
     </div>
   );
 }

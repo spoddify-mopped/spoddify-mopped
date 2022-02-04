@@ -41,10 +41,29 @@
   justify-content: center;
 }
 
+.playerTrack {
+  font-size: 1.2rem;
+  font-weight: 500;
+}
+
 .pausebutton {
   width: 50px;
 }
 
 .button:hover {
   opacity: 0.7;
+}
+
+.progressBar {
+  margin: 1rem 0;
+  width: 20rem;
+  height: 0.3rem;
+  background-color: #202020;
+  border-radius: 20px;
+}
+
+.filledProgressBar {
+  height: 0.3rem;
+  background-color: #777777;
+  border-radius: 20px;
 }

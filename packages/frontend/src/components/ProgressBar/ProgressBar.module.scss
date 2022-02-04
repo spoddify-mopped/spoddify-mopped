@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.progressBar {
+  margin: 1rem;
+  width: 20rem;
+  height: 0.3rem;
+  background-color: #202020;
+  border-radius: 20px;
+}
+
+.filledProgressBar {
+  height: 0.3rem;
+  background-color: #777777;
+  border-radius: 20px;
+}
+
+.time {
+  font-size: 0.8rem;
+}

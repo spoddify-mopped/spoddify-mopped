@@ -4,6 +4,7 @@ import { ReactComponent as Next } from '../../resources/step-forward-solid.svg';
 import { ReactComponent as Pause } from '../../resources/pause-circle-solid.svg';
 import { ReactComponent as Play } from '../../resources/play-circle-solid.svg';
 import { ReactComponent as Prev } from '../../resources/step-backward-solid.svg';
+import ProgressBar from '../ProgressBar/ProgressBar';
 import styles from './PlayerBar.module.scss';
 import { useNavigate } from 'react-router';
 
@@ -44,14 +45,21 @@ const PlayerBar = (props: Props): ReactElement => {
           </span>
         </div>
       </div>
-      <div className={styles.controls}>
-        <Prev className={styles.prev} onClick={props.onPrevious} />
-        {props.playerInformation.isPlaying ? (
-          <Pause className={styles.pause} onClick={props.onPlayPause} />
-        ) : (
-          <Play className={styles.play} onClick={props.onPlayPause} />
-        )}
-        <Next className={styles.next} onClick={props.onNext} />
+      <div className={styles.player}>
+        <div className={styles.controls}>
+          <Prev className={styles.prev} onClick={props.onPrevious} />
+          {props.playerInformation.isPlaying ? (
+            <Pause className={styles.pause} onClick={props.onPlayPause} />
+          ) : (
+            <Play className={styles.play} onClick={props.onPlayPause} />
+          )}
+          <Next className={styles.next} onClick={props.onNext} />
+        </div>
+        <ProgressBar
+          duration={props.playerInformation.duration}
+          isPlaying={props.playerInformation.isPlaying}
+          startProgress={props.playerInformation.progress}
+        />
       </div>
       <div className={styles.volume}></div>
     </div>

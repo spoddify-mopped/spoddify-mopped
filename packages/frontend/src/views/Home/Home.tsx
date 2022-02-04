@@ -2,12 +2,13 @@ import './Home.css';
 
 import { Outlet, useLocation, useNavigate } from 'react-router';
 import React, { ReactElement, useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 import ApiClient from '../../clients/api';
 import { AppState } from '../../redux/reducers';
 import Aside from '../../components/Aside/Aside';
 import PlayerBar from '../../components/PlayerBar/PlayerBar';
-import { useSelector } from 'react-redux';
+import { playerActions } from '../../redux/player/actions';
 
 const asideItems = [
   {
@@ -23,11 +24,16 @@ const asideItems = [
 ];
 
 const Home = (): ReactElement => {
+  const dispatch = useDispatch();
   const player = useSelector((state: AppState) => state.player);
 
   const [activePage, setActivePage] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
+
+  useEffect(() => {
+    dispatch(playerActions.getPlayer());
+  }, [dispatch]);
 
   useEffect(() => {
     if (location.pathname === '/') {
