@@ -43,13 +43,12 @@ export default class App {
     this.app = express();
     this.server = http.createServer(this.app);
 
-    this.websocketHandler = new WebsocketHandler(spotifyClient);
-    this.initializeSocketIo();
+    this.initializeSocketIo(spotifyClient);
 
     this.searchController = new SearchController(spotifySearchService);
     this.playlistController = new PlaylistController(playlistService);
     this.playerController = new PlayerController(spotifyPlayerService);
-    this.eventController = new EventController(this.io, this.websocketHandler);
+    this.eventController = new EventController(this.websocketHandler);
     this.authController = new AuthController(spotifyClient);
 
     this.initializeMiddleware();
@@ -77,19 +76,16 @@ export default class App {
     );
   }
 
-  private initializeSocketIo(): void {
+  private initializeSocketIo(spotifyClient: SpotifyClient): void {
     this.io = new Server(this.server, {
       cors: socketIoCors,
     });
 
+    this.websocketHandler = new WebsocketHandler(spotifyClient, this.io);
+
     this.io.on('connection', (socket) => {
       console.log(`New socket.io connection with id: ${socket.id}`);
-      socket.on('action', (action) => {
-        const handler = this.websocketHandler.getHandler(action.type);
-        if (handler) {
-          handler(this.io);
-        }
-      });
+      socket.on('action', this.websocketHandler.handle);
     });
   }
 

@@ -1,4 +1,3 @@
-import { Server } from 'socket.io';
 import WebsocketHandler from '../ws/handler';
 import express from 'express';
 
@@ -6,11 +5,9 @@ export default class EventController {
   public path = '/event';
   public router = express.Router();
 
-  private io: Server;
   private websocketHandler: WebsocketHandler;
 
-  public constructor(io: Server, websocketHandler: WebsocketHandler) {
-    this.io = io;
+  public constructor(websocketHandler: WebsocketHandler) {
     this.websocketHandler = websocketHandler;
 
     this.initializeRoutes();
@@ -24,7 +21,7 @@ export default class EventController {
     _request: express.Request,
     response: express.Response
   ): Promise<void> => {
-    await this.websocketHandler.sendPlayerState(this.io);
+    await this.websocketHandler.sendPlayerState();
     response.sendStatus(204);
   };
 }
