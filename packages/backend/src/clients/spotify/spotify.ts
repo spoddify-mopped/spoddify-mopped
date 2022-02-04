@@ -8,7 +8,13 @@ import {
   SearchResult,
   Track,
   UserDevicesResponse,
-} from './spotify_response';
+} from './responses';
+import {
+  CombinedOptions,
+  DeviceOptions,
+  MarketOptions,
+  PlayOptions,
+} from './options';
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
 import qs from 'qs';
@@ -17,29 +23,6 @@ type Config = {
   clientSecret: string;
   clientId: string;
   redirectUri: string;
-};
-
-type MarketOptions = {
-  market?: string;
-};
-
-type Options = MarketOptions & {
-  limit?: number;
-  offset?: number;
-};
-
-type DeviceOptions = {
-  // eslint-disable-next-line camelcase
-  device_id?: string;
-};
-
-type PlayOptions = DeviceOptions & {
-  // eslint-disable-next-line camelcase
-  context_uri?: string;
-  uris?: ReadonlyArray<string>;
-  offset?: { position: number } | { uri: string };
-  // eslint-disable-next-line camelcase
-  position_ms?: number;
 };
 
 const SPOTIFY_BASE_AUTH_URL = 'https://accounts.spotify.com';
@@ -167,7 +150,7 @@ export default class SpotifyClient {
   public search = async (
     query: string,
     types: string[],
-    options: Options = {}
+    options: CombinedOptions = {}
   ): Promise<SearchResult> => {
     const response = await this.tryWithToken<SearchResult>(
       async () =>
@@ -201,7 +184,7 @@ export default class SpotifyClient {
 
   public getAlbumTracks = async (
     id: string,
-    options?: Options
+    options?: CombinedOptions
   ): Promise<AlbumTracksResponse> => {
     const response = await this.tryWithToken<AlbumTracksResponse>(
       async () =>

@@ -1,4 +1,4 @@
-import { Player } from '../clients/spotify/spotify_response';
+import { Player } from '../clients/spotify/responses';
 import SpotifyClient from '../clients/spotify/spotify';
 
 export class DeviceNotFoundError extends Error {}

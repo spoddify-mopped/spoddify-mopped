@@ -1,4 +1,4 @@
-import { FullArtist } from '../clients/spotify/spotify_response';
+import { FullArtist } from '../clients/spotify/responses';
 import Playlist from '../entities/Playlist';
 import { SpotifyApiError } from './SpotifyPlayerService';
 import SpotifyClient from '../clients/spotify/spotify';

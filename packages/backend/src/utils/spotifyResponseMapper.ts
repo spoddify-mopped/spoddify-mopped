@@ -2,7 +2,7 @@ import {
   Album as SpotifyAlbum,
   FullArtist as SpotifyArtist,
   Track as SpotifyTrack,
-} from './../clients/spotify/spotify_response';
+} from '../clients/spotify/responses';
 
 export type Artist = {
   id: string;
