@@ -3,6 +3,7 @@ import { ConnectionOptions, createConnection } from 'typeorm';
 import App from './App';
 import Playlist from './entities/Playlist';
 import PlaylistService from './services/PlaylistService';
+import SpotifyAuth from './entities/SpotifyAuth';
 import SpotifyClient from './clients/spotify/spotify';
 import SpotifyPlayerService from './services/SpotifyPlayerService';
 import Track from './entities/Track';
@@ -22,13 +23,19 @@ export const playlistService = new PlaylistService(spotifyClient);
 
 const databaseConnectionOptions: ConnectionOptions = {
   database: 'database.sqlite',
-  entities: [Track, Playlist],
+  entities: [Track, Playlist, SpotifyAuth],
   synchronize: true,
   type: 'sqlite',
 };
 
 createConnection(databaseConnectionOptions)
-  .then(() => {
+  .then(async () => {
+    const spotifyAuth = await SpotifyAuth.findOne({ tokenType: 'refresh' });
+
+    if (spotifyAuth) {
+      spotifyClient.setRefreshToken(spotifyAuth.tokenValue);
+    }
+
     const app = new App(8080);
     app.listen();
   })

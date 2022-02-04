@@ -1,3 +1,4 @@
+import SpotifyAuth from '../entities/SpotifyAuth';
 import express from 'express';
 import { spotifyClient } from './../index';
 
@@ -32,6 +33,11 @@ export default class AuthController {
     spotifyClient
       .authorizationCodeGrant(code)
       .then(async (data) => {
+        const spotifyAuth = new SpotifyAuth();
+        spotifyAuth.tokenType = 'refresh';
+        spotifyAuth.tokenValue = data.refresh_token;
+        await spotifyAuth.save();
+
         spotifyClient.setRefreshToken(data.refresh_token);
         spotifyClient.setAccessToken(data.access_token);
         response.sendStatus(204);
