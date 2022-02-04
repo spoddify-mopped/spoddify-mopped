@@ -3,8 +3,11 @@ import './Home.css';
 import { Outlet, useLocation, useNavigate } from 'react-router';
 import React, { ReactElement, useEffect, useState } from 'react';
 
+import ApiClient from '../../clients/api';
+import { AppState } from '../../redux/reducers';
 import Aside from '../../components/Aside/Aside';
 import PlayerBar from '../../components/PlayerBar/PlayerBar';
+import { useSelector } from 'react-redux';
 
 const asideItems = [
   {
@@ -20,6 +23,8 @@ const asideItems = [
 ];
 
 const Home = (): ReactElement => {
+  const player = useSelector((state: AppState) => state.player);
+
   const [activePage, setActivePage] = useState('');
   const location = useLocation();
   const navigate = useNavigate();
@@ -57,24 +62,23 @@ const Home = (): ReactElement => {
         <Outlet />
       </div>
       <PlayerBar
-        onNext={() => {
-          console.log('onNext');
+        onNext={async () => {
+          await ApiClient.next();
         }}
-        onPlayPause={() => {
-          console.log('onPlayPause');
+        onPlayPause={async () => {
+          await ApiClient.playPause();
         }}
-        onPrevious={() => {
-          console.log('onPrevious');
+        onPrevious={async () => {
+          await ApiClient.previous();
         }}
         playerInformation={{
-          albumName: 'Album',
-          artistName: 'Artist',
-          coverImgUri:
-            'https://i.scdn.co/image/ab67616d0000485183e260c313dc1ff1f17909cf',
-          duration: 300000,
-          isPlaying: true,
-          progress: 0,
-          trackName: 'Track',
+          albumName: player.album,
+          artistName: player.artist,
+          coverImgUri: player.coverUrl,
+          duration: player.duration,
+          isPlaying: player.isPlaying,
+          progress: player.progress,
+          trackName: player.track,
         }}
       />
     </div>

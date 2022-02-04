@@ -7,13 +7,13 @@ import { ReactComponent as Prev } from '../../resources/step-backward-solid.svg'
 import styles from './PlayerBar.module.scss';
 
 export type PlayerInformation = {
-  coverImgUri: string;
-  artistName: string;
-  albumName: string;
-  trackName: string;
-  isPlaying: boolean;
-  progress: number;
-  duration: number;
+  coverImgUri?: string;
+  artistName?: string;
+  albumName?: string;
+  trackName?: string;
+  isPlaying?: boolean;
+  progress?: number;
+  duration?: number;
 };
 
 type Props = {
@@ -27,24 +27,24 @@ const PlayerBar = (props: Props): ReactElement => {
   return (
     <div className={styles.playerbar}>
       <div className={styles.infoContainer}>
-        <img src={props.playerInformation.coverImgUri} alt="Cover" />
+        <img src={props.playerInformation.coverImgUri || ''} alt="Cover" />
         <div className={styles.info}>
           <span className={styles.track}>
-            {props.playerInformation.trackName}
+            {props.playerInformation.trackName || ''}
           </span>
           <span className={styles.artist}>
-            {props.playerInformation.artistName}
+            {props.playerInformation.artistName || ''}
           </span>
         </div>
       </div>
       <div className={styles.controls}>
-        <Prev className={styles.prev} />
+        <Prev className={styles.prev} onClick={props.onPrevious} />
         {props.playerInformation.isPlaying ? (
-          <Pause className={styles.pause} />
+          <Pause className={styles.pause} onClick={props.onPlayPause} />
         ) : (
-          <Play className={styles.play} />
+          <Play className={styles.play} onClick={props.onPlayPause} />
         )}
-        <Next className={styles.next} />
+        <Next className={styles.next} onClick={props.onNext} />
       </div>
       <div className={styles.volume}></div>
     </div>
