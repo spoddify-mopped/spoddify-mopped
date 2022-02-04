@@ -1,16 +1,17 @@
-import SpotifyWebApi from 'spotify-web-api-node';
+import { Player } from '../clients/spotify/spotify_response';
+import SpotifyClient from '../clients/spotify/spotify';
 
 export class DeviceNotFoundError extends Error {}
 export class SpotifyApiError extends Error {}
 
 export default class SpotifyPlayerService {
-  private spotifyApiClient: SpotifyWebApi;
+  private spotifyClient: SpotifyClient;
   private deviceName: string;
 
   private targetDevice?: SpotifyApi.UserDevice;
 
-  public constructor(spotifyApiClient: SpotifyWebApi, deviceName: string) {
-    this.spotifyApiClient = spotifyApiClient;
+  public constructor(spotifyClient: SpotifyClient, deviceName: string) {
+    this.spotifyClient = spotifyClient;
     this.deviceName = deviceName;
   }
 
@@ -18,7 +19,7 @@ export default class SpotifyPlayerService {
     let spotifyDeviceResponse: SpotifyApi.UserDevicesResponse;
 
     try {
-      spotifyDeviceResponse = (await this.spotifyApiClient.getMyDevices()).body;
+      spotifyDeviceResponse = await this.spotifyClient.getMyDevices();
     } catch (error) {
       throw new SpotifyApiError();
     }
@@ -34,17 +35,15 @@ export default class SpotifyPlayerService {
     }
   };
 
-  public getPlayer = async (): Promise<SpotifyApi.CurrentPlaybackResponse> => {
+  public getPlayer = async (): Promise<Player> => {
     if (!this.targetDevice) {
       this.targetDevice = await this.findTargetDevice();
     }
 
-    let spotifyPlayerResponse: SpotifyApi.CurrentPlaybackResponse;
+    let spotifyPlayerResponse: Player;
 
     try {
-      spotifyPlayerResponse = (
-        await this.spotifyApiClient.getMyCurrentPlaybackState()
-      ).body;
+      spotifyPlayerResponse = await this.spotifyClient.getPlayer();
     } catch (error) {
       throw new SpotifyApiError();
     }
@@ -65,12 +64,12 @@ export default class SpotifyPlayerService {
 
     try {
       if (player.is_playing) {
-        await this.spotifyApiClient.pause({
+        await this.spotifyClient.pause({
           // eslint-disable-next-line camelcase
           device_id: this.targetDevice.id,
         });
       } else {
-        await this.spotifyApiClient.play({
+        await this.spotifyClient.play({
           // eslint-disable-next-line camelcase
           device_id: this.targetDevice.id,
         });
@@ -86,7 +85,7 @@ export default class SpotifyPlayerService {
     }
 
     try {
-      await this.spotifyApiClient.skipToNext({
+      await this.spotifyClient.next({
         // eslint-disable-next-line camelcase
         device_id: this.targetDevice.id,
       });
@@ -101,7 +100,7 @@ export default class SpotifyPlayerService {
     }
 
     try {
-      await this.spotifyApiClient.skipToPrevious({
+      await this.spotifyClient.previous({
         // eslint-disable-next-line camelcase
         device_id: this.targetDevice.id,
       });
@@ -116,7 +115,7 @@ export default class SpotifyPlayerService {
     }
 
     try {
-      await this.spotifyApiClient.play({
+      await this.spotifyClient.play({
         // eslint-disable-next-line camelcase
         device_id: this.targetDevice.id,
         uris,
@@ -132,7 +131,7 @@ export default class SpotifyPlayerService {
     }
 
     try {
-      await this.spotifyApiClient.pause({
+      await this.spotifyClient.pause({
         // eslint-disable-next-line camelcase
         device_id: this.targetDevice.id,
       });
@@ -147,7 +146,7 @@ export default class SpotifyPlayerService {
     }
 
     try {
-      await this.spotifyApiClient.addToQueue(uri, {
+      await this.spotifyClient.addToQueue(uri, {
         // eslint-disable-next-line camelcase
         device_id: this.targetDevice.id,
       });

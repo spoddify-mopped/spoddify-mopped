@@ -1,5 +1,5 @@
 import express from 'express';
-import { spotifyApi } from './../index';
+import { spotifyClient } from './../index';
 
 export default class AuthController {
   public path = '';
@@ -14,15 +14,12 @@ export default class AuthController {
     this.router.get(`${this.path}/callback`, this.callback);
   }
 
-  private login = (
-    request: express.Request,
-    response: express.Response
-  ): void => {
+  private login = (_: express.Request, response: express.Response): void => {
     response.redirect(
-      spotifyApi.createAuthorizeURL(
-        ['user-read-playback-state', 'user-modify-playback-state'],
-        'some-state'
-      )
+      spotifyClient.getOAuthUrl([
+        'user-read-playback-state',
+        'user-modify-playback-state',
+      ])
     );
   };
 
@@ -30,14 +27,17 @@ export default class AuthController {
     request: express.Request,
     response: express.Response
   ): void => {
-    const token = request.query.code as string;
+    const code = request.query.code as string;
 
-    spotifyApi.authorizationCodeGrant(token).then((body) => {
-      console.log('Got token');
-      spotifyApi.setAccessToken(body.body.access_token);
-      spotifyApi.setRefreshToken(body.body.refresh_token);
-    });
-
-    response.sendStatus(204);
+    spotifyClient
+      .authorizationCodeGrant(code)
+      .then(async (data) => {
+        spotifyClient.setRefreshToken(data.refresh_token);
+        spotifyClient.setAccessToken(data.access_token);
+        response.sendStatus(204);
+      })
+      .catch(() => {
+        response.sendStatus(503);
+      });
   };
 }

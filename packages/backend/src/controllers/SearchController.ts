@@ -1,12 +1,8 @@
-import {
-  Album,
-  Artist,
-  Track,
-  spotifyResponseMapper,
-} from '../utils/spotifyResponseMapper';
+import { Album, Artist, Track } from '../utils/spotifyResponseMapper';
 
 import express from 'express';
-import { spotifyApi } from './../index';
+import { spotifyClient } from './../index';
+import { spotifyResponseMapper } from './../utils/spotifyResponseMapper';
 
 type SearchResponse = {
   artists: Artist[];
@@ -69,19 +65,19 @@ export default class SearchController {
       return;
     }
 
-    const spotifyRes = await spotifyApi.search(query, type, {
+    const res = await spotifyClient.search(query, type, {
       limit,
     });
 
     const searchResponse: SearchResponse = {
-      albums: spotifyRes.body.albums
-        ? spotifyRes.body.albums.items.map(spotifyResponseMapper.mapToAlbum)
+      albums: res.albums
+        ? res.albums.items.map(spotifyResponseMapper.mapToAlbum)
         : [],
-      artists: spotifyRes.body.artists
-        ? spotifyRes.body.artists.items.map(spotifyResponseMapper.mapToArtist)
+      artists: res.artists
+        ? res.artists.items.map(spotifyResponseMapper.mapToArtist)
         : [],
-      tracks: spotifyRes.body.tracks
-        ? spotifyRes.body.tracks.items.map(spotifyResponseMapper.mapToTrack)
+      tracks: res.tracks
+        ? res.tracks.items.map(spotifyResponseMapper.mapToTrack)
         : [],
     };
 
@@ -94,12 +90,12 @@ export default class SearchController {
   ) => {
     const { params } = request;
 
-    const artistTopTracksResponse = await spotifyApi.getArtistTopTracks(
+    const artistTopTracksResponse = await spotifyClient.getArtistTopTracks(
       params.id,
       'DE'
     );
 
-    const tracks: Track[] = artistTopTracksResponse.body.tracks.map(
+    const tracks: Track[] = artistTopTracksResponse.tracks.map(
       spotifyResponseMapper.mapToTrack
     );
 
@@ -112,11 +108,12 @@ export default class SearchController {
   ) => {
     const { params } = request;
 
-    const albumTracksResponse = await spotifyApi.getAlbumTracks(params.id, {
+    const albumTracksResponse = await spotifyClient.getAlbumTracks(params.id, {
       limit: 50,
+      market: 'DE',
     });
 
-    const tracks: Track[] = albumTracksResponse.body.items.map(
+    const tracks: Track[] = albumTracksResponse.items.map(
       spotifyResponseMapper.mapToTrack
     );
 

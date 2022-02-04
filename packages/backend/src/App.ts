@@ -8,7 +8,7 @@ import cors from 'cors';
 import express from 'express';
 import http from 'http';
 import path from 'path';
-import { spotifyApi } from '.';
+import { spotifyClient } from './index';
 
 const socketIoCors = {
   allowedHeaders: '*',
@@ -63,16 +63,16 @@ export default class App {
       console.log(`New socket.io connection with id: ${socket.id}`);
 
       socket.on('action', () => {
-        spotifyApi.getMyCurrentPlaybackState().then((spotifyResponse) => {
+        spotifyClient.getPlayer().then((data) => {
           this.io.emit('action', {
             payload: {
-              album: spotifyResponse.body.item['album'].name,
-              artist: spotifyResponse.body.item['artists'][0].name,
-              coverUrl: spotifyResponse.body.item['album']['images'][0].url,
-              duration: spotifyResponse.body.item.duration_ms,
-              isPlaying: spotifyResponse.body.is_playing,
-              progress: spotifyResponse.body.progress_ms,
-              track: spotifyResponse.body.item.name,
+              album: data.item.album.name,
+              artist: data.item.artists.map((artist) => artist.name).join(', '),
+              coverUrl: data.item.album.images[0].url,
+              duration: data.item.duration_ms,
+              isPlaying: data.is_playing,
+              progress: data.progress_ms,
+              track: data.item.name,
             },
             type: 'WS_TO_CLIENT_SET_PLAYER_STATE',
           });

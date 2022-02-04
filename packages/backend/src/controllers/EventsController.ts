@@ -1,6 +1,6 @@
 import { Server } from 'socket.io';
 import express from 'express';
-import { spotifyApi } from './../index';
+import { spotifyClient } from './../index';
 
 export default class EventController {
   public path = '/event';
@@ -21,16 +21,16 @@ export default class EventController {
     _request: express.Request,
     response: express.Response
   ): void => {
-    spotifyApi.getMyCurrentPlaybackState().then((spotifyResponse) => {
+    spotifyClient.getPlayer().then((data) => {
       this.io.emit('action', {
         payload: {
-          album: spotifyResponse.body.item['album'].name,
-          artist: spotifyResponse.body.item['artists'][0].name,
-          coverUrl: spotifyResponse.body.item['album']['images'][0].url,
-          duration: spotifyResponse.body.item.duration_ms,
-          isPlaying: spotifyResponse.body.is_playing,
-          progress: spotifyResponse.body.progress_ms,
-          track: spotifyResponse.body.item.name,
+          album: data.item.album.name,
+          artist: data.item.artists.map((artist) => artist.name).join(', '),
+          coverUrl: data.item.album.images[0].url,
+          duration: data.item.duration_ms,
+          isPlaying: data.is_playing,
+          progress: data.progress_ms,
+          track: data.item.name,
         },
         type: 'WS_TO_CLIENT_SET_PLAYER_STATE',
       });

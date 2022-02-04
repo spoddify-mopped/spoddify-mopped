@@ -1,3 +1,9 @@
+import {
+  Album as SpotifyAlbum,
+  FullArtist as SpotifyArtist,
+  Track as SpotifyTrack,
+} from './../clients/spotify/spotify_response';
+
 export type Artist = {
   id: string;
   name: string;
@@ -20,22 +26,20 @@ export type Track = {
 };
 
 export const spotifyResponseMapper = {
-  mapToAlbum: (spotifyAlbum: SpotifyApi.AlbumObjectFull): Album => ({
+  mapToAlbum: (spotifyAlbum: SpotifyAlbum): Album => ({
     artists: spotifyAlbum.artists.map(spotifyResponseMapper.mapToArtist),
     id: spotifyAlbum.id,
     imageUrl: spotifyAlbum.images?.[0]?.url,
     name: spotifyAlbum.name,
   }),
-  mapToArtist: (spotifyArtist: SpotifyApi.ArtistObjectFull): Artist => ({
+  mapToArtist: (spotifyArtist: SpotifyArtist): Artist => ({
     id: spotifyArtist.id,
     imageUrl: spotifyArtist.images?.[0]?.url,
     name: spotifyArtist.name,
   }),
-  mapToTrack: (spotifyTrack: SpotifyApi.TrackObjectFull): Track => ({
+  mapToTrack: (spotifyTrack: SpotifyTrack): Track => ({
     album: spotifyTrack.album
-      ? spotifyResponseMapper.mapToAlbum(
-          spotifyTrack.album as SpotifyApi.AlbumObjectFull
-        )
+      ? spotifyResponseMapper.mapToAlbum(spotifyTrack.album)
       : undefined,
     artists: spotifyTrack.artists.map(spotifyResponseMapper.mapToArtist),
     id: spotifyTrack.id,

@@ -1,14 +1,15 @@
+import { FullArtist } from '../clients/spotify/spotify_response';
 import Playlist from '../entities/Playlist';
 import { SpotifyApiError } from './SpotifyPlayerService';
-import SpotifyWebApi from 'spotify-web-api-node';
+import SpotifyClient from '../clients/spotify/spotify';
 import Track from '../entities/Track';
 import { spotifyPlayerService } from '..';
 
 export default class PlaylistService {
-  private spotifyApiClient: SpotifyWebApi;
+  private spotifyClient: SpotifyClient;
 
-  public constructor(spotifyApiClient: SpotifyWebApi) {
-    this.spotifyApiClient = spotifyApiClient;
+  public constructor(spotifyClient: SpotifyClient) {
+    this.spotifyClient = spotifyClient;
   }
 
   public sortInTrack = async (spotifyTrackId: string): Promise<void> => {
@@ -20,16 +21,14 @@ export default class PlaylistService {
       await track.save();
     }
 
-    let spotifyArtist: SpotifyApi.SingleArtistResponse;
+    let spotifyArtist: FullArtist;
 
     try {
-      const spotifyTrack = (
-        await this.spotifyApiClient.getTrack(spotifyTrackId)
-      ).body;
+      const spotifyTrack = await this.spotifyClient.getTrack(spotifyTrackId);
 
-      spotifyArtist = (
-        await this.spotifyApiClient.getArtist(spotifyTrack.artists[0].id)
-      ).body;
+      spotifyArtist = await this.spotifyClient.getArtist(
+        spotifyTrack.artists[0].id
+      );
     } catch (error) {
       throw new SpotifyApiError();
     }
@@ -55,11 +54,12 @@ export default class PlaylistService {
   };
 
   public sortInAlbum = async (spotifyAlbumId: string): Promise<void> => {
-    const spotifyAlbum = (
-      await this.spotifyApiClient.getAlbumTracks(spotifyAlbumId, {
+    const spotifyAlbum = await this.spotifyClient.getAlbumTracks(
+      spotifyAlbumId,
+      {
         limit: 50,
-      })
-    ).body;
+      }
+    );
 
     for (const track of spotifyAlbum.items) {
       await this.sortInTrack(track.id);
