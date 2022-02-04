@@ -18,7 +18,9 @@ const SearchCoverView = (props: Props): ReactElement => {
         {item.imageUrl ? (
           <img alt="" src={item.imageUrl} />
         ) : (
-          <div className="coverViewImgReplacement"></div>
+          <div className="coverViewImgReplacement">
+            <span>No Image</span>
+          </div>
         )}
         {'artists' in item ? (
           <span>{item.artists.map((artist) => artist.name).join(', ')}</span>
