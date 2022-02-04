@@ -8,6 +8,7 @@ import { Server } from 'socket.io';
 import SpotifyClient from './clients/spotify/spotify';
 import SpotifyPlayerService from './services/player';
 import SpotifySearchService from './services/search';
+import WebsocketHandler from './ws/handler';
 import cors from 'cors';
 import express from 'express';
 import http from 'http';
@@ -25,13 +26,13 @@ export default class App {
   private server: http.Server;
   private io: Server;
 
+  private websocketHandler: WebsocketHandler;
+
   private searchController: SearchController;
   private playlistController: PlaylistController;
   private playerController: PlayerController;
   private eventController: EventController;
   private authController: AuthController;
-
-  private spotifyClient: SpotifyClient;
 
   public constructor(
     spotifySearchService: SpotifySearchService,
@@ -41,14 +42,14 @@ export default class App {
   ) {
     this.app = express();
     this.server = http.createServer(this.app);
-    this.initializeSocketIo();
 
-    this.spotifyClient = spotifyClient;
+    this.websocketHandler = new WebsocketHandler(spotifyClient);
+    this.initializeSocketIo();
 
     this.searchController = new SearchController(spotifySearchService);
     this.playlistController = new PlaylistController(playlistService);
     this.playerController = new PlayerController(spotifyPlayerService);
-    this.eventController = new EventController(this.io, spotifyClient);
+    this.eventController = new EventController(this.io, this.websocketHandler);
     this.authController = new AuthController(spotifyClient);
 
     this.initializeMiddleware();
@@ -83,22 +84,11 @@ export default class App {
 
     this.io.on('connection', (socket) => {
       console.log(`New socket.io connection with id: ${socket.id}`);
-
-      socket.on('action', () => {
-        this.spotifyClient.getPlayer().then((data) => {
-          this.io.emit('action', {
-            payload: {
-              album: data.item.album.name,
-              artist: data.item.artists.map((artist) => artist.name).join(', '),
-              coverUrl: data.item.album.images[0].url,
-              duration: data.item.duration_ms,
-              isPlaying: data.is_playing,
-              progress: data.progress_ms,
-              track: data.item.name,
-            },
-            type: 'WS_TO_CLIENT_SET_PLAYER_STATE',
-          });
-        });
+      socket.on('action', (action) => {
+        const handler = this.websocketHandler.getHandler(action.type);
+        if (handler) {
+          handler(this.io);
+        }
       });
     });
   }
