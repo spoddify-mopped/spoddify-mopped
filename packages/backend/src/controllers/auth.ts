@@ -1,4 +1,4 @@
-import SpotifyAuth from '../entities/SpotifyAuth';
+import SpotifyAuth from '../entities/spotify_auth';
 import express from 'express';
 import { spotifyClient } from './../index';
 

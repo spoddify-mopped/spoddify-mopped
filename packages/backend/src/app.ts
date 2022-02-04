@@ -1,8 +1,8 @@
-import AuthController from './controllers/AuthController';
-import EventController from './controllers/EventsController';
-import PlayerController from './controllers/PlayerController';
-import PlaylistController from './controllers/PlaylistController';
-import SearchController from './controllers/SearchController';
+import AuthController from './controllers/auth';
+import EventController from './controllers/event';
+import PlayerController from './controllers/player';
+import PlaylistController from './controllers/playlist';
+import SearchController from './controllers/search';
 import { Server } from 'socket.io';
 import cors from 'cors';
 import express from 'express';

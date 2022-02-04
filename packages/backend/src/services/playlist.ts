@@ -1,8 +1,8 @@
 import { FullArtist } from '../clients/spotify/responses';
-import Playlist from '../entities/Playlist';
-import { SpotifyApiError } from './SpotifyPlayerService';
+import Playlist from '../entities/playlist';
+import { SpotifyApiError } from './player';
 import SpotifyClient from '../clients/spotify/spotify';
-import Track from '../entities/Track';
+import Track from '../entities/track';
 import { spotifyPlayerService } from '..';
 
 export default class PlaylistService {

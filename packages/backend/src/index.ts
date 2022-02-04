@@ -1,12 +1,12 @@
 import { ConnectionOptions, createConnection } from 'typeorm';
 
-import App from './App';
-import Playlist from './entities/Playlist';
-import PlaylistService from './services/PlaylistService';
-import SpotifyAuth from './entities/SpotifyAuth';
+import App from './app';
+import Playlist from './entities/playlist';
+import PlaylistService from './services/playlist';
+import SpotifyAuth from './entities/spotify_auth';
 import SpotifyClient from './clients/spotify/spotify';
-import SpotifyPlayerService from './services/SpotifyPlayerService';
-import Track from './entities/Track';
+import SpotifyPlayerService from './services/player';
+import Track from './entities/track';
 
 export const spotifyClient = new SpotifyClient({
   clientId: '82cee3b12c81432bb0fc7efddffd94d4',

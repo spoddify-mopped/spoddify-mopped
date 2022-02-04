@@ -1,8 +1,12 @@
-import { Album, Artist, Track } from '../utils/spotifyResponseMapper';
+import {
+  Album,
+  Artist,
+  Track,
+  spotifyResponseMapper,
+} from '../utils/spotify_response_mapper';
 
 import express from 'express';
 import { spotifyClient } from './../index';
-import { spotifyResponseMapper } from './../utils/spotifyResponseMapper';
 
 type SearchResponse = {
   artists: Artist[];

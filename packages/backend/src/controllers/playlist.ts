@@ -1,4 +1,4 @@
-import { DeviceNotFoundError } from '../services/SpotifyPlayerService';
+import { DeviceNotFoundError } from '../services/player';
 import express from 'express';
 import { playlistService } from './../index';
 

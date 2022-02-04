@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import Track from './Track';
+import Track from './track';
 
 @Entity()
 export default class Playlist extends BaseEntity {
