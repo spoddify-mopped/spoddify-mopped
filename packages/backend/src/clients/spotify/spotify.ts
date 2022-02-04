@@ -257,7 +257,7 @@ export default class SpotifyClient {
   ): Promise<void> => {
     await this.tryWithToken<UserDevicesResponse>(
       async () =>
-        await this.httpClient.put(`/me/player/queue`, {
+        await this.httpClient.post(`/me/player/queue`, {
           params: {
             uri,
             ...options,
@@ -269,7 +269,7 @@ export default class SpotifyClient {
   public next = async (options?: DeviceOptions): Promise<void> => {
     await this.tryWithToken<UserDevicesResponse>(
       async () =>
-        await this.httpClient.put(`/me/player/next`, {
+        await this.httpClient.post(`/me/player/next`, {
           params: options,
         })
     );
@@ -278,7 +278,7 @@ export default class SpotifyClient {
   public previous = async (options?: DeviceOptions): Promise<void> => {
     await this.tryWithToken<UserDevicesResponse>(
       async () =>
-        await this.httpClient.put(`/me/player/previous`, {
+        await this.httpClient.post(`/me/player/previous`, {
           params: options,
         })
     );
