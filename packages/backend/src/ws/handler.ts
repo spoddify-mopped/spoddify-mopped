@@ -1,5 +1,9 @@
-import SpotifyClient from '../clients/spotify/spotify';
+import SpotifyPlayerService, { DeviceNotFoundError } from '../services/player';
+
+import Logger from '../logger/logger';
 import io from 'socket.io';
+
+const LOGGER = Logger.create(__filename);
 
 const WS_EVENT_NAME = 'action';
 
@@ -13,11 +17,14 @@ type Action<T = unknown> = {
 export default class WebsocketHandler {
   private handlers: Record<string, SocketHandler> = {};
 
-  private spotifyClient: SpotifyClient;
+  private spotifyPlayerService: SpotifyPlayerService;
   private io: io.Server;
 
-  public constructor(spotifyClient: SpotifyClient, io: io.Server) {
-    this.spotifyClient = spotifyClient;
+  public constructor(
+    spotifyPlayerService: SpotifyPlayerService,
+    io: io.Server
+  ) {
+    this.spotifyPlayerService = spotifyPlayerService;
     this.io = io;
 
     this.initializeHandlers();
@@ -39,23 +46,33 @@ export default class WebsocketHandler {
   }
 
   public sendPlayerState = async (): Promise<void> => {
-    const player = await this.spotifyClient.getPlayer();
-    if (!player) {
-      // TODO: Send empty player websocket
-      return;
-    }
+    try {
+      const player = await this.spotifyPlayerService.getPlayer();
 
-    this.io.emit(WS_EVENT_NAME, {
-      payload: {
-        album: player.item.album.name,
-        artist: player.item.artists.map((artist) => artist.name).join(', '),
-        coverUrl: player.item.album.images[0].url,
-        duration: player.item.duration_ms,
-        isPlaying: player.is_playing,
-        progress: player.progress_ms,
-        track: player.item.name,
-      },
-      type: 'WS_TO_CLIENT_SET_PLAYER_STATE',
-    });
+      if (!player) {
+        // TODO: Send empty player websocket
+        return;
+      }
+
+      this.io.emit(WS_EVENT_NAME, {
+        payload: {
+          album: player.item.album.name,
+          artist: player.item.artists.map((artist) => artist.name).join(', '),
+          coverUrl: player.item.album.images[0].url,
+          duration: player.item.duration_ms,
+          isPlaying: player.is_playing,
+          progress: player.progress_ms,
+          track: player.item.name,
+        },
+        type: 'WS_TO_CLIENT_SET_PLAYER_STATE',
+      });
+    } catch (error) {
+      if (error instanceof DeviceNotFoundError) {
+        // TODO: Send empty player websocket
+        return;
+      }
+
+      LOGGER.error(error);
+    }
   };
 }
