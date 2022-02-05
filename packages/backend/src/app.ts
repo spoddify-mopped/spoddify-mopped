@@ -1,5 +1,6 @@
 import AuthController from './controllers/auth';
 import EventController from './controllers/event';
+import Logger from './logger/logger';
 import PlayerController from './controllers/player';
 import PlaylistController from './controllers/playlist';
 import PlaylistService from './services/playlist';
@@ -13,6 +14,8 @@ import cors from 'cors';
 import express from 'express';
 import http from 'http';
 import path from 'path';
+
+const LOGGER = Logger.create(__filename);
 
 const socketIoCors = {
   allowedHeaders: '*',
@@ -84,14 +87,14 @@ export default class App {
     this.websocketHandler = new WebsocketHandler(spotifyClient, this.io);
 
     this.io.on('connection', (socket) => {
-      console.log(`New socket.io connection with id: ${socket.id}`);
+      LOGGER.info(`New socket.io connection with id: ${socket.id}`);
       socket.on('action', this.websocketHandler.handle);
     });
   }
 
   public listen(port: number): void {
     this.server.listen(port, () => {
-      console.info(`Server is running at http://localhost:${port}`);
+      LOGGER.info(`Server is running at http://localhost:${port}`);
     });
   }
 }

@@ -1,6 +1,7 @@
 import { ConnectionOptions, createConnection } from 'typeorm';
 
 import App from './app';
+import Logger from './logger/logger';
 import Playlist from './entities/playlist';
 import PlaylistService from './services/playlist';
 import SpotifyAuth from './entities/spotify_auth';
@@ -8,6 +9,10 @@ import SpotifyClient from './clients/spotify/spotify';
 import SpotifyPlayerService from './services/player';
 import SpotifySearchService from './services/search';
 import Track from './entities/track';
+
+const LOGGER = Logger.create(__filename);
+
+LOGGER.info(`Starting SpoddifyMopped on PID: ${process.pid}`);
 
 const spotifyClient = new SpotifyClient({
   clientId: '82cee3b12c81432bb0fc7efddffd94d4',
@@ -49,4 +54,4 @@ createConnection(databaseConnectionOptions)
     );
     app.listen(8080);
   })
-  .catch((error) => console.error('TypeORM connection error: ', error.message));
+  .catch((error) => LOGGER.error('TypeORM connection error: ', error.message));
