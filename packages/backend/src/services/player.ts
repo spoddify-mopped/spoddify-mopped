@@ -1,4 +1,4 @@
-import { Player } from '../clients/spotify/responses';
+import { Player } from '../clients/spotify/types/player';
 import SpotifyClient from '../clients/spotify/spotify';
 
 export class DeviceNotFoundError extends Error {}
@@ -35,17 +35,21 @@ export default class SpotifyPlayerService {
     }
   };
 
-  public getPlayer = async (): Promise<Player> => {
+  public getPlayer = async (): Promise<Player | undefined> => {
     if (!this.targetDevice) {
       this.targetDevice = await this.findTargetDevice();
     }
 
-    let spotifyPlayerResponse: Player;
+    let spotifyPlayerResponse: Player | undefined;
 
     try {
       spotifyPlayerResponse = await this.spotifyClient.getPlayer();
     } catch (error) {
       throw new SpotifyApiError();
+    }
+
+    if (!spotifyPlayerResponse) {
+      return spotifyPlayerResponse;
     }
 
     if (spotifyPlayerResponse.device.id !== this.targetDevice.id) {

@@ -1,12 +1,12 @@
 import {
   AlbumTracksResponse,
+  ArtistResponse,
   ArtistTopTracksResponse,
   AuthorizationCodeGrantResponse,
-  FullArtist,
-  Player,
+  PlayerResponse,
   RefreshTokenResponse,
-  SearchResult,
-  Track,
+  SearchResponse,
+  TrackResponse,
   UserDevicesResponse,
 } from './responses';
 import {
@@ -132,8 +132,8 @@ export default class SpotifyClient {
     }
   };
 
-  public getPlayer = async (): Promise<Player | undefined> => {
-    const response = await this.tryWithToken<Player>(
+  public getPlayer = async (): Promise<PlayerResponse | undefined> => {
+    const response = await this.tryWithToken<PlayerResponse>(
       async () => await this.httpClient.get('/me/player')
     );
 
@@ -152,8 +152,8 @@ export default class SpotifyClient {
     query: string,
     types: string[],
     options: CombinedOptions = {}
-  ): Promise<SearchResult> => {
-    const response = await this.tryWithToken<SearchResult>(
+  ): Promise<SearchResponse> => {
+    const response = await this.tryWithToken<SearchResponse>(
       async () =>
         await this.httpClient.get('/search', {
           params: {
@@ -200,8 +200,8 @@ export default class SpotifyClient {
   public getTrack = async (
     id: string,
     options?: MarketOptions
-  ): Promise<Track> => {
-    const response = await this.tryWithToken<Track>(
+  ): Promise<TrackResponse> => {
+    const response = await this.tryWithToken<TrackResponse>(
       async () =>
         await this.httpClient.get(`/tracks/${id}`, {
           params: options,
@@ -211,8 +211,8 @@ export default class SpotifyClient {
     return response.data;
   };
 
-  public getArtist = async (id: string): Promise<FullArtist> => {
-    const response = await this.tryWithToken<FullArtist>(
+  public getArtist = async (id: string): Promise<ArtistResponse> => {
+    const response = await this.tryWithToken<ArtistResponse>(
       async () => await this.httpClient.get(`/artists/${id}`)
     );
 
@@ -228,7 +228,7 @@ export default class SpotifyClient {
   };
 
   public pause = async (options?: DeviceOptions): Promise<void> => {
-    await this.tryWithToken<UserDevicesResponse>(
+    await this.tryWithToken(
       async () =>
         await this.httpClient.put(`/me/player/pause`, {
           params: options,
@@ -241,7 +241,7 @@ export default class SpotifyClient {
     const device_id = options.device_id;
     delete options['device_id'];
 
-    await this.tryWithToken<UserDevicesResponse>(
+    await this.tryWithToken(
       async () =>
         await this.httpClient.put(`/me/player/play`, options, {
           params: {
@@ -256,7 +256,7 @@ export default class SpotifyClient {
     uri: string,
     options?: DeviceOptions
   ): Promise<void> => {
-    await this.tryWithToken<UserDevicesResponse>(
+    await this.tryWithToken(
       async () =>
         await this.httpClient.post(`/me/player/queue`, {
           params: {
@@ -268,7 +268,7 @@ export default class SpotifyClient {
   };
 
   public next = async (options?: DeviceOptions): Promise<void> => {
-    await this.tryWithToken<UserDevicesResponse>(
+    await this.tryWithToken(
       async () =>
         await this.httpClient.post(`/me/player/next`, {
           params: options,
@@ -277,7 +277,7 @@ export default class SpotifyClient {
   };
 
   public previous = async (options?: DeviceOptions): Promise<void> => {
-    await this.tryWithToken<UserDevicesResponse>(
+    await this.tryWithToken(
       async () =>
         await this.httpClient.post(`/me/player/previous`, {
           params: options,

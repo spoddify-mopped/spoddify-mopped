@@ -1,10 +1,7 @@
-import {
-  Album as SpotifyAlbum,
-  FullArtist as SpotifyArtist,
-  Track as SpotifyTrack,
-} from '../clients/spotify/responses';
-
+import { Album as SpotifyAlbum } from '../clients/spotify/types/album';
+import { Artist as SpotifyArtist } from '../clients/spotify/types/artist';
 import SpotifyClient from '../clients/spotify/spotify';
+import { Track as SpotifyTrack } from '../clients/spotify/types/track';
 
 type Artist = {
   id: string;

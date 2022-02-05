@@ -1,6 +1,6 @@
 import SpotifyPlayerService, { SpotifyApiError } from './player';
 
-import { FullArtist } from '../clients/spotify/responses';
+import { Artist } from '../clients/spotify/types/artist';
 import Playlist from '../entities/playlist';
 import SpotifyClient from '../clients/spotify/spotify';
 import Track from '../entities/track';
@@ -26,7 +26,7 @@ export default class PlaylistService {
       await track.save();
     }
 
-    let spotifyArtist: FullArtist;
+    let spotifyArtist: Artist;
 
     try {
       const spotifyTrack = await this.spotifyClient.getTrack(spotifyTrackId);

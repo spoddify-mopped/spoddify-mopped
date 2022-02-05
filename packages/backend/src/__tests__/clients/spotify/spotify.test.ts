@@ -1,14 +1,16 @@
+/* eslint-disable camelcase */
+
 import {
   AlbumTracksResponse,
+  ArtistResponse,
   ArtistTopTracksResponse,
-  FullArtist,
-  SearchResult,
-  Track,
-} from '../../../clients/spotify/responses';
+  SearchResponse,
+  TrackResponse,
+  UserDevicesResponse,
+} from './../../../clients/spotify/responses';
 import axios, { AxiosError } from 'axios';
 
 import SpotifyClient from '../../../clients/spotify/spotify';
-import { UserDevicesResponse } from './../../../clients/spotify/responses';
 
 const testConfig = {
   clientId: 'CLIENT_ID',
@@ -66,14 +68,10 @@ describe('getOAuthUrl', () => {
 describe('authorizationCodeGrant', () => {
   it('returns a token pair for a valid request', async () => {
     const expectedResponse = {
-      // eslint-disable-next-line camelcase
       access_token: 'ACCESS_TOKEN',
-      // eslint-disable-next-line camelcase
       expires_in: 3600,
-      // eslint-disable-next-line camelcase
       refresh_token: 'REFRESH_TOKEN',
       scope: 'SCOPE',
-      // eslint-disable-next-line camelcase
       token_type: 'Bearer',
     };
 
@@ -132,13 +130,9 @@ describe('authorizationCodeGrant', () => {
 describe('requestRefreshedToken', () => {
   it('returns a access token for a valid request', async () => {
     const expectedResponse = {
-      // eslint-disable-next-line camelcase
       access_token: 'ACCESS_TOKEN',
-      // eslint-disable-next-line camelcase
       expires_in: 3600,
-      // eslint-disable-next-line camelcase
       scope: 'SCOPE',
-      // eslint-disable-next-line camelcase
       token_type: 'Bearer',
     };
 
@@ -237,7 +231,6 @@ describe('tryWithToken implementation', () => {
         if (url === 'https://accounts.spotify.com/api/token') {
           return Promise.resolve({
             data: {
-              // eslint-disable-next-line camelcase
               access_token: 'TOKEN',
             },
             status: 200,
@@ -330,7 +323,7 @@ describe('getPlayer', () => {
 
 describe('getPlayer', () => {
   it('succeeds with the given parameters and a single type', async () => {
-    const expectedResponse: SearchResult = {
+    const expectedResponse: SearchResponse = {
       albums: undefined,
       artists: undefined,
       tracks: undefined,
@@ -356,7 +349,7 @@ describe('getPlayer', () => {
   });
 
   it('succeeds with the given parameters and multiple types', async () => {
-    const expectedResponse: SearchResult = {
+    const expectedResponse: SearchResponse = {
       albums: undefined,
       artists: undefined,
       tracks: undefined,
@@ -445,31 +438,25 @@ describe('getAlbumTracks', () => {
 
 describe('getTrack', () => {
   it('succeeds with the given parameters', async () => {
-    const expectedResponse: Track = {
+    const expectedResponse: TrackResponse = {
       album: undefined,
       artists: [],
-      // eslint-disable-next-line camelcase
       available_markets: [],
-      // eslint-disable-next-line camelcase
       disc_number: 0,
-      // eslint-disable-next-line camelcase
       duration_ms: 0,
       explicit: false,
-      // eslint-disable-next-line camelcase
       external_ids: undefined,
-      // eslint-disable-next-line camelcase
       external_urls: undefined,
       href: '',
       id: '',
-      // eslint-disable-next-line camelcase
       is_local: false,
+      is_playable: true,
       name: '',
       popularity: 0,
-      // eslint-disable-next-line camelcase
       preview_url: '',
-      // eslint-disable-next-line camelcase
+      restrictions: undefined,
       track_number: 0,
-      type: '',
+      type: 'track',
       uri: '',
     };
 
@@ -496,8 +483,7 @@ describe('getTrack', () => {
 
 describe('getArtist', () => {
   it('succeeds with the given parameters', async () => {
-    const expectedResponse: FullArtist = {
-      // eslint-disable-next-line camelcase
+    const expectedResponse: ArtistResponse = {
       external_urls: undefined,
       followers: undefined,
       genres: [],
@@ -505,7 +491,7 @@ describe('getArtist', () => {
       id: '',
       images: [],
       name: '',
-      type: '',
+      type: 'artist',
       uri: '',
     };
 
@@ -555,13 +541,11 @@ describe('pause', () => {
 
     const spotifyClient = new SpotifyClient(testConfig);
     await spotifyClient.pause({
-      // eslint-disable-next-line camelcase
       device_id: 'id',
     });
 
     expect(axiosSpy).toBeCalledWith(`/me/player/pause`, {
       params: {
-        // eslint-disable-next-line camelcase
         device_id: 'id',
       },
     });
@@ -578,7 +562,6 @@ describe('play', () => {
 
     const spotifyClient = new SpotifyClient(testConfig);
     await spotifyClient.play({
-      // eslint-disable-next-line camelcase
       device_id: 'id',
     });
 
@@ -587,7 +570,6 @@ describe('play', () => {
       {},
       {
         params: {
-          // eslint-disable-next-line camelcase
           device_id: 'id',
         },
       }
@@ -602,24 +584,20 @@ describe('play', () => {
     );
 
     const expectedBody = {
-      // eslint-disable-next-line camelcase
       context_uri: '',
       offset: { position: 0 },
-      // eslint-disable-next-line camelcase
       position_ms: 0,
       uris: ['URI'],
     };
 
     const spotifyClient = new SpotifyClient(testConfig);
     await spotifyClient.play({
-      // eslint-disable-next-line camelcase
       device_id: 'id',
       ...expectedBody,
     });
 
     expect(axiosSpy).toBeCalledWith(`/me/player/play`, expectedBody, {
       params: {
-        // eslint-disable-next-line camelcase
         device_id: 'id',
       },
     });
@@ -636,13 +614,11 @@ describe('addToQueue', () => {
 
     const spotifyClient = new SpotifyClient(testConfig);
     await spotifyClient.addToQueue('URI', {
-      // eslint-disable-next-line camelcase
       device_id: 'id',
     });
 
     expect(axiosSpy).toBeCalledWith(`/me/player/queue`, {
       params: {
-        // eslint-disable-next-line camelcase
         device_id: 'id',
         uri: 'URI',
       },
@@ -660,13 +636,11 @@ describe('next', () => {
 
     const spotifyClient = new SpotifyClient(testConfig);
     await spotifyClient.next({
-      // eslint-disable-next-line camelcase
       device_id: 'id',
     });
 
     expect(axiosSpy).toBeCalledWith(`/me/player/next`, {
       params: {
-        // eslint-disable-next-line camelcase
         device_id: 'id',
       },
     });
@@ -683,13 +657,11 @@ describe('previous', () => {
 
     const spotifyClient = new SpotifyClient(testConfig);
     await spotifyClient.previous({
-      // eslint-disable-next-line camelcase
       device_id: 'id',
     });
 
     expect(axiosSpy).toBeCalledWith(`/me/player/previous`, {
       params: {
-        // eslint-disable-next-line camelcase
         device_id: 'id',
       },
     });
