@@ -25,7 +25,7 @@ export default class SpotifyPlayerService {
     }
 
     const device = spotifyDeviceResponse.devices.find(
-      (device) => device.name === this.deviceName
+      (device) => device && device.name === this.deviceName
     );
 
     if (device) {
