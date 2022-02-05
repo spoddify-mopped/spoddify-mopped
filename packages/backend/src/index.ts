@@ -9,20 +9,24 @@ import SpotifyClient from './clients/spotify/spotify';
 import SpotifyPlayerService from './services/player';
 import SpotifySearchService from './services/search';
 import Track from './entities/track';
+import config from 'nconf';
+import initializeConfig from './config/config';
+
+initializeConfig();
 
 const LOGGER = Logger.create(__filename);
 
 LOGGER.info(`Starting SpoddifyMopped on PID: ${process.pid}`);
 
 const spotifyClient = new SpotifyClient({
-  clientId: '82cee3b12c81432bb0fc7efddffd94d4',
-  clientSecret: '88d72d2562cb41afa7c7f05c1fbd6cbb',
-  redirectUri: 'http://localhost:8080/api/callback',
+  clientId: config.get('spotify:clientId'),
+  clientSecret: config.get('spotify:clientSecret'),
+  redirectUri: `${config.get('spotify:redirectBaseUri')}/api/callback`,
 });
 
 const spotifyPlayerService = new SpotifyPlayerService(
   spotifyClient,
-  'SpoddifyMopped'
+  config.get('app:name')
 );
 
 const playlistService = new PlaylistService(
@@ -32,7 +36,7 @@ const playlistService = new PlaylistService(
 const spotifySearchService = new SpotifySearchService(spotifyClient);
 
 const databaseConnectionOptions: ConnectionOptions = {
-  database: 'database.sqlite',
+  database: `${config.get('server:dataPath')}/database.sqlite`,
   entities: [Track, Playlist, SpotifyAuth],
   synchronize: true,
   type: 'sqlite',

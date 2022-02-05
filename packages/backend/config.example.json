@@ -1,0 +1,14 @@
+{
+  "app": {
+    "name": "SpoddifyMopped"
+  },
+  "server": {
+    "port": 8080,
+    "dataPath": "./"
+  },
+  "spotify": {
+    "clientId": "<YOUR_SPOTIFY_CLIENT_ID>",
+    "clientSecret": "<YOUR_SPOTIFY_CLIENT_SECRET>",
+    "redirectBaseUri": "http://localhost:8080"
+  }
+}
