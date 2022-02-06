@@ -14,8 +14,25 @@ export default class ArtistController {
   }
 
   public initializeRoutes(): void {
+    this.router.get(`${this.path}/:id`, this.getArtist);
     this.router.get(`${this.path}/:id/tracks`, this.getArtistTopTracks);
   }
+
+  private getArtist = async (
+    request: express.Request,
+    response: express.Response
+  ) => {
+    const { params } = request;
+
+    await this.spotifySearchService
+      .getArtist(params.id)
+      .then((artist) => {
+        response.send(artist);
+      })
+      .catch(() => {
+        response.sendStatus(503);
+      });
+  };
 
   private getArtistTopTracks = async (
     request: express.Request,
