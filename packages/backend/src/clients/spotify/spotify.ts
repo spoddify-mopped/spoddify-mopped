@@ -297,4 +297,20 @@ export default class SpotifyClient {
 
     return response.data;
   };
+
+  public seek = async (
+    position: number,
+    options?: DeviceOptions
+  ): Promise<void> => {
+    await this.tryWithToken(
+      async () =>
+        await this.httpClient.put(`/me/player/seek`, {
+          params: {
+            // eslint-disable-next-line camelcase
+            position_ms: position,
+            ...options,
+          },
+        })
+    );
+  };
 }

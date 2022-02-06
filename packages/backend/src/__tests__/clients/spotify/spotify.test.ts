@@ -692,3 +692,25 @@ describe('getTracks', () => {
     expect(response).toBe(expectedResponse);
   });
 });
+
+describe('seek', () => {
+  it('succeeds with the given parameters', async () => {
+    const axiosSpy = jest.spyOn(axios, 'put').mockImplementation(() =>
+      Promise.resolve({
+        status: 204,
+      })
+    );
+
+    const spotifyClient = new SpotifyClient(testConfig);
+    await spotifyClient.seek(10000, {
+      device_id: 'id',
+    });
+
+    expect(axiosSpy).toBeCalledWith(`/me/player/seek`, {
+      params: {
+        device_id: 'id',
+        position_ms: 10000,
+      },
+    });
+  });
+});
