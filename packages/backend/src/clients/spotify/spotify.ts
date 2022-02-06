@@ -17,6 +17,7 @@ import {
 } from './options';
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
+import { Album } from './types/album';
 import Logger from '../../logger/logger';
 import qs from 'qs';
 
@@ -312,5 +313,19 @@ export default class SpotifyClient {
           },
         })
     );
+  };
+
+  public getAlbum = async (
+    id: string,
+    options?: MarketOptions
+  ): Promise<Album> => {
+    const response = await this.tryWithToken<Album>(
+      async () =>
+        await this.httpClient.get(`/albums/${id}`, {
+          params: options,
+        })
+    );
+
+    return response.data;
   };
 }

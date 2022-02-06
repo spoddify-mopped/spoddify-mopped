@@ -10,6 +10,7 @@ import {
 } from './../../../clients/spotify/responses';
 import axios, { AxiosError } from 'axios';
 
+import { Album } from '../../../clients/spotify/types/album';
 import SpotifyClient from '../../../clients/spotify/spotify';
 
 const testConfig = {
@@ -710,6 +711,47 @@ describe('seek', () => {
       params: {
         device_id: 'id',
         position_ms: 10000,
+      },
+    });
+  });
+});
+
+describe('getAlbum', () => {
+  it('succeeds with the given parameters', async () => {
+    const expectedResponse: Album = {
+      album_type: 'album',
+      artists: [],
+      available_markets: [],
+      external_urls: undefined,
+      href: '',
+      id: '',
+      images: [],
+      name: '',
+      release_date: '',
+      release_date_precision: 'day',
+      restrictions: undefined,
+      total_tracks: 0,
+      tracks: [],
+      type: 'album',
+      uri: '',
+    };
+
+    const axiosSpy = jest.spyOn(axios, 'get').mockImplementation(() =>
+      Promise.resolve({
+        data: expectedResponse,
+        status: 200,
+      })
+    );
+
+    const spotifyClient = new SpotifyClient(testConfig);
+    const response = await spotifyClient.getAlbum('id', {
+      market: 'DE',
+    });
+
+    expect(response).toBe(expectedResponse);
+    expect(axiosSpy).toBeCalledWith(`/albums/id`, {
+      params: {
+        market: 'DE',
       },
     });
   });
