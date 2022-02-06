@@ -230,7 +230,7 @@ export default class SpotifyClient {
   public pause = async (options?: DeviceOptions): Promise<void> => {
     await this.tryWithToken(
       async () =>
-        await this.httpClient.put(`/me/player/pause`, {
+        await this.httpClient.put(`/me/player/pause`, null, {
           params: options,
         })
     );
@@ -258,7 +258,7 @@ export default class SpotifyClient {
   ): Promise<void> => {
     await this.tryWithToken(
       async () =>
-        await this.httpClient.post(`/me/player/queue`, {
+        await this.httpClient.post(`/me/player/queue`, null, {
           params: {
             uri,
             ...options,
@@ -270,7 +270,7 @@ export default class SpotifyClient {
   public next = async (options?: DeviceOptions): Promise<void> => {
     await this.tryWithToken(
       async () =>
-        await this.httpClient.post(`/me/player/next`, {
+        await this.httpClient.post(`/me/player/next`, null, {
           params: options,
         })
     );
@@ -279,7 +279,7 @@ export default class SpotifyClient {
   public previous = async (options?: DeviceOptions): Promise<void> => {
     await this.tryWithToken(
       async () =>
-        await this.httpClient.post(`/me/player/previous`, {
+        await this.httpClient.post(`/me/player/previous`, null, {
           params: options,
         })
     );
@@ -304,7 +304,7 @@ export default class SpotifyClient {
   ): Promise<void> => {
     await this.tryWithToken(
       async () =>
-        await this.httpClient.put(`/me/player/seek`, {
+        await this.httpClient.put(`/me/player/seek`, null, {
           params: {
             // eslint-disable-next-line camelcase
             position_ms: position,

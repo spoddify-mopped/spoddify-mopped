@@ -544,7 +544,7 @@ describe('pause', () => {
       device_id: 'id',
     });
 
-    expect(axiosSpy).toBeCalledWith(`/me/player/pause`, {
+    expect(axiosSpy).toBeCalledWith(`/me/player/pause`, null, {
       params: {
         device_id: 'id',
       },
@@ -617,7 +617,7 @@ describe('addToQueue', () => {
       device_id: 'id',
     });
 
-    expect(axiosSpy).toBeCalledWith(`/me/player/queue`, {
+    expect(axiosSpy).toBeCalledWith(`/me/player/queue`, null, {
       params: {
         device_id: 'id',
         uri: 'URI',
@@ -639,7 +639,7 @@ describe('next', () => {
       device_id: 'id',
     });
 
-    expect(axiosSpy).toBeCalledWith(`/me/player/next`, {
+    expect(axiosSpy).toBeCalledWith(`/me/player/next`, null, {
       params: {
         device_id: 'id',
       },
@@ -660,7 +660,7 @@ describe('previous', () => {
       device_id: 'id',
     });
 
-    expect(axiosSpy).toBeCalledWith(`/me/player/previous`, {
+    expect(axiosSpy).toBeCalledWith(`/me/player/previous`, null, {
       params: {
         device_id: 'id',
       },
@@ -706,7 +706,7 @@ describe('seek', () => {
       device_id: 'id',
     });
 
-    expect(axiosSpy).toBeCalledWith(`/me/player/seek`, {
+    expect(axiosSpy).toBeCalledWith(`/me/player/seek`, null, {
       params: {
         device_id: 'id',
         position_ms: 10000,
