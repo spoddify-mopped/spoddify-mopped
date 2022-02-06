@@ -113,6 +113,23 @@ export default class SpotifyPlayerService {
     }
   };
 
+  public seek = async (position: number): Promise<void> => {
+    if (!this.targetDevice) {
+      this.targetDevice = await this.findTargetDevice();
+    }
+
+    try {
+      await this.spotifyClient.seek(position, {
+        // eslint-disable-next-line camelcase
+        device_id: this.targetDevice.id,
+      });
+    } catch (error) {
+      console.log(error);
+
+      throw new SpotifyApiError();
+    }
+  };
+
   public play = async (uris: string[] = []): Promise<void> => {
     if (!this.targetDevice) {
       this.targetDevice = await this.findTargetDevice();

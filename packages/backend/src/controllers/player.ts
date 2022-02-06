@@ -19,6 +19,7 @@ export default class PlayerController {
     this.router.post(`${this.path}/pause`, this.playPause);
     this.router.post(`${this.path}/forwards`, this.next);
     this.router.post(`${this.path}/previous`, this.previous);
+    this.router.put(`${this.path}/seek`, this.seek);
     this.router.post(`${this.path}/play`, this.play);
     this.router.post(`${this.path}/queue`, this.addQueue);
   }
@@ -71,6 +72,23 @@ export default class PlayerController {
   ): Promise<void> => {
     await this.spotifyPlayerService
       .previous()
+      .then(() => response.sendStatus(204))
+      .catch((error) => this.handleError(error, response));
+  };
+
+  private seek = async (
+    request: express.Request,
+    response: express.Response
+  ): Promise<void> => {
+    const position = request.query['position'] as string;
+
+    if (!position) {
+      response.sendStatus(400);
+      return;
+    }
+
+    await this.spotifyPlayerService
+      .seek(Number.parseInt(position))
       .then(() => response.sendStatus(204))
       .catch((error) => this.handleError(error, response));
   };
