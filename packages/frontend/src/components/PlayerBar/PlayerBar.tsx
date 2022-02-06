@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 
-import { ReactComponent as Logo } from '../../resources/logo.svg';
+import CoverReplacement from '../../resources/cover_replacement.png';
 import { ReactComponent as Next } from '../../resources/step-forward-solid.svg';
 import { ReactComponent as Pause } from '../../resources/pause-circle-solid.svg';
 import { ReactComponent as Play } from '../../resources/play-circle-solid.svg';
@@ -33,13 +33,10 @@ const PlayerBar = (props: Props): ReactElement => {
     <div className={styles.playerbar}>
       <div className={styles.infoContainer}>
         <div onClick={() => navigate('/player')} className={styles.cover}>
-          {props.playerInformation.coverImgUri ? (
-            <img src={props.playerInformation.coverImgUri || ''} alt="Cover" />
-          ) : (
-            <div className={styles.coverReplacement}>
-              <Logo />
-            </div>
-          )}
+          <img
+            src={props.playerInformation.coverImgUri || CoverReplacement}
+            alt="Cover"
+          />
         </div>
 
         <div className={styles.info}>

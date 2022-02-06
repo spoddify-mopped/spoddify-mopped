@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import ApiClient from '../../clients/api';
 import { AppState } from '../../redux/reducers';
+import CoverReplacement from '../../resources/cover_replacement.png';
 import { ReactComponent as Next } from '../../resources/step-forward-solid.svg';
 import { ReactComponent as Pause } from '../../resources/pause-circle-solid.svg';
 import { ReactComponent as Play } from '../../resources/play-circle-solid.svg';
@@ -44,7 +45,11 @@ export default function Player(): ReactElement {
         &larr;
       </span>
       <div className={styles.infoContainer}>
-        <img className={styles.cover} src={player.coverUrl} alt="Cover" />
+        <img
+          className={styles.cover}
+          src={player.coverUrl || CoverReplacement}
+          alt="Cover"
+        />
         <div className={styles.metadata}>
           <p className={styles.track}>{player.track}</p>
           <p>{player.artist}</p>
