@@ -25,7 +25,7 @@ const PlaylistDetailView = (): React.ReactElement => {
 
   return (
     <div className={styles.container}>
-      <h1>{playlist.name}</h1>
+      <h1 className={styles.headline}>{playlist.name}</h1>
       <TrackView tracks={playlist.tracks} />
     </div>
   );
