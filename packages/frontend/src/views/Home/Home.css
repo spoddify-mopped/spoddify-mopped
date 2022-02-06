@@ -9,4 +9,10 @@ div.home {
 div.top {
   flex: 1;
   display: flex;
+  overflow: hidden;
+}
+
+div.content {
+  width: 100%;
+  overflow: auto;
 }

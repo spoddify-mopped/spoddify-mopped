@@ -62,7 +62,7 @@ export default function PlaylistView(): React.ReactElement {
 
   return (
     <div className="playlist">
-      <h1>Wähle ein Genre aus</h1>
+      <h1 className="playlistHeadline">Wähle ein Genre aus</h1>
       <div className="playlistContainer">{playlistRows}</div>
     </div>
   );

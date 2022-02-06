@@ -65,7 +65,9 @@ const Home = (): ReactElement => {
             }
           }}
         />
-        <Outlet />
+        <div className="content">
+          <Outlet />
+        </div>
       </div>
       <PlayerBar
         onNext={async () => {
