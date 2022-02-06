@@ -41,7 +41,7 @@ const AlbumView = (): React.ReactElement => {
           boxShadow: 'inset 0 0 0 2000px rgba(0, 0, 0, 0.9)',
         }}
       >
-        <img src={album.imageUrl} alt="Cover" />
+        <img className={styles.albumImage} src={album.imageUrl} alt="Cover" />
         <div className={styles.meta}>
           <span className={styles.title}>{album.name}</span>
           <div className={styles.artist}>
