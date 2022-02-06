@@ -1,3 +1,4 @@
+import AlbumController from './controllers/album';
 import ArtistController from './controllers/artist';
 import AuthController from './controllers/auth';
 import EventController from './controllers/event';
@@ -32,6 +33,7 @@ export default class App {
 
   private websocketHandler: WebsocketHandler;
 
+  private albumController: AlbumController;
   private artistController: ArtistController;
   private authController: AuthController;
   private eventController: EventController;
@@ -50,6 +52,7 @@ export default class App {
 
     this.initializeSocketIo(spotifyPlayerService);
 
+    this.albumController = new AlbumController(spotifySearchService);
     this.artistController = new ArtistController(spotifySearchService);
     this.authController = new AuthController(spotifyClient);
     this.eventController = new EventController(this.websocketHandler);
@@ -68,6 +71,7 @@ export default class App {
   }
 
   private initializeControllers(): void {
+    this.app.use('/api', this.albumController.router);
     this.app.use('/api', this.artistController.router);
     this.app.use('/api', this.authController.router);
     this.app.use('/api', this.eventController.router);
