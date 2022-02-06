@@ -1,4 +1,5 @@
 import {
+  AlbumWithTracks,
   Artist,
   ArtistTopTracksResponse,
   FullPlaylist,
@@ -25,6 +26,13 @@ const ApiClient = {
       id,
     });
   },
+  getAlbum: async (id: string): Promise<AlbumWithTracks> => {
+    const { data } = await axios.get<AlbumWithTracks>(
+      `${API_URL}/api/album/${id}`
+    );
+
+    return data;
+  },
   getAlbumTracks: async (id: string): Promise<ArtistTopTracksResponse> => {
     const { data } = await axios.get<ArtistTopTracksResponse>(
       `${API_URL}/api/album/${id}/tracks`
@@ -32,6 +40,7 @@ const ApiClient = {
 
     return data;
   },
+
   getArtist: async (id: string): Promise<Artist> => {
     const { data } = await axios.get<Artist>(`${API_URL}/api/artist/${id}`);
 

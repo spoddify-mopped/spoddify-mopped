@@ -11,6 +11,10 @@ export type Album = {
   imageUrl?: string;
 };
 
+export type AlbumWithTracks = Album & {
+  tracks: Track[];
+};
+
 export type Track = {
   id: string;
   name: string;

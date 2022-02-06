@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import React, { ReactElement } from 'react';
 
+import AlbumView from './views/AlbumView/AlbumView';
 import ArtistView from './views/ArtistView/ArtistView';
 import Home from './views/Home/Home';
 import Player from './views/Player/Player';
@@ -20,6 +21,7 @@ export default function App(): ReactElement {
           <Route path="/playlists" element={<PlaylistsView />} />
           <Route path="/playlist/:id" element={<PlaylistDetailView />} />
           <Route path="/artist/:id" element={<ArtistView />} />
+          <Route path="/album/:id" element={<AlbumView />} />
         </Route>
         <Route path="/player" element={<Player />} />
       </Routes>

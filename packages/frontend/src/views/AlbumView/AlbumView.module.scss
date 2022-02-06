@@ -1,0 +1,45 @@
+div.header {
+  display: flex;
+  align-items: flex-end;
+  padding: 5rem;
+
+  div.meta {
+    display: flex;
+    flex-direction: column;
+    margin-left: 2rem;
+
+    span.title {
+      font-weight: 700;
+      font-size: 5rem;
+    }
+
+    div.artist {
+      display: flex;
+      align-items: center;
+
+      img.artistImage {
+        height: 28px;
+        border-radius: 50px;
+        margin-right: 0.5rem;
+      }
+
+      span.artistName {
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+
+  img {
+    height: 300px;
+    border-radius: 10px;
+  }
+}
+
+div.innerContainer {
+  margin: 5rem 5rem 0 5rem;
+  padding-bottom: 5rem;
+}

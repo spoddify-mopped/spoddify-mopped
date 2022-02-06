@@ -43,18 +43,3 @@ input.searchInput {
   justify-content: space-between;
   align-items: center;
 }
-
-.albumModalHeader {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.albumModalHeader span {
-  margin-left: 5rem;
-  cursor: pointer;
-}
-
-.albumModalHeader span:hover {
-  text-decoration: underline;
-}

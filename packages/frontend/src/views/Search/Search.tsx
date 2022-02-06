@@ -1,16 +1,12 @@
 import './Search.css';
 
-import {
-  ArtistTopTracksResponse,
-  SearchResponse,
-} from '../../clients/api.types';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import ApiClient from '../../clients/api';
-import { Modal } from '../../components/Modal/Modal';
 import SearchCoverView from '../../components/SearchCoverView/SearchCoverView';
 import { ReactComponent as SearchIcon } from '../../resources/search.svg';
+import { SearchResponse } from '../../clients/api.types';
 import SearchTrackView from '../../components/SearchTrackView/SearchTrackView';
 
 export const Search = (): ReactElement => {
@@ -18,13 +14,6 @@ export const Search = (): ReactElement => {
   const { query } = useParams();
 
   const [result, setResult] = useState<SearchResponse | undefined>(undefined);
-
-  const [showAlbumTracks, setShowAlbumTracks] = useState<boolean>(false);
-  const [albumTracks, setAlbumTracks] = useState<
-    ArtistTopTracksResponse | undefined
-  >(undefined);
-
-  const [albumId, setAlbumId] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     if (query) {
@@ -65,35 +54,9 @@ export const Search = (): ReactElement => {
           <div className="categoryHeader">
             <h3>Albums</h3>
           </div>
-          <Modal
-            visible={showAlbumTracks}
-            onClose={() => setShowAlbumTracks(false)}
-          >
-            <div className="albumModalHeader">
-              <h3>Album track's</h3>
-              <span
-                onClick={async () => {
-                  albumId && (await ApiClient.addAlbum(albumId));
-                }}
-              >
-                Add album
-              </span>
-            </div>
-            {albumTracks ? (
-              <SearchTrackView
-                tracks={albumTracks.tracks}
-                onAddTrackClick={async (track) => {
-                  await ApiClient.addTrack(track.id);
-                }}
-              />
-            ) : undefined}
-          </Modal>
           <SearchCoverView
             onCoverClick={async (id) => {
-              const artistTopTracks = await ApiClient.getAlbumTracks(id);
-              setAlbumId(id);
-              setAlbumTracks(artistTopTracks);
-              setShowAlbumTracks(true);
+              navigate(`/album/${id}`);
             }}
             items={result.albums}
           />
