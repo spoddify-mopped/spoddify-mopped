@@ -14,8 +14,8 @@ export default function App(): ReactElement {
       <Routes>
         <Route path="/" element={<Home />}>
           <Route path="/search" element={<Search />}>
-            <Route path=":query" />
-            <Route path="" />
+            <Route path=":query" element={null} />
+            <Route path="" element={null} />
           </Route>
           <Route path="/playlists" element={<PlaylistsView />} />
           <Route path="/playlist/:id" element={<PlaylistDetailView />} />
