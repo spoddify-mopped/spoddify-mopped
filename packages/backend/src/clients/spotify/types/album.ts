@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import { ExternalUrls, Image, Restrictions } from './common';
+import { ExternalUrls, Image, PagingObject, Restrictions } from './common';
 
 import { Artist } from './artist';
 import { BaseTrack } from './track';
@@ -22,5 +22,5 @@ export type BaseAlbum = {
 };
 
 export type Album = BaseAlbum & {
-  tracks: BaseTrack[];
+  tracks: PagingObject<BaseTrack>;
 };

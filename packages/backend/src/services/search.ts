@@ -1,4 +1,9 @@
-import { Album, mapSpotifyAlbumToAlbum } from '../models/album';
+import {
+  Album,
+  AlbumWithTracks,
+  mapSpotifyAlbumToAlbum,
+  mapSpotifyAlbumToAlbumWithTracks,
+} from '../models/album';
 import { Artist, mapSpotifyArtistToArtist } from '../models/artist';
 import { Track, mapSpotifyTrackToTrack } from '../models/track';
 
@@ -68,5 +73,13 @@ export default class SpotifySearchService {
     );
 
     return tracks;
+  };
+
+  public getAlbum = async (id: string): Promise<AlbumWithTracks> => {
+    const albumResponse = await this.spotifyClient.getAlbum(id, {
+      market: 'DE',
+    });
+
+    return mapSpotifyAlbumToAlbumWithTracks(albumResponse);
   };
 }
