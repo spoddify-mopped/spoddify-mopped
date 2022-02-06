@@ -11,14 +11,12 @@ import { Modal } from '../../components/Modal/Modal';
 import SearchCoverView from '../../components/SearchCoverView/SearchCoverView';
 import { ReactComponent as SearchIcon } from '../../resources/search.svg';
 import SearchTrackView from '../../components/SearchTrackView/SearchTrackView';
+import { useNavigate } from 'react-router-dom';
 
 export const Search = (): ReactElement => {
-  const [result, setResult] = useState<SearchResponse | undefined>(undefined);
+  const navigate = useNavigate();
 
-  const [showArtistInfo, setShowArtistInfo] = useState<boolean>(false);
-  const [artistTopTracks, setArtistTopTracks] = useState<
-    ArtistTopTracksResponse | undefined
-  >(undefined);
+  const [result, setResult] = useState<SearchResponse | undefined>(undefined);
 
   const [showAlbumTracks, setShowAlbumTracks] = useState<boolean>(false);
   const [albumTracks, setAlbumTracks] = useState<
@@ -53,25 +51,9 @@ export const Search = (): ReactElement => {
           <div className="categoryHeader">
             <h3>Artists</h3>
           </div>
-          <Modal
-            visible={showArtistInfo}
-            onClose={() => setShowArtistInfo(false)}
-          >
-            <h3>Artist top track's</h3>
-            {artistTopTracks ? (
-              <SearchTrackView
-                tracks={artistTopTracks.tracks}
-                onAddTrackClick={async (track) => {
-                  await ApiClient.addTrack(track.id);
-                }}
-              />
-            ) : undefined}
-          </Modal>
           <SearchCoverView
             onCoverClick={async (id) => {
-              const artistTopTracks = await ApiClient.getArtistTopTracks(id);
-              setArtistTopTracks(artistTopTracks);
-              setShowArtistInfo(true);
+              navigate(`/artist/${id}`);
             }}
             items={result.artists}
           />

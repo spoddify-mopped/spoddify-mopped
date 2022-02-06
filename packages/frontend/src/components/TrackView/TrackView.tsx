@@ -18,7 +18,7 @@ const TrackView = (props: Props): React.ReactElement => {
             <span className={styles.trackTitle} title={track.name}>
               {track.name}
             </span>
-            <span>
+            <span className={styles.artistName}>
               {track.artists.map((trackArtist, index) => (
                 <span>
                   {trackArtist.name}
