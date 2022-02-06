@@ -1,5 +1,3 @@
-import './Player.css';
-
 import React, { ReactElement, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -11,6 +9,7 @@ import { ReactComponent as Play } from '../../resources/play-circle-solid.svg';
 import { ReactComponent as Prev } from '../../resources/step-backward-solid.svg';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
 import { playerActions } from '../../redux/player/actions';
+import styles from './Player.module.scss';
 import { useNavigate } from 'react-router-dom';
 
 export default function Player(): ReactElement {
@@ -22,47 +21,68 @@ export default function Player(): ReactElement {
     dispatch(playerActions.getPlayer());
   }, [dispatch]);
 
+  const getPlayerBackgroundStyles = () => {
+    if (player.coverUrl) {
+      return {
+        backgroundImage: `url(${player.coverUrl})`,
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 'cover',
+        boxShadow: 'inset 0 0 0 2000px rgba(0, 0, 0, 0.9)',
+      };
+    }
+    return {};
+  };
+
   return (
-    <div className="player">
-      <span className="playerBackButton" onClick={() => navigate(-1)}>
+    <div
+      className={styles.player}
+      style={{
+        ...getPlayerBackgroundStyles(),
+      }}
+    >
+      <span className={styles.backButton} onClick={() => navigate(-1)}>
         &larr;
       </span>
-      <div className="metadata">
-        <img className="coverart" src={player.coverUrl} alt="Cover" />
-        <p className="playerTrack">{player.track}</p>
-        <p>{player.artist}</p>
+      <div className={styles.infoContainer}>
+        <img className={styles.cover} src={player.coverUrl} alt="Cover" />
+        <div className={styles.metadata}>
+          <p className={styles.track}>{player.track}</p>
+          <p>{player.artist}</p>
+        </div>
       </div>
-      <div className="control">
-        <button
-          className="playerButton"
-          onClick={() => {
-            ApiClient.previous();
-          }}
-        >
-          <Prev />
-        </button>
-        <button
-          className="playerButton pausebutton"
-          onClick={() => {
-            ApiClient.playPause();
-          }}
-        >
-          {player.isPlaying ? <Pause /> : <Play />}
-        </button>
-        <button
-          className="playerButton"
-          onClick={() => {
-            ApiClient.next();
-          }}
-        >
-          <Next />
-        </button>
+      <div>
+        <div className={styles.control}>
+          <button
+            className={styles.button}
+            onClick={() => {
+              ApiClient.previous();
+            }}
+          >
+            <Prev />
+          </button>
+          <button
+            className={`${styles.button} ${styles.playpause}`}
+            onClick={() => {
+              ApiClient.playPause();
+            }}
+          >
+            {player.isPlaying ? <Pause /> : <Play />}
+          </button>
+          <button
+            className={styles.button}
+            onClick={() => {
+              ApiClient.next();
+            }}
+          >
+            <Next />
+          </button>
+        </div>
+        <ProgressBar
+          duration={player.duration}
+          isPlaying={player.isPlaying}
+          startProgress={player.progress}
+        />
       </div>
-      <ProgressBar
-        duration={player.duration}
-        isPlaying={player.isPlaying}
-        startProgress={player.progress}
-      />
     </div>
   );
 }

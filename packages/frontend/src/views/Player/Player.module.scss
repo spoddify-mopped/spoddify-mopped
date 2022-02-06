@@ -1,0 +1,70 @@
+div.player {
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  color: white;
+
+  span.backButton {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    cursor: pointer;
+    font-size: 2rem;
+    font-weight: 500;
+
+    &:hover {
+      opacity: 0.5;
+    }
+  }
+}
+
+div.infoContainer {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+
+  img.cover {
+    width: auto;
+    height: auto;
+    max-height: 60vh;
+    max-width: 100%;
+    border-radius: 10px;
+  }
+
+  div.metadata {
+    margin-left: 2rem;
+    max-width: 30vw;
+
+    p.track {
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+  }
+}
+
+div.control {
+  display: flex;
+  justify-content: center;
+}
+
+.button {
+  background-color: transparent;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  width: 32px;
+  color: white;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &.playpause {
+    width: 50px;
+  }
+}
