@@ -26,7 +26,7 @@ const ArtistView = (): React.ReactElement => {
   }, [params]);
 
   if (!artistTopTracks || !artistInfo) {
-    return <>Error</>;
+    return <></>;
   }
 
   return (

@@ -1,6 +1,6 @@
 import './Home.css';
 
-import { Outlet, useLocation, useNavigate } from 'react-router';
+import { Outlet, matchPath, useLocation, useNavigate } from 'react-router';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -15,11 +15,13 @@ import { playerActions } from '../../redux/player/actions';
 const asideItems = [
   {
     image: <PlaylistIcon />,
+    matcher: '/playlists',
     name: 'Playlists',
     path: '/playlists',
   },
   {
     image: <SearchIcon />,
+    matcher: '/search/*',
     name: 'Search',
     path: '/search',
   },
@@ -43,7 +45,7 @@ const Home = (): ReactElement => {
     }
 
     const item = asideItems.find(
-      (item) => item.path.toLowerCase() === location.pathname.toLowerCase()
+      (item) => !!matchPath(item.matcher, location.pathname)
     );
 
     setActivePage(item ? item.name : '');
