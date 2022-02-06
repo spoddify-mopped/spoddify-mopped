@@ -3,9 +3,9 @@
 import {
   AlbumTracksResponse,
   ArtistResponse,
-  ArtistTopTracksResponse,
   SearchResponse,
   TrackResponse,
+  TracksResponse,
   UserDevicesResponse,
 } from './../../../clients/spotify/responses';
 import axios, { AxiosError } from 'axios';
@@ -377,7 +377,7 @@ describe('getPlayer', () => {
 
 describe('getArtistTopTracks', () => {
   it('succeeds with the given parameters', async () => {
-    const expectedResponse: ArtistTopTracksResponse = {
+    const expectedResponse: TracksResponse = {
       tracks: [],
     };
 
@@ -665,5 +665,30 @@ describe('previous', () => {
         device_id: 'id',
       },
     });
+  });
+});
+
+describe('getTracks', () => {
+  it('succeeds with the given parameters', async () => {
+    const expectedResponse: TracksResponse = {
+      tracks: [],
+    };
+
+    const axiosSpy = jest.spyOn(axios, 'get').mockImplementation(() =>
+      Promise.resolve({
+        data: expectedResponse,
+        status: 200,
+      })
+    );
+
+    const spotifyClient = new SpotifyClient(testConfig);
+    const response = await spotifyClient.getTracks(['id1', 'id2']);
+
+    expect(axiosSpy).toBeCalledWith(`/tracks`, {
+      params: {
+        ids: 'id1,id2',
+      },
+    });
+    expect(response).toBe(expectedResponse);
   });
 });

@@ -1,28 +1,8 @@
-import { Album as SpotifyAlbum } from '../clients/spotify/types/album';
-import { Artist as SpotifyArtist } from '../clients/spotify/types/artist';
+import { Album, mapSpotifyAlbumToAlbum } from '../models/album';
+import { Artist, mapSpotifyArtistToArtist } from '../models/artist';
+import { Track, mapSpotifyTrackToTrack } from '../models/track';
+
 import SpotifyClient from '../clients/spotify/spotify';
-import { Track as SpotifyTrack } from '../clients/spotify/types/track';
-
-type Artist = {
-  id: string;
-  name: string;
-  imageUrl?: string;
-};
-
-type Album = {
-  id: string;
-  name: string;
-  artists: Artist[];
-  imageUrl?: string;
-};
-
-type Track = {
-  id: string;
-  name: string;
-  artists: Artist[];
-  album?: Album;
-  imageUrl?: string;
-};
 
 type SearchResult = {
   albums: Album[];
@@ -37,37 +17,6 @@ export default class SpotifySearchService {
     this.spotifyClient = spotifyClient;
   }
 
-  private mapSpotifyArtistToArtist = (spotifyArtist: SpotifyArtist) => {
-    return {
-      id: spotifyArtist.id,
-      imageUrl: spotifyArtist.images?.[0]?.url,
-      name: spotifyArtist.name,
-    };
-  };
-
-  private mapSpotifyAlbumToAlbum = (spotifyAlbum: SpotifyAlbum) => {
-    return {
-      artists: spotifyAlbum.artists.map(this.mapSpotifyArtistToArtist),
-      id: spotifyAlbum.id,
-      imageUrl: spotifyAlbum.images?.[0]?.url,
-      name: spotifyAlbum.name,
-    };
-  };
-
-  private mapSpotifyTrackToTrack = (spotifyTrack: SpotifyTrack) => {
-    return {
-      album: spotifyTrack.album
-        ? this.mapSpotifyAlbumToAlbum(spotifyTrack.album)
-        : undefined,
-      artists: spotifyTrack.artists.map(this.mapSpotifyArtistToArtist),
-      id: spotifyTrack.id,
-      imageUrl: spotifyTrack.album
-        ? spotifyTrack.album.images?.[0].url
-        : undefined,
-      name: spotifyTrack.name,
-    };
-  };
-
   public search = async (
     query: string,
     types: string[],
@@ -79,13 +28,13 @@ export default class SpotifySearchService {
 
     return {
       albums: searchResponse.albums
-        ? searchResponse.albums.items.map(this.mapSpotifyAlbumToAlbum)
+        ? searchResponse.albums.items.map(mapSpotifyAlbumToAlbum)
         : [],
       artists: searchResponse.artists
-        ? searchResponse.artists.items.map(this.mapSpotifyArtistToArtist)
+        ? searchResponse.artists.items.map(mapSpotifyArtistToArtist)
         : [],
       tracks: searchResponse.tracks
-        ? searchResponse.tracks.items.map(this.mapSpotifyTrackToTrack)
+        ? searchResponse.tracks.items.map(mapSpotifyTrackToTrack)
         : [],
     };
   };
@@ -97,7 +46,7 @@ export default class SpotifySearchService {
     );
 
     const tracks: Track[] = artistTopTracksResponse.tracks.map(
-      this.mapSpotifyTrackToTrack
+      mapSpotifyTrackToTrack
     );
 
     return tracks;
@@ -110,7 +59,7 @@ export default class SpotifySearchService {
     });
 
     const tracks: Track[] = albumTracksResponse.items.map(
-      this.mapSpotifyTrackToTrack
+      mapSpotifyTrackToTrack
     );
 
     return tracks;

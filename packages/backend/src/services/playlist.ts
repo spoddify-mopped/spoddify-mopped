@@ -1,9 +1,17 @@
 import SpotifyPlayerService, { SpotifyApiError } from './player';
 
 import { Artist } from '../clients/spotify/types/artist';
+import { Track as FullTrack } from '../models/track';
 import Playlist from '../entities/playlist';
 import SpotifyClient from '../clients/spotify/spotify';
 import Track from '../entities/track';
+import { mapSpotifyTrackToTrack } from './../models/track';
+
+type FullPlaylist = {
+  id: number;
+  name: string;
+  tracks: FullTrack[];
+};
 
 export default class PlaylistService {
   private spotifyClient: SpotifyClient;
@@ -75,8 +83,23 @@ export default class PlaylistService {
     return await Playlist.find();
   };
 
-  public getPlaylist = async (id: number): Promise<Playlist> => {
-    return await Playlist.findOne({ id });
+  public getPlaylist = async (id: number): Promise<FullPlaylist> => {
+    const playlist = await Playlist.findOne(
+      { id },
+      {
+        relations: ['tracks'],
+      }
+    );
+
+    const response = await this.spotifyClient.getTracks(
+      playlist.tracks.map((track) => track.id)
+    );
+
+    return {
+      id: playlist.id,
+      name: playlist.name,
+      tracks: response.tracks.map(mapSpotifyTrackToTrack),
+    };
   };
 
   public playPlaylist = async (id: number): Promise<void> => {

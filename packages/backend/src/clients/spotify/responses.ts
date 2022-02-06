@@ -26,7 +26,7 @@ export type SearchResponse = {
   tracks?: PagingObject<Track>;
 };
 
-export type ArtistTopTracksResponse = {
+export type TracksResponse = {
   tracks: Track[];
 };
 

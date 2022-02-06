@@ -1,12 +1,12 @@
 import {
   AlbumTracksResponse,
   ArtistResponse,
-  ArtistTopTracksResponse,
   AuthorizationCodeGrantResponse,
   PlayerResponse,
   RefreshTokenResponse,
   SearchResponse,
   TrackResponse,
+  TracksResponse,
   UserDevicesResponse,
 } from './responses';
 import {
@@ -170,8 +170,8 @@ export default class SpotifyClient {
   public getArtistTopTracks = async (
     id: string,
     market?: string
-  ): Promise<ArtistTopTracksResponse> => {
-    const response = await this.tryWithToken<ArtistTopTracksResponse>(
+  ): Promise<TracksResponse> => {
+    const response = await this.tryWithToken<TracksResponse>(
       async () =>
         await this.httpClient.get(`/artists/${id}/top-tracks`, {
           params: {
@@ -283,5 +283,18 @@ export default class SpotifyClient {
           params: options,
         })
     );
+  };
+
+  public getTracks = async (ids: string[]): Promise<TracksResponse> => {
+    const response = await this.tryWithToken<TracksResponse>(
+      async () =>
+        await this.httpClient.get(`/tracks`, {
+          params: {
+            ids: ids.join(','),
+          },
+        })
+    );
+
+    return response.data;
   };
 }
