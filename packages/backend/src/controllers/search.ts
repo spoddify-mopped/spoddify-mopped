@@ -33,7 +33,6 @@ export default class SearchController {
 
   public initializeRoutes(): void {
     this.router.get(`${this.path}/search`, this.search);
-    this.router.get(`${this.path}/artist/:id/tracks`, this.getArtistTopTracks);
     this.router.get(`${this.path}/album/:id/tracks`, this.getAlbumTracks);
   }
 
@@ -64,22 +63,6 @@ export default class SearchController {
       .search(query, type, limit)
       .then((result) => {
         response.send(result);
-      })
-      .catch(() => {
-        response.sendStatus(503);
-      });
-  };
-
-  private getArtistTopTracks = async (
-    request: express.Request,
-    response: express.Response
-  ) => {
-    const { params } = request;
-
-    await this.spotifySearchService
-      .getArtistTopTracks(params.id)
-      .then((tracks) => {
-        response.send({ tracks });
       })
       .catch(() => {
         response.sendStatus(503);

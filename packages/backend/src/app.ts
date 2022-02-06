@@ -1,3 +1,4 @@
+import ArtistController from './controllers/artist';
 import AuthController from './controllers/auth';
 import EventController from './controllers/event';
 import Logger from './logger/logger';
@@ -31,11 +32,12 @@ export default class App {
 
   private websocketHandler: WebsocketHandler;
 
-  private searchController: SearchController;
-  private playlistController: PlaylistController;
-  private playerController: PlayerController;
-  private eventController: EventController;
+  private artistController: ArtistController;
   private authController: AuthController;
+  private eventController: EventController;
+  private playerController: PlayerController;
+  private playlistController: PlaylistController;
+  private searchController: SearchController;
 
   public constructor(
     spotifySearchService: SpotifySearchService,
@@ -48,11 +50,12 @@ export default class App {
 
     this.initializeSocketIo(spotifyPlayerService);
 
-    this.searchController = new SearchController(spotifySearchService);
-    this.playlistController = new PlaylistController(playlistService);
-    this.playerController = new PlayerController(spotifyPlayerService);
-    this.eventController = new EventController(this.websocketHandler);
+    this.artistController = new ArtistController(spotifySearchService);
     this.authController = new AuthController(spotifyClient);
+    this.eventController = new EventController(this.websocketHandler);
+    this.playerController = new PlayerController(spotifyPlayerService);
+    this.playlistController = new PlaylistController(playlistService);
+    this.searchController = new SearchController(spotifySearchService);
 
     this.initializeMiddleware();
     this.initializeControllers();
@@ -65,11 +68,12 @@ export default class App {
   }
 
   private initializeControllers(): void {
+    this.app.use('/api', this.artistController.router);
     this.app.use('/api', this.authController.router);
-    this.app.use('/api', this.playerController.router);
-    this.app.use('/api', this.searchController.router);
     this.app.use('/api', this.eventController.router);
+    this.app.use('/api', this.playerController.router);
     this.app.use('/api', this.playlistController.router);
+    this.app.use('/api', this.searchController.router);
 
     this.app.use(
       '*',
