@@ -28,3 +28,12 @@ export type SearchResponse = {
 export type ArtistTopTracksResponse = {
   tracks: Track[];
 };
+
+export type Playlist = {
+  id: number;
+  name: string;
+};
+
+export type FullPlaylist = Playlist & {
+  tracks: Track[];
+};

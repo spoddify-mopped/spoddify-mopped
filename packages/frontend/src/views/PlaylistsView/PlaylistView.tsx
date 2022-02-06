@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 
 import { ReactComponent as Play } from '../../resources/play-solid.svg';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
@@ -13,6 +14,8 @@ interface Playlist {
 }
 
 export default function PlaylistView(): React.ReactElement {
+  const navigate = useNavigate();
+
   const [playlists, setPlaylists] = useState<Playlist[]>([
     {
       id: undefined,
@@ -44,7 +47,12 @@ export default function PlaylistView(): React.ReactElement {
   for (const playlist of playlists) {
     playlistRows.push(
       <div className="singlePlaylist" key={playlist.id}>
-        <p>{playlist.name}</p>
+        <p
+          className="playlistName"
+          onClick={() => navigate(`/playlist/${playlist.id}`)}
+        >
+          {playlist.name}
+        </p>
         <button className="button" onClick={() => play(playlist.id)}>
           <Play />
         </button>

@@ -1,0 +1,34 @@
+div.container {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  div.entryContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    div.entry {
+      display: flex;
+      align-items: center;
+      display: flex;
+      margin-bottom: 1rem;
+
+      img {
+        width: 60px;
+        height: 60px;
+        margin-right: 1rem;
+        border-radius: 10px;
+      }
+    }
+
+    div.trackInfo {
+      display: flex;
+      flex-direction: column;
+
+      span.trackTitle {
+        font-weight: 600;
+      }
+    }
+  }
+}

@@ -1,4 +1,8 @@
-import { ArtistTopTracksResponse, SearchResponse } from './api.types';
+import {
+  ArtistTopTracksResponse,
+  FullPlaylist,
+  SearchResponse,
+} from './api.types';
 
 import axios from 'axios';
 
@@ -30,6 +34,13 @@ const ApiClient = {
   getArtistTopTracks: async (id: string): Promise<ArtistTopTracksResponse> => {
     const { data } = await axios.get<ArtistTopTracksResponse>(
       `${API_URL}/api/artist/${id}/tracks`
+    );
+
+    return data;
+  },
+  getPlaylist: async (id: number): Promise<FullPlaylist> => {
+    const { data } = await axios.get<FullPlaylist>(
+      `${API_URL}/api/playlist/${id}`
     );
 
     return data;

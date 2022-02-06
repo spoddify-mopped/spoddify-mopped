@@ -46,9 +46,7 @@ const Home = (): ReactElement => {
       (item) => item.path.toLowerCase() === location.pathname.toLowerCase()
     );
 
-    if (item) {
-      setActivePage(item.name);
-    }
+    setActivePage(item ? item.name : '');
   }, [location, navigate]);
 
   return (

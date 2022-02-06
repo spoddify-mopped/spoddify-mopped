@@ -13,6 +13,10 @@
   align-items: center;
 }
 
+.playlistName {
+  cursor: pointer;
+}
+
 .singlePlaylist {
   width: 30em;
   align-items: center;
