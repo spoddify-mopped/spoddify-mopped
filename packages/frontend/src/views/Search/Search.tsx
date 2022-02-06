@@ -4,17 +4,18 @@ import {
   ArtistTopTracksResponse,
   SearchResponse,
 } from '../../clients/api.types';
-import React, { ReactElement, useState } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import ApiClient from '../../clients/api';
 import { Modal } from '../../components/Modal/Modal';
 import SearchCoverView from '../../components/SearchCoverView/SearchCoverView';
 import { ReactComponent as SearchIcon } from '../../resources/search.svg';
 import SearchTrackView from '../../components/SearchTrackView/SearchTrackView';
-import { useNavigate } from 'react-router-dom';
 
 export const Search = (): ReactElement => {
   const navigate = useNavigate();
+  const { query } = useParams();
 
   const [result, setResult] = useState<SearchResponse | undefined>(undefined);
 
@@ -25,19 +26,21 @@ export const Search = (): ReactElement => {
 
   const [albumId, setAlbumId] = useState<string | undefined>(undefined);
 
+  useEffect(() => {
+    if (query) {
+      ApiClient.search(query, {
+        limit: 5,
+        type: ['artist', 'track', 'album'],
+      }).then(setResult);
+    } else {
+      setResult(undefined);
+    }
+  }, [query]);
+
   const handleSearchInputChange = async (
     evt: React.ChangeEvent<HTMLInputElement>
   ) => {
-    if (!evt.target.value) {
-      setResult(undefined);
-      return;
-    }
-    setResult(
-      await ApiClient.search(evt.target.value, {
-        limit: 5,
-        type: ['artist', 'track', 'album'],
-      })
-    );
+    navigate(`/search/${evt.target.value}`, { replace: true });
   };
 
   const renderResult = () => {
@@ -118,6 +121,7 @@ export const Search = (): ReactElement => {
           <input
             className="searchInput"
             placeholder="Search"
+            value={query}
             onChange={handleSearchInputChange}
           />
         </div>

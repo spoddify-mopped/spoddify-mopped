@@ -13,7 +13,10 @@ export default function App(): ReactElement {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />}>
-          <Route path="/search" element={<Search />} />
+          <Route path="/search" element={<Search />}>
+            <Route path=":query" />
+            <Route path="" />
+          </Route>
           <Route path="/playlists" element={<PlaylistsView />} />
           <Route path="/playlist/:id" element={<PlaylistDetailView />} />
           <Route path="/artist/:id" element={<ArtistView />} />
