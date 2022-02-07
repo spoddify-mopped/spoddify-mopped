@@ -19,6 +19,14 @@ export default function Player(): ReactElement {
   const dispatch = useDispatch();
 
   useEffect(() => {
+    if (player.artists && player.track) {
+      document.title = `${player.track} - ${player.artists
+        .map((artist) => artist.name)
+        .join(',')}`;
+    }
+  }, [player.artists, player.track]);
+
+  useEffect(() => {
     dispatch(playerActions.getPlayer());
   }, [dispatch]);
 
