@@ -19,7 +19,7 @@ export default class PlaylistController {
     this.router.post(`${this.path}/add/album`, this.addAlbum);
     this.router.get(`${this.path}`, this.getPlaylists);
     this.router.get(`${this.path}/:id`, this.getPlaylist);
-    this.router.get(`${this.path}/:id/play`, this.playPlaylist);
+    this.router.post(`${this.path}/:id/play`, this.playPlaylist);
   }
 
   private handleError = (error: Error, response: express.Response) => {

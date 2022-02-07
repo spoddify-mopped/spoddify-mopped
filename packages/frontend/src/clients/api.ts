@@ -87,7 +87,7 @@ const ApiClient = {
     await axios.post(`${API_URL}/api/pause`);
   },
   playPlaylist: async (id: number): Promise<void> => {
-    await axios.get<void>(`${API_URL}/api/playlist/${id}/play`);
+    await axios.post<void>(`${API_URL}/api/playlist/${id}/play`);
   },
   previous: async (): Promise<void> => {
     await axios.post(`${API_URL}/api/previous`);
