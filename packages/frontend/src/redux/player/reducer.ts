@@ -1,9 +1,11 @@
+import { Album, Artist } from '../../clients/api.types';
 import { PlayerActionTypes, PlayerWebSocketToClientActions } from './types';
 
 export type PlayerState = {
-  artist?: string;
-  album?: string;
+  artists?: Artist[];
+  album?: Album;
   track?: string;
+  trackId?: string;
   coverUrl?: string;
   progress?: number;
   duration?: number;

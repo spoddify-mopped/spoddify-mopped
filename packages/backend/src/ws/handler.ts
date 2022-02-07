@@ -2,6 +2,8 @@ import SpotifyPlayerService, { DeviceNotFoundError } from '../services/player';
 
 import Logger from '../logger/logger';
 import io from 'socket.io';
+import { mapBaseSpotifyArtistToArtist } from './../models/artist';
+import { mapSpotifyAlbumToAlbum } from './../models/album';
 
 const LOGGER = Logger.create(__filename);
 
@@ -56,13 +58,14 @@ export default class WebsocketHandler {
 
       this.io.emit(WS_EVENT_NAME, {
         payload: {
-          album: player.item.album.name,
-          artist: player.item.artists.map((artist) => artist.name).join(', '),
+          album: mapSpotifyAlbumToAlbum(player.item.album),
+          artists: player.item.artists.map(mapBaseSpotifyArtistToArtist),
           coverUrl: player.item.album.images[0].url,
           duration: player.item.duration_ms,
           isPlaying: player.is_playing,
           progress: player.progress_ms,
           track: player.item.name,
+          trackId: player.item.id,
         },
         type: 'WS_TO_CLIENT_SET_PLAYER_STATE',
       });

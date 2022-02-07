@@ -36,6 +36,38 @@ export default function Player(): ReactElement {
     return {};
   };
 
+  const renderAlbumAndArtist = () => {
+    if (!player.artists || !player.album) {
+      return <></>;
+    }
+
+    const artistCount = player.artists.length;
+
+    return (
+      <span className={styles.artistAlbum}>
+        {player.artists.map((artist, index) => (
+          <>
+            <span
+              className={styles.link}
+              key={artist.id}
+              onClick={() => navigate(`/artist/${artist.id}`)}
+            >
+              {artist.name}
+            </span>
+            {index === artistCount - 1 ? ' ' : ', '}
+          </>
+        ))}{' '}
+        -{' '}
+        <span
+          className={styles.link}
+          onClick={() => navigate(`/album/${player.album?.id}`)}
+        >
+          {player.album.name}
+        </span>
+      </span>
+    );
+  };
+
   return (
     <div className={styles.player}>
       <div
@@ -57,9 +89,7 @@ export default function Player(): ReactElement {
         </div>
         <div className={styles.metadata}>
           <span className={styles.track}>{player.track}</span>
-          <p className={styles.artistAlbum}>
-            {player.artist} - {player.album}
-          </p>
+          {renderAlbumAndArtist()}
         </div>
       </div>
       <div>

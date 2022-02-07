@@ -60,8 +60,17 @@ div.infoContainer {
       font-weight: 500;
     }
 
-    p.artistAlbum {
+    span.artistAlbum {
+      margin-top: 1rem;
       font-size: 1.2rem;
+
+      span.link {
+        cursor: pointer;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
     }
   }
 }
