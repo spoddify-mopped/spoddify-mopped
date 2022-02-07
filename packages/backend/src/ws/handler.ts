@@ -1,6 +1,7 @@
 import SpotifyPlayerService, { DeviceNotFoundError } from '../services/player';
 
 import Logger from '../logger/logger';
+import SystemService from '../services/system';
 import io from 'socket.io';
 import { mapBaseSpotifyArtistToArtist } from './../models/artist';
 import { mapSpotifyAlbumToAlbum } from './../models/album';
@@ -19,13 +20,16 @@ type Action<T = unknown> = {
 export default class WebsocketHandler {
   private handlers: Record<string, SocketHandler> = {};
 
+  private systemService: SystemService;
   private spotifyPlayerService: SpotifyPlayerService;
   private io: io.Server;
 
   public constructor(
+    systemService: SystemService,
     spotifyPlayerService: SpotifyPlayerService,
     io: io.Server
   ) {
+    this.systemService = systemService;
     this.spotifyPlayerService = spotifyPlayerService;
     this.io = io;
 
@@ -37,6 +41,10 @@ export default class WebsocketHandler {
   };
 
   public handle = (action: Action): void => {
+    if (!this.systemService.isReady()) {
+      return;
+    }
+
     const handler = this.getHandler(action.type);
     if (handler) {
       handler();

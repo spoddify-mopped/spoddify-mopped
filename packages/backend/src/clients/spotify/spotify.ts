@@ -116,6 +116,10 @@ export default class SpotifyClient {
     this.refreshToken = refreshToken;
   };
 
+  public getRefreshToken = (): string => {
+    return this.refreshToken;
+  };
+
   private tryWithToken = async <T>(
     cb: () => Promise<AxiosResponse<T>>
   ): Promise<AxiosResponse<T>> => {

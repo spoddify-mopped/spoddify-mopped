@@ -8,6 +8,7 @@ import SpotifyAuth from './entities/spotify_auth';
 import SpotifyClient from './clients/spotify/spotify';
 import SpotifyPlayerService from './services/player';
 import SpotifySearchService from './services/search';
+import SystemService from './services/system';
 import Track from './entities/track';
 import config from 'nconf';
 import initializeConfig from './config/config';
@@ -35,6 +36,8 @@ const playlistService = new PlaylistService(
 );
 const spotifySearchService = new SpotifySearchService(spotifyClient);
 
+const systemService = new SystemService(spotifyClient);
+
 const databaseConnectionOptions: ConnectionOptions = {
   database: `${config.get('server:dataPath')}/database.sqlite`,
   entities: [Track, Playlist, SpotifyAuth],
@@ -54,7 +57,8 @@ createConnection(databaseConnectionOptions)
       spotifySearchService,
       playlistService,
       spotifyPlayerService,
-      spotifyClient
+      spotifyClient,
+      systemService
     );
     app.listen(8080);
   })

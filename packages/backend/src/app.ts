@@ -11,6 +11,9 @@ import { Server } from 'socket.io';
 import SpotifyClient from './clients/spotify/spotify';
 import SpotifyPlayerService from './services/player';
 import SpotifySearchService from './services/search';
+import SystemController from './controllers/system';
+import SystemMiddleware from './middleware/system';
+import SystemService from './services/system';
 import WebsocketHandler from './ws/handler';
 import cors from 'cors';
 import express from 'express';
@@ -33,6 +36,8 @@ export default class App {
 
   private websocketHandler: WebsocketHandler;
 
+  private systemMiddleware: SystemMiddleware;
+
   private albumController: AlbumController;
   private artistController: ArtistController;
   private authController: AuthController;
@@ -40,17 +45,21 @@ export default class App {
   private playerController: PlayerController;
   private playlistController: PlaylistController;
   private searchController: SearchController;
+  private systemController: SystemController;
 
   public constructor(
     spotifySearchService: SpotifySearchService,
     playlistService: PlaylistService,
     spotifyPlayerService: SpotifyPlayerService,
-    spotifyClient: SpotifyClient
+    spotifyClient: SpotifyClient,
+    systemService: SystemService
   ) {
     this.app = express();
     this.server = http.createServer(this.app);
 
-    this.initializeSocketIo(spotifyPlayerService);
+    this.initializeSocketIo(spotifyPlayerService, systemService);
+
+    this.systemMiddleware = new SystemMiddleware(systemService);
 
     this.albumController = new AlbumController(spotifySearchService);
     this.artistController = new ArtistController(spotifySearchService);
@@ -59,6 +68,7 @@ export default class App {
     this.playerController = new PlayerController(spotifyPlayerService);
     this.playlistController = new PlaylistController(playlistService);
     this.searchController = new SearchController(spotifySearchService);
+    this.systemController = new SystemController(systemService);
 
     this.initializeMiddleware();
     this.initializeControllers();
@@ -68,6 +78,8 @@ export default class App {
     this.app.use(cors());
     this.app.use(express.json());
     this.app.use(express.static(path.join(__dirname, '..', 'public')));
+
+    this.app.use(this.systemMiddleware.checkReadiness);
   }
 
   private initializeControllers(): void {
@@ -78,6 +90,7 @@ export default class App {
     this.app.use('/api', this.playerController.router);
     this.app.use('/api', this.playlistController.router);
     this.app.use('/api', this.searchController.router);
+    this.app.use('/api', this.systemController.router);
 
     this.app.use(
       '*',
@@ -87,12 +100,19 @@ export default class App {
     );
   }
 
-  private initializeSocketIo(spotifyPlayerService: SpotifyPlayerService): void {
+  private initializeSocketIo(
+    spotifyPlayerService: SpotifyPlayerService,
+    systemService: SystemService
+  ): void {
     this.io = new Server(this.server, {
       cors: socketIoCors,
     });
 
-    this.websocketHandler = new WebsocketHandler(spotifyPlayerService, this.io);
+    this.websocketHandler = new WebsocketHandler(
+      systemService,
+      spotifyPlayerService,
+      this.io
+    );
 
     this.io.on('connection', (socket) => {
       LOGGER.info(`New socket.io connection with id: ${socket.id}`);
