@@ -4,6 +4,7 @@ import {
   ArtistTopTracksResponse,
   ArtistsAlbumsResponse,
   FullPlaylist,
+  Playlist,
   SearchResponse,
 } from './api.types';
 
@@ -75,11 +76,18 @@ const ApiClient = {
 
     return data;
   },
+  getPlaylists: async (): Promise<Playlist[]> => {
+    const { data } = await axios.get<Playlist[]>(`${API_URL}/api/playlist`);
+    return data;
+  },
   next: async (): Promise<void> => {
     await axios.post(`${API_URL}/api/forwards`);
   },
   playPause: async (): Promise<void> => {
     await axios.post(`${API_URL}/api/pause`);
+  },
+  playPlaylist: async (id: number): Promise<void> => {
+    await axios.get<void>(`${API_URL}/api/playlist/${id}/play`);
   },
   previous: async (): Promise<void> => {
     await axios.post(`${API_URL}/api/previous`);
