@@ -26,21 +26,24 @@ export default function Player(): ReactElement {
     if (player.coverUrl) {
       return {
         backgroundImage: `url(${player.coverUrl})`,
+        backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
-        boxShadow: 'inset 0 0 0 2000px rgba(0, 0, 0, 0.9)',
+        boxShadow: 'inset 0 0 0 2000px rgba(0, 0, 0, 0.8)',
+        filter: 'blur(12px)',
       };
     }
     return {};
   };
 
   return (
-    <div
-      className={styles.player}
-      style={{
-        ...getPlayerBackgroundStyles(),
-      }}
-    >
+    <div className={styles.player}>
+      <div
+        className={styles.bg}
+        style={{
+          ...getPlayerBackgroundStyles(),
+        }}
+      ></div>
       <span className={styles.backButton} onClick={() => navigate(-1)}>
         &larr;
       </span>
