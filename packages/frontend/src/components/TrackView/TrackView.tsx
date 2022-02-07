@@ -11,7 +11,10 @@ type Props = {
 const TrackView = (props: Props): React.ReactElement => {
   const renderTracks = () => {
     return props.tracks.map((track) => (
-      <div className={styles.entryContainer}>
+      <div
+        className={styles.entryContainer}
+        key={`key-${track.name}-${track.id}`}
+      >
         <div className={styles.entry}>
           {track.imageUrl ? <img alt="" src={track.imageUrl} /> : undefined}
           <div className={styles.trackInfo}>
@@ -20,7 +23,7 @@ const TrackView = (props: Props): React.ReactElement => {
             </span>
             <span className={styles.artistName}>
               {track.artists.map((trackArtist, index) => (
-                <span>
+                <span key={`key-${index}-${trackArtist.id}`}>
                   {trackArtist.name}
                   {index !== track.artists.length - 1 ? ', ' : ''}
                 </span>

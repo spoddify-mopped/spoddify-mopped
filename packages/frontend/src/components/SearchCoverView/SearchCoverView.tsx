@@ -14,6 +14,7 @@ const SearchCoverView = (props: Props): ReactElement => {
       <div
         className="coverViewEntry"
         onClick={() => props.onCoverClick && props.onCoverClick(item.id)}
+        key={item.name}
       >
         {item.imageUrl ? (
           <img alt="" src={item.imageUrl} />
