@@ -33,6 +33,10 @@ export type ArtistTopTracksResponse = {
   tracks: Track[];
 };
 
+export type ArtistsAlbumsResponse = {
+  albums: Album[];
+};
+
 export type Playlist = {
   id: number;
   name: string;

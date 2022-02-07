@@ -2,6 +2,7 @@ import {
   AlbumWithTracks,
   Artist,
   ArtistTopTracksResponse,
+  ArtistsAlbumsResponse,
   FullPlaylist,
   SearchResponse,
 } from './api.types';
@@ -40,7 +41,6 @@ const ApiClient = {
 
     return data;
   },
-
   getArtist: async (id: string): Promise<Artist> => {
     const { data } = await axios.get<Artist>(`${API_URL}/api/artist/${id}`);
 
@@ -49,6 +49,21 @@ const ApiClient = {
   getArtistTopTracks: async (id: string): Promise<ArtistTopTracksResponse> => {
     const { data } = await axios.get<ArtistTopTracksResponse>(
       `${API_URL}/api/artist/${id}/tracks`
+    );
+
+    return data;
+  },
+  getArtistsAlbums: async (
+    id: string,
+    limit?: number
+  ): Promise<ArtistsAlbumsResponse> => {
+    const { data } = await axios.get<ArtistsAlbumsResponse>(
+      `${API_URL}/api/artist/${id}/albums`,
+      {
+        params: {
+          limit,
+        },
+      }
     );
 
     return data;
