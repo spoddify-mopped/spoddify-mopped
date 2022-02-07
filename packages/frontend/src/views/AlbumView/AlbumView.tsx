@@ -2,6 +2,7 @@ import { AlbumWithTracks, Artist } from '../../clients/api.types';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 
+import { ReactComponent as AddImage } from '../../resources/add.svg';
 import ApiClient from '../../clients/api';
 import SearchTrackView from '../../components/SearchTrackView/SearchTrackView';
 import styles from './AlbumView.module.scss';
@@ -62,6 +63,13 @@ const AlbumView = (): React.ReactElement => {
         </div>
       </div>
       <div className={styles.innerContainer}>
+        <AddImage
+          className={styles.addAlbumButton}
+          title="Add album"
+          onClick={async () => {
+            await ApiClient.addAlbum(album.id);
+          }}
+        />
         <SearchTrackView
           tracks={album.tracks}
           onAddTrackClick={async (track) => {

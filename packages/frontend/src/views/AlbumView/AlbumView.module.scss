@@ -46,8 +46,18 @@ div.header {
 }
 
 div.innerContainer {
-  margin: 5rem 5rem 0 5rem;
+  margin: 0 5rem 0 5rem;
   padding-bottom: 5rem;
+}
+
+svg.addAlbumButton {
+  width: 2rem;
+  margin: 2rem 0;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.5;
+  }
 }
 
 @media screen and (max-width: 1200px) {
