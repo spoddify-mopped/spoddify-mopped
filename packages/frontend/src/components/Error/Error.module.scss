@@ -1,0 +1,11 @@
+div.error {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+
+  span {
+    font-size: 2rem;
+  }
+}

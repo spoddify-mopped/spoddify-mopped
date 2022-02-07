@@ -4,6 +4,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import ApiClient from '../../clients/api';
+import Error from '../../components/Error/Error';
 import SearchCoverView from '../../components/SearchCoverView/SearchCoverView';
 import { ReactComponent as SearchIcon } from '../../resources/search.svg';
 import { SearchResponse } from '../../clients/api.types';
@@ -40,12 +41,7 @@ export const Search = (): ReactElement => {
 
   const renderResult = () => {
     if (isError) {
-      return (
-        <div className="noContent">
-          <span>An error has occurred.</span>
-          <span> Please try again later.</span>
-        </div>
-      );
+      return <Error />;
     }
 
     if (!result) {
