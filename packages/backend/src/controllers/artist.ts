@@ -57,8 +57,11 @@ export default class ArtistController {
   ) => {
     const { params } = request;
 
+    const limit =
+      Number.parseInt(request.query['limit'] as string) || undefined;
+
     await this.spotifySearchService
-      .getArtistAlbums(params.id)
+      .getArtistAlbums(params.id, limit)
       .then((albums) => {
         response.send({ albums });
       })
