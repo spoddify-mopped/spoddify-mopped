@@ -13,10 +13,18 @@ import SetupView from './views/SetupView/SetupView';
 
 export default function App(): ReactElement {
   const [renderSetup, setRenderSetup] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    ApiClient.getSystemStatus().then((status) => setRenderSetup(!status.ready));
+    setIsLoading(true);
+    ApiClient.getSystemStatus()
+      .then((status) => setRenderSetup(!status.ready))
+      .finally(() => setIsLoading(false));
   }, []);
+
+  if (isLoading) {
+    return <></>;
+  }
 
   if (renderSetup) {
     return <SetupView />;
