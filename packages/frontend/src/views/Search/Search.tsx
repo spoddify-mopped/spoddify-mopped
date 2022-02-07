@@ -29,7 +29,9 @@ export const Search = (): ReactElement => {
   const handleSearchInputChange = async (
     evt: React.ChangeEvent<HTMLInputElement>
   ) => {
-    navigate(`/search/${evt.target.value}`, { replace: true });
+    navigate(`/search/${encodeURIComponent(evt.target.value)}`, {
+      replace: true,
+    });
   };
 
   const renderResult = () => {
