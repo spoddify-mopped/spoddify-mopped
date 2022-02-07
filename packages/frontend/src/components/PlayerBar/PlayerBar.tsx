@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react';
 
+import { Artist } from '../../clients/api.types';
 import CoverReplacement from '../../resources/cover_replacement.png';
 import { ReactComponent as Next } from '../../resources/step-forward-solid.svg';
 import { ReactComponent as Pause } from '../../resources/pause-circle-solid.svg';
@@ -10,9 +11,8 @@ import styles from './PlayerBar.module.scss';
 import { useNavigate } from 'react-router';
 
 export type PlayerInformation = {
+  artists?: Artist[];
   coverImgUri?: string;
-  artistName?: string;
-  albumName?: string;
   trackName?: string;
   isPlaying?: boolean;
   progress?: number;
@@ -29,6 +29,29 @@ type Props = {
 const PlayerBar = (props: Props): ReactElement => {
   const navigate = useNavigate();
 
+  const renderArtists = () => {
+    if (props.playerInformation.artists) {
+      const artistCount = props.playerInformation.artists.length;
+
+      return (
+        <span className={styles.artist}>
+          {props.playerInformation.artists.map((artist, index) => (
+            <>
+              <span
+                className={styles.link}
+                key={artist.id}
+                onClick={() => navigate(`/artist/${artist.id}`)}
+              >
+                {artist.name}
+              </span>
+              {index === artistCount - 1 ? ' ' : ', '}
+            </>
+          ))}
+        </span>
+      );
+    }
+  };
+
   return (
     <div className={styles.playerbar}>
       <div className={styles.infoContainer}>
@@ -43,9 +66,7 @@ const PlayerBar = (props: Props): ReactElement => {
           <span className={styles.track}>
             {props.playerInformation.trackName || ''}
           </span>
-          <span className={styles.artist}>
-            {props.playerInformation.artistName || ''}
-          </span>
+          {renderArtists()}
         </div>
       </div>
       <div className={styles.player}>

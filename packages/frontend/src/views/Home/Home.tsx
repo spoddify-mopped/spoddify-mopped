@@ -82,8 +82,7 @@ const Home = (): ReactElement => {
           await ApiClient.previous();
         }}
         playerInformation={{
-          albumName: player.album?.name,
-          artistName: player.artists?.[0].name,
+          artists: player.artists,
           coverImgUri: player.coverUrl,
           duration: player.duration,
           isPlaying: player.isPlaying,

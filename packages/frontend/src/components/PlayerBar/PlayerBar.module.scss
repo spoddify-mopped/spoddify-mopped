@@ -75,3 +75,11 @@ div.playerbar {
     flex: 1;
   }
 }
+
+span.link {
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
