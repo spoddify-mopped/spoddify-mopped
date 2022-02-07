@@ -15,12 +15,16 @@ export const Search = (): ReactElement => {
 
   const [result, setResult] = useState<SearchResponse | undefined>(undefined);
 
+  const [isError, setIsError] = useState(false);
+
   useEffect(() => {
     if (query) {
       ApiClient.search(query, {
         limit: 5,
         type: ['artist', 'track', 'album'],
-      }).then(setResult);
+      })
+        .then(setResult)
+        .catch(() => setIsError(true));
     } else {
       setResult(undefined);
     }
@@ -35,8 +39,21 @@ export const Search = (): ReactElement => {
   };
 
   const renderResult = () => {
+    if (isError) {
+      return (
+        <div className="noContent">
+          <span>An error has occurred.</span>
+          <span> Please try again later.</span>
+        </div>
+      );
+    }
+
     if (!result) {
-      return <></>;
+      return (
+        <div className="noContent">
+          <span>Get started and search for titles, artists or albums.</span>
+        </div>
+      );
     }
 
     return (
