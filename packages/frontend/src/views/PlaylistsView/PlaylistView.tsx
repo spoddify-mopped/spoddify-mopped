@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 
 import ApiClient from '../../clients/api';
 import Error from '../../components/Error/Error';
+import FullLoadingView from '../FullLoadingView/FullLoadingView';
 import { ReactComponent as Play } from '../../resources/play-solid.svg';
 import { Playlist } from '../../clients/api.types';
 import styles from './PlaylistView.module.scss';
@@ -12,11 +13,14 @@ export default function PlaylistView(): React.ReactElement {
 
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
   const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
+    setIsLoading(true);
     ApiClient.getPlaylists()
       .then(setPlaylists)
-      .catch(() => setIsError(true));
+      .catch(() => setIsError(true))
+      .finally(() => setIsLoading(false));
   }, []);
 
   const renderPlaylists = () => {
@@ -37,6 +41,10 @@ export default function PlaylistView(): React.ReactElement {
       </div>
     ));
   };
+
+  if (isLoading) {
+    return <FullLoadingView />;
+  }
 
   if (isError) {
     return <Error />;
