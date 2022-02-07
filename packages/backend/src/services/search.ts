@@ -57,6 +57,18 @@ export default class SpotifySearchService {
     return tracks;
   };
 
+  public getArtistAlbums = async (id: string): Promise<Album[]> => {
+    const artistTopTracksResponse = await this.spotifyClient.getArtistsAlbums(
+      id
+    );
+
+    const album: Album[] = artistTopTracksResponse.items.map(
+      mapSpotifyAlbumToAlbum
+    );
+
+    return album;
+  };
+
   public getArtist = async (id: string): Promise<Artist> => {
     const artistResponse = await this.spotifyClient.getArtist(id);
     return mapSpotifyArtistToArtist(artistResponse);
