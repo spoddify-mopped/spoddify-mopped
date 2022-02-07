@@ -6,6 +6,7 @@ import {
   FullPlaylist,
   Playlist,
   SearchResponse,
+  SystemStatus,
 } from './api.types';
 
 import axios from 'axios';
@@ -78,6 +79,12 @@ const ApiClient = {
   },
   getPlaylists: async (): Promise<Playlist[]> => {
     const { data } = await axios.get<Playlist[]>(`${API_URL}/api/playlist`);
+    return data;
+  },
+  getSystemStatus: async (): Promise<SystemStatus> => {
+    const { data } = await axios.get<SystemStatus>(
+      `${API_URL}/api/system/status`
+    );
     return data;
   },
   next: async (): Promise<void> => {

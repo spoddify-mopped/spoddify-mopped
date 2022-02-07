@@ -1,3 +1,7 @@
+export type SystemStatus = {
+  ready: boolean;
+};
+
 export type Artist = {
   id: string;
   name: string;
