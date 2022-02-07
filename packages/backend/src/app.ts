@@ -15,6 +15,7 @@ import SystemController from './controllers/system';
 import SystemMiddleware from './middleware/system';
 import SystemService from './services/system';
 import WebsocketHandler from './ws/handler';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import http from 'http';
@@ -76,6 +77,7 @@ export default class App {
 
   private initializeMiddleware(): void {
     this.app.use(cors());
+    this.app.use(cookieParser());
     this.app.use(express.json());
     this.app.use(express.static(path.join(__dirname, '..', 'public')));
 

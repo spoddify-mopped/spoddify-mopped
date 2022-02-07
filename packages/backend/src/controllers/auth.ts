@@ -19,7 +19,18 @@ export default class AuthController {
     this.router.get(`${this.path}/callback`, this.callback);
   }
 
-  private login = (_: express.Request, response: express.Response): void => {
+  private login = (
+    request: express.Request,
+    response: express.Response
+  ): void => {
+    const redirectUri = request.query['redirect_uri'] as string;
+
+    if (redirectUri) {
+      response.cookie('redirect_uri', redirectUri);
+    } else {
+      response.clearCookie('redirect_uri');
+    }
+
     response.redirect(
       this.spotifyClient.getOAuthUrl([
         'user-read-playback-state',
@@ -33,6 +44,7 @@ export default class AuthController {
     response: express.Response
   ): void => {
     const code = request.query.code as string;
+    const redirectUri = request.cookies['redirect_uri'] as string;
 
     this.spotifyClient
       .authorizationCodeGrant(code)
@@ -44,7 +56,7 @@ export default class AuthController {
 
         this.spotifyClient.setRefreshToken(data.refresh_token);
         this.spotifyClient.setAccessToken(data.access_token);
-        response.sendStatus(204);
+        response.redirect(redirectUri ? redirectUri : '/');
       })
       .catch(() => {
         response.sendStatus(503);
