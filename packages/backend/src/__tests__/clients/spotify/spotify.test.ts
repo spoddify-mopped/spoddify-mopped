@@ -1,5 +1,4 @@
-/* eslint-disable camelcase */
-
+import { Album, BaseAlbum } from '../../../clients/spotify/types/album';
 import {
   AlbumTracksResponse,
   ArtistResponse,
@@ -10,8 +9,10 @@ import {
 } from './../../../clients/spotify/responses';
 import axios, { AxiosError } from 'axios';
 
-import { Album } from '../../../clients/spotify/types/album';
+import { PagingObject } from './../../../clients/spotify/types/common';
 import SpotifyClient from '../../../clients/spotify/spotify';
+
+/* eslint-disable camelcase */
 
 const testConfig = {
   clientId: 'CLIENT_ID',
@@ -731,7 +732,7 @@ describe('getAlbum', () => {
       release_date_precision: 'day',
       restrictions: undefined,
       total_tracks: 0,
-      tracks: [],
+      tracks: undefined,
       type: 'album',
       uri: '',
     };
@@ -752,6 +753,41 @@ describe('getAlbum', () => {
     expect(axiosSpy).toBeCalledWith(`/albums/id`, {
       params: {
         market: 'DE',
+      },
+    });
+  });
+});
+
+describe('getArtistsAlbums', () => {
+  it('succeeds with the given parameters', async () => {
+    const expectedResponse: PagingObject<BaseAlbum> = {
+      href: '',
+      items: [],
+      limit: 30,
+      offset: 5,
+      total: 100,
+    };
+
+    const axiosSpy = jest.spyOn(axios, 'get').mockImplementation(() =>
+      Promise.resolve({
+        data: expectedResponse,
+        status: 200,
+      })
+    );
+
+    const spotifyClient = new SpotifyClient(testConfig);
+    const response = await spotifyClient.getArtistsAlbums('id', {
+      limit: 30,
+      market: 'DE',
+      offset: 5,
+    });
+
+    expect(response).toBe(expectedResponse);
+    expect(axiosSpy).toBeCalledWith(`/artists/id/albums`, {
+      params: {
+        limit: 30,
+        market: 'DE',
+        offset: 5,
       },
     });
   });

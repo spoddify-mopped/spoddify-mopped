@@ -1,3 +1,4 @@
+import { Album, BaseAlbum } from './types/album';
 import {
   AlbumTracksResponse,
   ArtistResponse,
@@ -17,8 +18,8 @@ import {
 } from './options';
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
-import { Album } from './types/album';
 import Logger from '../../logger/logger';
+import { PagingObject } from './types/common';
 import qs from 'qs';
 
 type Config = {
@@ -322,6 +323,20 @@ export default class SpotifyClient {
     const response = await this.tryWithToken<Album>(
       async () =>
         await this.httpClient.get(`/albums/${id}`, {
+          params: options,
+        })
+    );
+
+    return response.data;
+  };
+
+  public getArtistsAlbums = async (
+    id: string,
+    options?: CombinedOptions
+  ): Promise<PagingObject<BaseAlbum>> => {
+    const response = await this.tryWithToken<PagingObject<BaseAlbum>>(
+      async () =>
+        await this.httpClient.get(`/artists/${id}/albums`, {
           params: options,
         })
     );
