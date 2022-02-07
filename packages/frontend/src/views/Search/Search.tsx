@@ -11,7 +11,7 @@ import SearchTrackView from '../../components/SearchTrackView/SearchTrackView';
 
 export const Search = (): ReactElement => {
   const navigate = useNavigate();
-  const { query } = useParams();
+  const query = useParams().query || '';
 
   const [result, setResult] = useState<SearchResponse | undefined>(undefined);
 
