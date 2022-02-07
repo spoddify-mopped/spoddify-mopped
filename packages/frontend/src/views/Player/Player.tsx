@@ -45,14 +45,18 @@ export default function Player(): ReactElement {
         &larr;
       </span>
       <div className={styles.infoContainer}>
-        <img
-          className={styles.cover}
-          src={player.coverUrl || CoverReplacement}
-          alt="Cover"
-        />
+        <div className={styles.coverContainer}>
+          <img
+            className={styles.cover}
+            src={player.coverUrl || CoverReplacement}
+            alt="Cover"
+          />
+        </div>
         <div className={styles.metadata}>
-          <p className={styles.track}>{player.track}</p>
-          <p>{player.artist}</p>
+          <span className={styles.track}>{player.track}</span>
+          <p className={styles.artistAlbum}>
+            {player.artist} - {player.album}
+          </p>
         </div>
       </div>
       <div>

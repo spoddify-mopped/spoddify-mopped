@@ -23,26 +23,38 @@ div.player {
 
 div.infoContainer {
   display: flex;
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-  flex-wrap: wrap;
+  align-items: flex-start;
+  margin: auto 5rem;
 
-  img.cover {
-    width: auto;
-    height: auto;
-    max-height: 60vh;
-    max-width: 100%;
-    border-radius: 10px;
+  div.coverContainer {
+    flex: 1 0 30%;
+    display: flex;
+    justify-content: flex-end;
+
+    img.cover {
+      width: auto;
+      height: auto;
+      max-height: 70vh;
+      max-width: 100%;
+      border-radius: 10px;
+    }
   }
 
   div.metadata {
+    flex: 1 0 30%;
     margin-left: 2rem;
-    max-width: 30vw;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
 
-    p.track {
-      font-size: 1.2rem;
+    span.track {
+      font-size: 2rem;
       font-weight: 500;
+    }
+
+    p.artistAlbum {
+      font-size: 1.2rem;
     }
   }
 }
@@ -66,5 +78,16 @@ div.control {
 
   &.playpause {
     width: 50px;
+  }
+}
+
+@media screen and (max-width: 700px) {
+  div.infoContainer {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  div.metadata {
+    margin-top: 1rem;
   }
 }
