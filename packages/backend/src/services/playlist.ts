@@ -1,6 +1,7 @@
 import SpotifyPlayerService, { SpotifyApiError } from './player';
 
 import { Artist } from '../clients/spotify/types/artist';
+import DateUtils from '../utils/time';
 import { Track as FullTrack } from '../models/track';
 import Playlist from '../entities/playlist';
 import SpotifyClient from '../clients/spotify/spotify';
@@ -10,6 +11,8 @@ import { mapSpotifyTrackToTrack } from './../models/track';
 type FullPlaylist = {
   id: number;
   name: string;
+  updatedAt: number;
+  createdAt: number;
   tracks: FullTrack[];
 };
 
@@ -58,9 +61,11 @@ export default class PlaylistService {
         playlist = new Playlist();
         playlist.name = genre;
         playlist.tracks = [track];
+        playlist.createdAt = DateUtils.now();
       } else {
         playlist.tracks.push(track);
       }
+      playlist.updatedAt = DateUtils.now();
 
       await playlist.save();
     }
@@ -96,9 +101,11 @@ export default class PlaylistService {
     );
 
     return {
+      createdAt: playlist.createdAt,
       id: playlist.id,
       name: playlist.name,
       tracks: response.tracks.map(mapSpotifyTrackToTrack),
+      updatedAt: playlist.updatedAt,
     };
   };
 

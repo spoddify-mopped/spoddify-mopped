@@ -17,6 +17,12 @@ export default class Playlist extends BaseEntity {
   @Column()
   name: string;
 
+  @Column()
+  createdAt: number;
+
+  @Column()
+  updatedAt: number;
+
   @ManyToMany(() => Track)
   @JoinTable()
   tracks: Track[];
