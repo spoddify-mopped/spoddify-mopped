@@ -5,6 +5,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import ApiClient from '../../clients/api';
 import Error from '../../components/Error/Error';
+import FullLoadingView from '../FullLoadingView/FullLoadingView';
 import SearchCoverView from '../../components/SearchCoverView/SearchCoverView';
 import { ReactComponent as SearchIcon } from '../../resources/search.svg';
 import { SearchResponse } from '../../clients/api.types';
@@ -17,15 +18,18 @@ export const Search = (): ReactElement => {
   const [result, setResult] = useState<SearchResponse | undefined>(undefined);
 
   const [isError, setIsError] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     if (query) {
+      setIsLoading(true);
       ApiClient.search(query, {
         limit: 5,
         type: ['artist', 'track', 'album'],
       })
         .then(setResult)
-        .catch(() => setIsError(true));
+        .catch(() => setIsError(true))
+        .finally(() => setIsLoading(false));
     } else {
       setResult(undefined);
     }
@@ -40,6 +44,10 @@ export const Search = (): ReactElement => {
   };
 
   const renderResult = () => {
+    if (isLoading) {
+      return <FullLoadingView />;
+    }
+
     if (isError) {
       return <Error />;
     }
