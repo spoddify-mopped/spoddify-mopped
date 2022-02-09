@@ -20,6 +20,7 @@ export default class PlayerController {
     this.router.post(`${this.path}/forwards`, this.next);
     this.router.post(`${this.path}/previous`, this.previous);
     this.router.put(`${this.path}/seek`, this.seek);
+    this.router.put(`${this.path}/volume`, this.setVolume);
     this.router.post(`${this.path}/play`, this.play);
     this.router.post(`${this.path}/queue`, this.addQueue);
   }
@@ -89,6 +90,29 @@ export default class PlayerController {
 
     await this.spotifyPlayerService
       .seek(Number.parseInt(position))
+      .then(() => response.sendStatus(204))
+      .catch((error) => this.handleError(error, response));
+  };
+
+  private setVolume = async (
+    request: express.Request,
+    response: express.Response
+  ): Promise<void> => {
+    const volumeString = request.query['volume'] as string;
+
+    if (!volumeString) {
+      response.sendStatus(400);
+      return;
+    }
+
+    const volume = Number.parseInt(volumeString);
+    if (volume < 0 || volume > 100) {
+      response.sendStatus(400);
+      return;
+    }
+
+    await this.spotifyPlayerService
+      .setVolume(volume)
       .then(() => response.sendStatus(204))
       .catch((error) => this.handleError(error, response));
   };

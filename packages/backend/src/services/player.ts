@@ -124,8 +124,6 @@ export default class SpotifyPlayerService {
         device_id: this.targetDevice.id,
       });
     } catch (error) {
-      console.log(error);
-
       throw new SpotifyApiError();
     }
   };
@@ -168,6 +166,21 @@ export default class SpotifyPlayerService {
 
     try {
       await this.spotifyClient.addToQueue(uri, {
+        // eslint-disable-next-line camelcase
+        device_id: this.targetDevice.id,
+      });
+    } catch (error) {
+      throw new SpotifyApiError();
+    }
+  };
+
+  public setVolume = async (volume: number): Promise<void> => {
+    if (!this.targetDevice) {
+      this.targetDevice = await this.findTargetDevice();
+    }
+
+    try {
+      await this.spotifyClient.setVolume(volume, {
         // eslint-disable-next-line camelcase
         device_id: this.targetDevice.id,
       });
