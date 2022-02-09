@@ -14,6 +14,8 @@ import SpotifySearchService from './services/search';
 import SystemController from './controllers/system';
 import SystemMiddleware from './middleware/system';
 import SystemService from './services/system';
+import VotingController from './controllers/voting';
+import VotingService from './services/voting';
 import WebsocketHandler from './ws/handler';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
@@ -47,13 +49,15 @@ export default class App {
   private playlistController: PlaylistController;
   private searchController: SearchController;
   private systemController: SystemController;
+  private votingController: VotingController;
 
   public constructor(
     spotifySearchService: SpotifySearchService,
     playlistService: PlaylistService,
     spotifyPlayerService: SpotifyPlayerService,
     spotifyClient: SpotifyClient,
-    systemService: SystemService
+    systemService: SystemService,
+    votingService: VotingService
   ) {
     this.app = express();
     this.server = http.createServer(this.app);
@@ -70,6 +74,7 @@ export default class App {
     this.playlistController = new PlaylistController(playlistService);
     this.searchController = new SearchController(spotifySearchService);
     this.systemController = new SystemController(systemService);
+    this.votingController = new VotingController(votingService);
 
     this.initializeMiddleware();
     this.initializeControllers();
@@ -93,6 +98,7 @@ export default class App {
     this.app.use('/api', this.playlistController.router);
     this.app.use('/api', this.searchController.router);
     this.app.use('/api', this.systemController.router);
+    this.app.use('/api', this.votingController.router);
 
     this.app.use(
       '*',

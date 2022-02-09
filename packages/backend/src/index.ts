@@ -10,10 +10,13 @@ import SpotifyPlayerService from './services/player';
 import SpotifySearchService from './services/search';
 import SystemService from './services/system';
 import Track from './entities/track';
+import VotingService from './services/voting';
 import config from 'nconf';
 import initializeConfig from './config/config';
 
 initializeConfig();
+
+Logger.setVerbose(true);
 
 const LOGGER = Logger.create(__filename);
 
@@ -38,6 +41,8 @@ const spotifySearchService = new SpotifySearchService(spotifyClient);
 
 const systemService = new SystemService(spotifyClient);
 
+const votingService = new VotingService(spotifyPlayerService);
+
 const databaseConnectionOptions: ConnectionOptions = {
   database: `${config.get('server:dataPath')}/database.sqlite`,
   entities: [Track, Playlist, SpotifyAuth],
@@ -58,7 +63,8 @@ createConnection(databaseConnectionOptions)
       playlistService,
       spotifyPlayerService,
       spotifyClient,
-      systemService
+      systemService,
+      votingService
     );
     app.listen(8080);
   })
