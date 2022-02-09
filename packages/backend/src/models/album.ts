@@ -8,6 +8,7 @@ export type Album = {
   name: string;
   artists: Artist[];
   imageUrl?: string;
+  releaseDate: string;
 };
 
 export type AlbumWithTracks = Album & {
@@ -20,6 +21,7 @@ export const mapSpotifyAlbumToAlbum = (spotifyAlbum: SpotifyAlbum): Album => {
     id: spotifyAlbum.id,
     imageUrl: spotifyAlbum.images?.[0]?.url,
     name: spotifyAlbum.name,
+    releaseDate: spotifyAlbum.release_date,
   };
 };
 
@@ -31,6 +33,7 @@ export const mapSpotifyAlbumToAlbumWithTracks = (
     id: spotifyAlbum.id,
     imageUrl: spotifyAlbum.images?.[0]?.url,
     name: spotifyAlbum.name,
+    releaseDate: spotifyAlbum.release_date,
     tracks: spotifyAlbum.tracks.items.map(mapSpotifyTrackToTrack),
   };
 };

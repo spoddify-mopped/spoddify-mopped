@@ -17,6 +17,7 @@ const AlbumCover = ({ item, onClick }: Props): React.ReactElement => {
         onClick: () => {
           onClick(item.id);
         },
+        subtitle: <span>{new Date(item.releaseDate || '').getFullYear()}</span>,
       }}
     />
   );

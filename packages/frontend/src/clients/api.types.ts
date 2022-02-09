@@ -13,6 +13,7 @@ export type Album = {
   name: string;
   artists: Artist[];
   imageUrl?: string;
+  releaseDate?: string;
 };
 
 export type AlbumWithTracks = Album & {
