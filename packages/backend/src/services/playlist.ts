@@ -1,7 +1,7 @@
 import SpotifyPlayerService, { SpotifyApiError } from './player';
 
 import { Artist } from '../clients/spotify/types/artist';
-import DateUtils from '../utils/time';
+import DateUtils from '../utils/date';
 import { Track as FullTrack } from '../models/track';
 import Playlist from '../entities/playlist';
 import SpotifyClient from '../clients/spotify/spotify';
