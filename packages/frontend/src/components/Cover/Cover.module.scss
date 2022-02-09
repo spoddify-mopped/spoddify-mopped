@@ -1,0 +1,28 @@
+div.cover {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 10rem;
+  padding: 1rem;
+  margin: 1rem;
+  cursor: pointer;
+  border-radius: 5px;
+  background-color: rgba($color: #ffffff, $alpha: 0.05);
+
+  &:hover {
+    background-color: rgba($color: #ffffff, $alpha: 0.15);
+  }
+
+  img {
+    width: 10rem;
+    margin-bottom: 1rem;
+  }
+
+  span.title {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 500;
+    margin-bottom: 1rem;
+  }
+}
