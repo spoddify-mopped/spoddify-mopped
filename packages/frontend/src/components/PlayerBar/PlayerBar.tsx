@@ -2,6 +2,7 @@ import React, { ReactElement } from 'react';
 
 import { Artist } from '../../clients/api.types';
 import CoverReplacement from '../../resources/cover_replacement.png';
+import { ReactComponent as FullScreen } from '../../resources/fullscreen.svg';
 import { ReactComponent as Next } from '../../resources/step-forward-solid.svg';
 import { ReactComponent as Pause } from '../../resources/pause-circle-solid.svg';
 import { ReactComponent as Play } from '../../resources/play-circle-solid.svg';
@@ -56,11 +57,15 @@ const PlayerBar = (props: Props): ReactElement => {
   return (
     <div className={styles.playerbar}>
       <div className={styles.infoContainer}>
-        <div onClick={() => navigate('/player')} className={styles.cover}>
-          <img
-            src={props.playerInformation.coverImgUri || CoverReplacement}
-            alt="Cover"
-          />
+        <div className={styles.cover}>
+          {props.playerInformation.coverImgUri ? (
+            <img
+              src={props.playerInformation.coverImgUri || CoverReplacement}
+              alt="Cover"
+            />
+          ) : (
+            <></>
+          )}
         </div>
 
         <div className={styles.info}>
@@ -91,7 +96,14 @@ const PlayerBar = (props: Props): ReactElement => {
           startProgress={props.playerInformation.progress}
         />
       </div>
-      <div className={styles.volume}></div>
+      <div className={styles.right}>
+        <span className={styles.fullscreen}>
+          <FullScreen
+            className={styles.fullscreen}
+            onClick={() => navigate('/player')}
+          />
+        </span>
+      </div>
     </div>
   );
 };
