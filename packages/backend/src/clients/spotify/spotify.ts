@@ -347,4 +347,20 @@ export default class SpotifyClient {
 
     return response.data;
   };
+
+  public setVolume = async (
+    volume: number,
+    options?: DeviceOptions
+  ): Promise<void> => {
+    await this.tryWithToken(
+      async () =>
+        await this.httpClient.put(`/me/player/volume`, null, {
+          params: {
+            // eslint-disable-next-line camelcase
+            volume_percent: volume,
+            ...options,
+          },
+        })
+    );
+  };
 }

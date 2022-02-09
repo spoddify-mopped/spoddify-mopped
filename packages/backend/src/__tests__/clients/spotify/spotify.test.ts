@@ -792,3 +792,25 @@ describe('getArtistsAlbums', () => {
     });
   });
 });
+
+describe('setVolume', () => {
+  it('succeeds with the given parameters', async () => {
+    const axiosSpy = jest.spyOn(axios, 'put').mockImplementation(() =>
+      Promise.resolve({
+        status: 204,
+      })
+    );
+
+    const spotifyClient = new SpotifyClient(testConfig);
+    await spotifyClient.setVolume(80, {
+      device_id: 'id',
+    });
+
+    expect(axiosSpy).toBeCalledWith(`/me/player/volume`, null, {
+      params: {
+        device_id: 'id',
+        volume_percent: 80,
+      },
+    });
+  });
+});
