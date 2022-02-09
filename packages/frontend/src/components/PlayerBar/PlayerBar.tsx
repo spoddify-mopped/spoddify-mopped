@@ -12,6 +12,7 @@ import { useNavigate } from 'react-router';
 
 export type PlayerInformation = {
   artists?: Artist[];
+  albumId?: string;
   coverImgUri?: string;
   trackName?: string;
   isPlaying?: boolean;
@@ -63,7 +64,12 @@ const PlayerBar = (props: Props): ReactElement => {
         </div>
 
         <div className={styles.info}>
-          <span className={styles.track}>
+          <span
+            className={`${styles.track} ${styles.link}`}
+            onClick={() =>
+              navigate(`/album/${props.playerInformation.albumId}`)
+            }
+          >
             {props.playerInformation.trackName || ''}
           </span>
           {renderArtists()}
