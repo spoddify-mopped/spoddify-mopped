@@ -62,11 +62,15 @@ export default class SpotifySearchService {
     limit?: number
   ): Promise<Album[]> => {
     const artistTopTracksResponse = await this.spotifyClient.getArtistsAlbums(
-      id,
-      {
-        limit: limit,
-      }
+      id
     );
+
+    artistTopTracksResponse.items = artistTopTracksResponse.items
+      .filter(
+        (value, index, self) =>
+          index === self.findIndex((t) => t.name === value.name)
+      )
+      .slice(0, limit);
 
     const album: Album[] = artistTopTracksResponse.items.map(
       mapSpotifyAlbumToAlbum
