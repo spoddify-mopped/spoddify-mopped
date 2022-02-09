@@ -1,5 +1,6 @@
 import React, { useRef } from 'react';
 
+import CoverReplacement from '../../resources/cover_replacement.png';
 import styles from './Cover.module.scss';
 
 type CoverItem = {
@@ -36,7 +37,7 @@ const Cover = ({ className, item }: Props): React.ReactElement => {
         item.onClick && item.onClick();
       }}
     >
-      <img src={item.image} alt="Thumb" />
+      <img src={item.image || CoverReplacement} alt="Thumb" />
       <span title={item.name} className={styles.title}>
         {item.name}
       </span>
