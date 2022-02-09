@@ -1,37 +1,41 @@
-import './SearchCoverView.css';
-
 import { Album, Artist } from '../../clients/api.types';
 import React, { ReactElement } from 'react';
+
+import AlbumWithArtistCover from '../AlbumWithArtistCover/AlbumWithArtistCover';
+import ArtistCover from '../ArtistCover/ArtistCover';
+import styles from './SearchCoverView.module.scss';
 
 interface Props {
   items: Album[] | Artist[];
   onCoverClick?: (id: string) => void;
+  onSubTitleClick?: (id: string) => void;
 }
 
 const SearchCoverView = (props: Props): ReactElement => {
   const renderItems = () => {
-    return props.items.map((item) => (
-      <div
-        className="coverViewEntry"
-        onClick={() => props.onCoverClick && props.onCoverClick(item.id)}
-        key={item.name}
-      >
-        {item.imageUrl ? (
-          <img alt="" src={item.imageUrl} />
-        ) : (
-          <div className="coverViewImgReplacement">
-            <span>No Image</span>
-          </div>
-        )}
-        {'artists' in item ? (
-          <span>{item.artists.map((artist) => artist.name).join(', ')}</span>
-        ) : undefined}
-        <span title={item.name}>{item.name}</span>
-      </div>
-    ));
+    return props.items.map((item) => {
+      if ('artists' in item) {
+        return (
+          <AlbumWithArtistCover
+            item={item}
+            onAlbumClick={(id) => props.onCoverClick && props.onCoverClick(id)}
+            onArtistClick={(id) =>
+              props.onSubTitleClick && props.onSubTitleClick(id)
+            }
+          />
+        );
+      }
+
+      return (
+        <ArtistCover
+          item={item}
+          onClick={(id) => props.onCoverClick && props.onCoverClick(id)}
+        />
+      );
+    });
   };
 
-  return <div className="searchCoverViewContainer">{renderItems()}</div>;
+  return <div className={styles.container}>{renderItems()}</div>;
 };
 
 export default SearchCoverView;

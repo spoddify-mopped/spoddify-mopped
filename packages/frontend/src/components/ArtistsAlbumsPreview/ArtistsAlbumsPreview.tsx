@@ -1,5 +1,5 @@
 import { Album } from '../../clients/api.types';
-import Cover from '../Cover/Cover';
+import AlbumCover from '../AlbumCover/AlbumCover';
 import React from 'react';
 import styles from './ArtistsAlbumsPreview.module.scss';
 
@@ -12,7 +12,12 @@ const ArtistsAlbumsPreview = (props: Props): React.ReactElement => {
   return (
     <div className={styles.container}>
       {props.items.map((item) => (
-        <Cover item={item} onClick={props.onItemClick} />
+        <AlbumCover
+          item={item}
+          onClick={() => {
+            props.onItemClick && props.onItemClick(item.id);
+          }}
+        />
       ))}
     </div>
   );

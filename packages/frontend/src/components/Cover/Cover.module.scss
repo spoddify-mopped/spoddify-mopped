@@ -15,6 +15,7 @@ div.cover {
 
   img {
     width: 10rem;
+    height: 10rem;
     margin-bottom: 1rem;
   }
 
@@ -23,6 +24,16 @@ div.cover {
     overflow: hidden;
     text-overflow: ellipsis;
     font-weight: 500;
-    margin-bottom: 1rem;
+  }
+
+  span.subtitle {
+    opacity: 0.5;
+    font-size: 0.9rem;
+
+    &.clickable {
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 }

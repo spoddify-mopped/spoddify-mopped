@@ -81,6 +81,9 @@ export const Search = (): ReactElement => {
             onCoverClick={async (id) => {
               navigate(`/album/${id}`);
             }}
+            onSubTitleClick={async (id) => {
+              navigate(`/artist/${id}`);
+            }}
             items={result.albums}
           />
         </div>
