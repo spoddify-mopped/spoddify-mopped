@@ -1,5 +1,4 @@
-import SpotifyPlayerService, { DeviceNotFoundError } from '../services/player';
-
+import SpotifyPlayerService from '../services/player';
 import express from 'express';
 
 export default class PlayerController {
@@ -25,61 +24,54 @@ export default class PlayerController {
     this.router.post(`${this.path}/queue`, this.addQueue);
   }
 
-  private handleError = (error: Error, response: express.Response) => {
-    if (error instanceof DeviceNotFoundError) {
-      response.status(503).send({
-        msg: 'Player not found',
-      });
-    } else {
-      response.status(503).send({
-        msg: 'Internal Server Error',
-      });
-    }
-  };
-
   private getPlayer = async (
     _request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ): Promise<void> => {
     await this.spotifyPlayerService
       .getPlayer()
       .then((player) => response.send(player))
-      .catch((error) => this.handleError(error, response));
+      .catch((err) => next(err));
   };
 
   private playPause = async (
     _request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ): Promise<void> => {
     await this.spotifyPlayerService
       .playPause()
       .then(() => response.sendStatus(204))
-      .catch((error) => this.handleError(error, response));
+      .catch((err) => next(err));
   };
 
   private next = async (
     _request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ): Promise<void> => {
     await this.spotifyPlayerService
       .next()
       .then(() => response.sendStatus(204))
-      .catch((error) => this.handleError(error, response));
+      .catch((err) => next(err));
   };
 
   private previous = async (
     _request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ): Promise<void> => {
     await this.spotifyPlayerService
       .previous()
       .then(() => response.sendStatus(204))
-      .catch((error) => this.handleError(error, response));
+      .catch((err) => next(err));
   };
 
   private seek = async (
     request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ): Promise<void> => {
     const position = request.query['position'] as string;
 
@@ -91,12 +83,13 @@ export default class PlayerController {
     await this.spotifyPlayerService
       .seek(Number.parseInt(position))
       .then(() => response.sendStatus(204))
-      .catch((error) => this.handleError(error, response));
+      .catch((err) => next(err));
   };
 
   private setVolume = async (
     request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ): Promise<void> => {
     const volumeString = request.query['volume'] as string;
 
@@ -114,12 +107,13 @@ export default class PlayerController {
     await this.spotifyPlayerService
       .setVolume(volume)
       .then(() => response.sendStatus(204))
-      .catch((error) => this.handleError(error, response));
+      .catch((err) => next(err));
   };
 
   private play = async (
     request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ): Promise<void> => {
     let uris = request.query['uri'] as string | string[];
 
@@ -134,12 +128,13 @@ export default class PlayerController {
     await this.spotifyPlayerService
       .play(uris)
       .then(() => response.sendStatus(204))
-      .catch((error) => this.handleError(error, response));
+      .catch((err) => next(err));
   };
 
   private addQueue = async (
     request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ): Promise<void> => {
     const uri = request.query['uri'] as string;
 
@@ -151,6 +146,6 @@ export default class PlayerController {
     await this.spotifyPlayerService
       .addQueue(uri)
       .then(() => response.sendStatus(204))
-      .catch((error) => this.handleError(error, response));
+      .catch((err) => next(err));
   };
 }
