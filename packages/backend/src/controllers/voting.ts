@@ -1,6 +1,7 @@
 import { body, matchedData } from 'express-validator';
 
 import RequestError from '../error/request';
+import { StatusCodes } from 'http-status-codes';
 import VotingService from '../services/voting';
 import express from 'express';
 
@@ -46,7 +47,7 @@ export default class VotingController {
       this.votingService.addVote(data.uuid, data.skip);
       response.sendStatus(204);
     } catch {
-      response.sendStatus(409);
+      next(new RequestError('UUID has already voted', StatusCodes.CONFLICT));
     }
   };
 }
