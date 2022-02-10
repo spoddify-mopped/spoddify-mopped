@@ -1,3 +1,5 @@
+import { ReasonPhrases, StatusCodes } from 'http-status-codes';
+
 import AlbumController from './controllers/album';
 import ArtistController from './controllers/artist';
 import AuthController from './controllers/auth';
@@ -6,6 +8,7 @@ import Logger from './logger/logger';
 import PlayerController from './controllers/player';
 import PlaylistController from './controllers/playlist';
 import PlaylistService from './services/playlist';
+import RequestError from './error/request';
 import SearchController from './controllers/search';
 import { Server } from 'socket.io';
 import SpotifyClient from './clients/spotify/spotify';
@@ -100,6 +103,8 @@ export default class App {
         response.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
       }
     );
+
+    this.app.use(this.errorHandler);
   }
 
   private initializeSocketIo(
@@ -121,6 +126,27 @@ export default class App {
       socket.on('action', this.websocketHandler.handle);
     });
   }
+
+  private errorHandler = (
+    error: Error,
+    _request: express.Request,
+    response: express.Response,
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    _next: express.NextFunction
+  ): void => {
+    if (error instanceof RequestError) {
+      response.status(error.statusCode).send(error.getErrorResponse());
+    } else {
+      response
+        .sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+        .send(
+          new RequestError(
+            ReasonPhrases.INTERNAL_SERVER_ERROR,
+            StatusCodes.INTERNAL_SERVER_ERROR
+          ).getErrorResponse()
+        );
+    }
+  };
 
   public listen(port: number): void {
     this.server.listen(port, () => {
