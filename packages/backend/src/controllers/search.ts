@@ -74,8 +74,6 @@ export default class SearchController {
       .then((result) => {
         response.send(result);
       })
-      .catch(() => {
-        response.sendStatus(503);
-      });
+      .catch((err) => next(err));
   };
 }
