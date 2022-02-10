@@ -1,5 +1,24 @@
+import { matchedData, query } from 'express-validator';
+
+import RequestError from '../error/request';
 import SpotifyPlayerService from '../services/player';
 import express from 'express';
+
+type SeekQuery = {
+  position: string;
+};
+
+type VolumeQuery = {
+  volume: number;
+};
+
+type PlayQuery = {
+  uri: string[];
+};
+
+type AddQueueQuery = {
+  uri: string;
+};
 
 export default class PlayerController {
   public path = '/player';
@@ -18,10 +37,29 @@ export default class PlayerController {
     this.router.post(`${this.path}/pause`, this.playPause);
     this.router.post(`${this.path}/forwards`, this.next);
     this.router.post(`${this.path}/previous`, this.previous);
-    this.router.put(`${this.path}/seek`, this.seek);
-    this.router.put(`${this.path}/volume`, this.setVolume);
-    this.router.post(`${this.path}/play`, this.play);
-    this.router.post(`${this.path}/queue`, this.addQueue);
+    this.router.put(
+      `${this.path}/seek`,
+      query('position').isString(),
+      this.seek
+    );
+    this.router.put(
+      `${this.path}/volume`,
+      query('volume').isInt({ max: 100, min: 0 }).toInt(),
+      this.setVolume
+    );
+    this.router.post(
+      `${this.path}/play`,
+      query('uri')
+        .optional()
+        .custom((uri) => typeof uri === 'string' || Array.isArray(uri))
+        .toArray(),
+      this.play
+    );
+    this.router.post(
+      `${this.path}/queue`,
+      query('uri').isString(),
+      this.addQueue
+    );
   }
 
   private getPlayer = async (
@@ -73,15 +111,16 @@ export default class PlayerController {
     response: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
-    const position = request.query['position'] as string;
-
-    if (!position) {
-      response.sendStatus(400);
+    const validationError = RequestError.validationResult(request);
+    if (validationError) {
+      next(validationError);
       return;
     }
 
+    const data = matchedData(request) as SeekQuery;
+
     await this.spotifyPlayerService
-      .seek(Number.parseInt(position))
+      .seek(Number.parseInt(data.position))
       .then(() => response.sendStatus(204))
       .catch((err) => next(err));
   };
@@ -91,21 +130,16 @@ export default class PlayerController {
     response: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
-    const volumeString = request.query['volume'] as string;
-
-    if (!volumeString) {
-      response.sendStatus(400);
+    const validationError = RequestError.validationResult(request);
+    if (validationError) {
+      next(validationError);
       return;
     }
 
-    const volume = Number.parseInt(volumeString);
-    if (volume < 0 || volume > 100) {
-      response.sendStatus(400);
-      return;
-    }
+    const data = matchedData(request) as VolumeQuery;
 
     await this.spotifyPlayerService
-      .setVolume(volume)
+      .setVolume(data.volume)
       .then(() => response.sendStatus(204))
       .catch((err) => next(err));
   };
@@ -115,18 +149,16 @@ export default class PlayerController {
     response: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
-    let uris = request.query['uri'] as string | string[];
-
-    if (!uris) {
-      uris = [];
+    const validationError = RequestError.validationResult(request);
+    if (validationError) {
+      next(validationError);
+      return;
     }
 
-    if (!Array.isArray(uris)) {
-      uris = [uris];
-    }
+    const data = matchedData(request) as PlayQuery;
 
     await this.spotifyPlayerService
-      .play(uris)
+      .play(data.uri)
       .then(() => response.sendStatus(204))
       .catch((err) => next(err));
   };
@@ -136,15 +168,16 @@ export default class PlayerController {
     response: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
-    const uri = request.query['uri'] as string;
-
-    if (!uri) {
-      response.sendStatus(400);
+    const validationError = RequestError.validationResult(request);
+    if (validationError) {
+      next(validationError);
       return;
     }
 
+    const data = matchedData(request) as AddQueueQuery;
+
     await this.spotifyPlayerService
-      .addQueue(uri)
+      .addQueue(data.uri)
       .then(() => response.sendStatus(204))
       .catch((err) => next(err));
   };
