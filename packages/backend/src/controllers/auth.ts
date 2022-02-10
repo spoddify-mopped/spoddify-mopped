@@ -2,6 +2,8 @@ import SpotifyAuth from '../entities/spotify_auth';
 import SpotifyClient from '../clients/spotify/spotify';
 import express from 'express';
 
+const OAUTH_SCOPES = ['user-read-playback-state', 'user-modify-playback-state'];
+
 export default class AuthController {
   public path = '';
   public router = express.Router();
@@ -31,12 +33,7 @@ export default class AuthController {
       response.clearCookie('redirect_uri');
     }
 
-    response.redirect(
-      this.spotifyClient.getOAuthUrl([
-        'user-read-playback-state',
-        'user-modify-playback-state',
-      ])
-    );
+    response.redirect(this.spotifyClient.getOAuthUrl(OAUTH_SCOPES));
   };
 
   private callback = (
