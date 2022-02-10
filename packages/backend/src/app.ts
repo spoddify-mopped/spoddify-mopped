@@ -138,7 +138,7 @@ export default class App {
       response.status(error.statusCode).send(error.getErrorResponse());
     } else {
       response
-        .sendStatus(StatusCodes.INTERNAL_SERVER_ERROR)
+        .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .send(
           new RequestError(
             ReasonPhrases.INTERNAL_SERVER_ERROR,
