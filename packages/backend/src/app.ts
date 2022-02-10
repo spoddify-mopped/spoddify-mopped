@@ -41,21 +41,11 @@ export default class App {
 
   private systemMiddleware: SystemMiddleware;
 
-  private albumController: AlbumController;
-  private artistController: ArtistController;
-  private authController: AuthController;
-  private eventController: EventController;
-  private playerController: PlayerController;
-  private playlistController: PlaylistController;
-  private searchController: SearchController;
-  private systemController: SystemController;
-  private votingController: VotingController;
-
   public constructor(
-    spotifySearchService: SpotifySearchService,
     playlistService: PlaylistService,
-    spotifyPlayerService: SpotifyPlayerService,
     spotifyClient: SpotifyClient,
+    spotifyPlayerService: SpotifyPlayerService,
+    spotifySearchService: SpotifySearchService,
     systemService: SystemService,
     votingService: VotingService
   ) {
@@ -66,18 +56,15 @@ export default class App {
 
     this.systemMiddleware = new SystemMiddleware(systemService);
 
-    this.albumController = new AlbumController(spotifySearchService);
-    this.artistController = new ArtistController(spotifySearchService);
-    this.authController = new AuthController(spotifyClient);
-    this.eventController = new EventController(this.websocketHandler);
-    this.playerController = new PlayerController(spotifyPlayerService);
-    this.playlistController = new PlaylistController(playlistService);
-    this.searchController = new SearchController(spotifySearchService);
-    this.systemController = new SystemController(systemService);
-    this.votingController = new VotingController(votingService);
-
     this.initializeMiddleware();
-    this.initializeControllers();
+    this.initializeControllers(
+      playlistService,
+      spotifyClient,
+      spotifyPlayerService,
+      spotifySearchService,
+      systemService,
+      votingService
+    );
   }
 
   private initializeMiddleware(): void {
@@ -89,16 +76,23 @@ export default class App {
     this.app.use(this.systemMiddleware.checkReadiness);
   }
 
-  private initializeControllers(): void {
-    this.app.use('/api', this.albumController.router);
-    this.app.use('/api', this.artistController.router);
-    this.app.use('/api', this.authController.router);
-    this.app.use('/api', this.eventController.router);
-    this.app.use('/api', this.playerController.router);
-    this.app.use('/api', this.playlistController.router);
-    this.app.use('/api', this.searchController.router);
-    this.app.use('/api', this.systemController.router);
-    this.app.use('/api', this.votingController.router);
+  private initializeControllers(
+    playlistService: PlaylistService,
+    spotifyClient: SpotifyClient,
+    spotifyPlayerService: SpotifyPlayerService,
+    spotifySearchService: SpotifySearchService,
+    systemService: SystemService,
+    votingService: VotingService
+  ): void {
+    this.app.use('/api', new AlbumController(spotifySearchService).router);
+    this.app.use('/api', new ArtistController(spotifySearchService).router);
+    this.app.use('/api', new AuthController(spotifyClient).router);
+    this.app.use('/api', new EventController(this.websocketHandler).router);
+    this.app.use('/api', new PlayerController(spotifyPlayerService).router);
+    this.app.use('/api', new PlaylistController(playlistService).router);
+    this.app.use('/api', new SearchController(spotifySearchService).router);
+    this.app.use('/api', new SystemController(systemService).router);
+    this.app.use('/api', new VotingController(votingService).router);
 
     this.app.use(
       '*',

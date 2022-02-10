@@ -59,10 +59,10 @@ createConnection(databaseConnectionOptions)
     }
 
     const app = new App(
-      spotifySearchService,
       playlistService,
-      spotifyPlayerService,
       spotifyClient,
+      spotifyPlayerService,
+      spotifySearchService,
       systemService,
       votingService
     );
