@@ -66,6 +66,7 @@ createConnection(databaseConnectionOptions)
       systemService,
       votingService
     );
-    app.listen(8080);
+
+    app.listen(config.get('server:port'));
   })
   .catch((error) => LOGGER.error('TypeORM connection error: ', error.message));
