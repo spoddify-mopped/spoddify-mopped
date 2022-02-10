@@ -6,6 +6,14 @@ import RequestError from '../error/request';
 import { StatusCodes } from 'http-status-codes';
 import express from 'express';
 
+type AddToPlaylistRequest = {
+  id: string;
+};
+
+type GetPlaylistRequest = {
+  id: number;
+};
+
 export default class PlaylistController {
   public path = '/playlist';
   public router = express.Router();
@@ -32,12 +40,12 @@ export default class PlaylistController {
     this.router.get(`${this.path}`, this.getPlaylists);
     this.router.get(
       `${this.path}/:id`,
-      param('id').isNumeric(),
+      param('id').isNumeric().toInt(),
       this.getPlaylist
     );
     this.router.post(
       `${this.path}/:id/play`,
-      param('id').isNumeric(),
+      param('id').isNumeric().toInt(),
       this.playPlaylist
     );
   }
@@ -65,7 +73,7 @@ export default class PlaylistController {
       return;
     }
 
-    const data = matchedData(request);
+    const data = matchedData(request) as AddToPlaylistRequest;
 
     await this.playlistService
       .sortInTrack(data.id)
@@ -84,7 +92,7 @@ export default class PlaylistController {
       return;
     }
 
-    const data = matchedData(request);
+    const data = matchedData(request) as AddToPlaylistRequest;
 
     await this.playlistService
       .sortInAlbum(data.id)
@@ -114,11 +122,10 @@ export default class PlaylistController {
       return;
     }
 
-    const data = matchedData(request);
-    const id = Number.parseInt(data.id);
+    const data = matchedData(request) as GetPlaylistRequest;
 
     await this.playlistService
-      .getPlaylist(id)
+      .getPlaylist(data.id)
       .then((playlist) => response.send(playlist))
       .catch((error) => {
         if (error instanceof PlaylistNotFoundError) {
@@ -140,11 +147,10 @@ export default class PlaylistController {
       return;
     }
 
-    const data = matchedData(request);
-    const id = Number.parseInt(data.id);
+    const data = matchedData(request) as GetPlaylistRequest;
 
     await this.playlistService
-      .playPlaylist(id)
+      .playPlaylist(data.id)
       .then(() => response.sendStatus(204))
       .catch((error) => {
         if (error instanceof PlaylistNotFoundError) {
