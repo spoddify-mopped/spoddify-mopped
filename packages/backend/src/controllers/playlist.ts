@@ -1,5 +1,8 @@
+import { body, matchedData, param } from 'express-validator';
+
 import { DeviceNotFoundError } from '../services/player';
 import PlaylistService from '../services/playlist';
+import RequestError from '../error/request';
 import express from 'express';
 
 export default class PlaylistController {
@@ -15,11 +18,27 @@ export default class PlaylistController {
   }
 
   public initializeRoutes(): void {
-    this.router.post(`${this.path}/add/track`, this.addTrack);
-    this.router.post(`${this.path}/add/album`, this.addAlbum);
+    this.router.post(
+      `${this.path}/add/track`,
+      body('id').isString(),
+      this.addTrack
+    );
+    this.router.post(
+      `${this.path}/add/album`,
+      body('id').isString(),
+      this.addAlbum
+    );
     this.router.get(`${this.path}`, this.getPlaylists);
-    this.router.get(`${this.path}/:id`, this.getPlaylist);
-    this.router.post(`${this.path}/:id/play`, this.playPlaylist);
+    this.router.get(
+      `${this.path}/:id`,
+      param('id').isNumeric(),
+      this.getPlaylist
+    );
+    this.router.post(
+      `${this.path}/:id/play`,
+      param('id').isNumeric(),
+      this.playPlaylist
+    );
   }
 
   private handleError = (error: Error, response: express.Response) => {
@@ -36,34 +55,38 @@ export default class PlaylistController {
 
   private addTrack = async (
     request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ): Promise<void> => {
-    const { body } = request;
-
-    if (!body.id) {
-      response.sendStatus(400);
+    const validationError = RequestError.validationResult(request);
+    if (validationError) {
+      next(validationError);
       return;
     }
 
+    const data = matchedData(request);
+
     await this.playlistService
-      .sortInTrack(body.id)
+      .sortInTrack(data.id)
       .then(() => response.sendStatus(204))
       .catch((error) => this.handleError(error, response));
   };
 
   private addAlbum = async (
     request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ): Promise<void> => {
-    const { body } = request;
-
-    if (!body.id) {
-      response.sendStatus(400);
+    const validationError = RequestError.validationResult(request);
+    if (validationError) {
+      next(validationError);
       return;
     }
 
+    const data = matchedData(request);
+
     await this.playlistService
-      .sortInAlbum(body.id)
+      .sortInAlbum(data.id)
       .then(() => response.sendStatus(204))
       .catch((error) => this.handleError(error, response));
   };
@@ -80,14 +103,17 @@ export default class PlaylistController {
 
   private getPlaylist = async (
     request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ): Promise<void> => {
-    const id = Number.parseInt(request.params.id);
-
-    if (!id) {
-      response.sendStatus(400);
+    const validationError = RequestError.validationResult(request);
+    if (validationError) {
+      next(validationError);
       return;
     }
+
+    const data = matchedData(request);
+    const id = Number.parseInt(data.id);
 
     await this.playlistService
       .getPlaylist(id)
@@ -97,14 +123,17 @@ export default class PlaylistController {
 
   private playPlaylist = async (
     request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ): Promise<void> => {
-    const id = Number.parseInt(request.params.id);
-
-    if (!id) {
-      response.sendStatus(400);
+    const validationError = RequestError.validationResult(request);
+    if (validationError) {
+      next(validationError);
       return;
     }
+
+    const data = matchedData(request);
+    const id = Number.parseInt(data.id);
 
     await this.playlistService
       .playPlaylist(id)
