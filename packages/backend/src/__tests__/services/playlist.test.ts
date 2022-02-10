@@ -1,5 +1,3 @@
-/* eslint-disable camelcase */
-
 import {
   AlbumTracksResponse,
   ArtistResponse,
@@ -10,9 +8,12 @@ import SpotifyPlayerService, { SpotifyApiError } from '../../services/player';
 import { createConnection, getConnection } from 'typeorm';
 
 import Playlist from '../../entities/playlist';
+import { PlaylistNotFoundError } from './../../services/playlist';
 import PlaylistService from '../../services/playlist';
 import SpotifyClient from '../../clients/spotify/spotify';
 import Track from '../../entities/track';
+
+/* eslint-disable camelcase */
 
 export const spotifyArtist: ArtistResponse = {
   external_urls: undefined,
@@ -246,14 +247,14 @@ describe('getPlaylist', () => {
     expect(playlist.tracks[0].name).toBe('some name');
   });
 
-  it('throws error when playlist could not be found', async () => {
+  it('throws PlaylistNotFoundError when playlist could not be found', async () => {
     const getAlbumTracksSpy = jest.spyOn(spotifyClientMock, 'getTracks');
     getAlbumTracksSpy.mockResolvedValue(spotifyTracks);
 
     const playlistService = new PlaylistService(spotifyClientMock, null);
 
     await expect(playlistService.getPlaylist(1)).rejects.toThrow(
-      new Error('playlist not found')
+      new PlaylistNotFoundError()
     );
   });
 });
@@ -267,7 +268,7 @@ describe('playPlaylist', () => {
     await closeDB();
   });
 
-  it('playPlaylist', async () => {
+  it('plays a playlist', async () => {
     const spotifyPlayerServiceMock = new SpotifyPlayerService(
       spotifyClientMock,
       'some device name'
@@ -303,5 +304,23 @@ describe('playPlaylist', () => {
         'spotify:track:some track id 2',
       ])
     );
+  });
+
+  it('throws PlaylistNotFoundError when playlist could not be found', async () => {
+    const spotifyPlayerServiceMock = new SpotifyPlayerService(
+      spotifyClientMock,
+      'some device name'
+    );
+
+    const playSpy = jest
+      .spyOn(spotifyPlayerServiceMock, 'play')
+      .mockResolvedValue();
+
+    const playlistService = new PlaylistService(null, spotifyPlayerServiceMock);
+
+    await expect(playlistService.playPlaylist(1)).rejects.toThrow(
+      new PlaylistNotFoundError()
+    );
+    expect(playSpy).not.toBeCalled();
   });
 });

@@ -9,6 +9,8 @@ import SpotifyClient from '../clients/spotify/spotify';
 import Track from '../entities/track';
 import { mapSpotifyTrackToTrack } from './../models/track';
 
+export class PlaylistNotFoundError extends Error {}
+
 type FullPlaylist = {
   id: number;
   name: string;
@@ -104,7 +106,7 @@ export default class PlaylistService {
     );
 
     if (!playlist) {
-      throw new Error('playlist not found');
+      throw new PlaylistNotFoundError();
     }
 
     const response = await this.spotifyClient.getTracks(
@@ -127,6 +129,11 @@ export default class PlaylistService {
         relations: ['tracks'],
       }
     );
+
+    if (!playlist) {
+      throw new PlaylistNotFoundError();
+    }
+
     const tracks = playlist.tracks
       .sort(() => Math.random() - 0.5)
       .map((track) => `spotify:track:${track.id}`);
