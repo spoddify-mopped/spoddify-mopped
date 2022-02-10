@@ -103,6 +103,10 @@ export default class PlaylistService {
       }
     );
 
+    if (!playlist) {
+      throw new Error('playlist not found');
+    }
+
     const response = await this.spotifyClient.getTracks(
       playlist.tracks.map((track) => track.id)
     );
