@@ -1,3 +1,6 @@
+import { body, matchedData } from 'express-validator';
+
+import RequestError from '../error/request';
 import VotingService from '../services/voting';
 import express from 'express';
 
@@ -18,17 +21,29 @@ export default class VotingController {
   }
 
   public initializeRoutes(): void {
-    this.router.post(`${this.path}`, this.vote);
+    this.router.post(
+      `${this.path}`,
+      body('uuid').isString(),
+      body('skip').isBoolean(),
+      this.vote
+    );
   }
 
   public vote = (
     request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ): void => {
-    const body = request.body as VoteRequest;
+    const validationError = RequestError.validationResult(request);
+    if (validationError) {
+      next(validationError);
+      return;
+    }
+
+    const data = matchedData(request) as VoteRequest;
 
     try {
-      this.votingService.addVote(body.uuid, body.skip);
+      this.votingService.addVote(data.uuid, data.skip);
       response.sendStatus(204);
     } catch {
       response.sendStatus(409);
