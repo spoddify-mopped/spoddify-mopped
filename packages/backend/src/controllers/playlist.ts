@@ -1,8 +1,9 @@
+import PlaylistService, { PlaylistNotFoundError } from '../services/playlist';
 import { body, matchedData, param } from 'express-validator';
 
 import { DeviceNotFoundError } from '../services/player';
-import PlaylistService from '../services/playlist';
 import RequestError from '../error/request';
+import { StatusCodes } from 'http-status-codes';
 import express from 'express';
 
 export default class PlaylistController {
@@ -93,12 +94,13 @@ export default class PlaylistController {
 
   private getPlaylists = async (
     _request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ): Promise<void> => {
     await this.playlistService
       .getPlaylists()
       .then((playlists) => response.send(playlists))
-      .catch((error) => this.handleError(error, response));
+      .catch((error) => next(error));
   };
 
   private getPlaylist = async (
@@ -118,7 +120,13 @@ export default class PlaylistController {
     await this.playlistService
       .getPlaylist(id)
       .then((playlist) => response.send(playlist))
-      .catch((error) => this.handleError(error, response));
+      .catch((error) => {
+        if (error instanceof PlaylistNotFoundError) {
+          next(new RequestError('Playlist not found', StatusCodes.NOT_FOUND));
+        } else {
+          next(error);
+        }
+      });
   };
 
   private playPlaylist = async (
@@ -138,6 +146,12 @@ export default class PlaylistController {
     await this.playlistService
       .playPlaylist(id)
       .then(() => response.sendStatus(204))
-      .catch((error) => this.handleError(error, response));
+      .catch((error) => {
+        if (error instanceof PlaylistNotFoundError) {
+          next(new RequestError('Playlist not found', StatusCodes.NOT_FOUND));
+        } else {
+          next(error);
+        }
+      });
   };
 }
