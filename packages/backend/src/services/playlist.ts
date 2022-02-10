@@ -1,5 +1,6 @@
 import SpotifyPlayerService, { SpotifyApiError } from './player';
 
+import { AlbumTracksResponse } from '../clients/spotify/responses';
 import { Artist } from '../clients/spotify/types/artist';
 import DateUtils from '../utils/date';
 import { Track as FullTrack } from '../models/track';
@@ -45,7 +46,7 @@ export default class PlaylistService {
       spotifyArtist = await this.spotifyClient.getArtist(
         spotifyTrack.artists[0].id
       );
-    } catch (error) {
+    } catch {
       throw new SpotifyApiError();
     }
 
@@ -72,14 +73,20 @@ export default class PlaylistService {
   };
 
   public sortInAlbum = async (spotifyAlbumId: string): Promise<void> => {
-    const spotifyAlbum = await this.spotifyClient.getAlbumTracks(
-      spotifyAlbumId,
-      {
-        limit: 50,
-      }
-    );
+    let spotifyAlbumTracks: AlbumTracksResponse;
 
-    for (const track of spotifyAlbum.items) {
+    try {
+      spotifyAlbumTracks = await this.spotifyClient.getAlbumTracks(
+        spotifyAlbumId,
+        {
+          limit: 50,
+        }
+      );
+    } catch {
+      throw new SpotifyApiError();
+    }
+
+    for (const track of spotifyAlbumTracks.items) {
       await this.sortInTrack(track.id);
     }
   };
