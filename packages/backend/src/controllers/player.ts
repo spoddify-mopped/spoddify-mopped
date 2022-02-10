@@ -3,7 +3,7 @@ import SpotifyPlayerService, { DeviceNotFoundError } from '../services/player';
 import express from 'express';
 
 export default class PlayerController {
-  public path = '';
+  public path = '/player';
   public router = express.Router();
 
   private spotifyPlayerService: SpotifyPlayerService;
@@ -15,7 +15,7 @@ export default class PlayerController {
   }
 
   public initializeRoutes(): void {
-    this.router.get(`${this.path}/player`, this.getPlayer);
+    this.router.get(`${this.path}`, this.getPlayer);
     this.router.post(`${this.path}/pause`, this.playPause);
     this.router.post(`${this.path}/forwards`, this.next);
     this.router.post(`${this.path}/previous`, this.previous);

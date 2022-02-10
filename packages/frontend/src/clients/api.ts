@@ -88,16 +88,16 @@ const ApiClient = {
     return data;
   },
   next: async (): Promise<void> => {
-    await axios.post(`${API_URL}/api/forwards`);
+    await axios.post(`${API_URL}/api/player/forwards`);
   },
   playPause: async (): Promise<void> => {
-    await axios.post(`${API_URL}/api/pause`);
+    await axios.post(`${API_URL}/api/player/pause`);
   },
   playPlaylist: async (id: number): Promise<void> => {
     await axios.post<void>(`${API_URL}/api/playlist/${id}/play`);
   },
   previous: async (): Promise<void> => {
-    await axios.post(`${API_URL}/api/previous`);
+    await axios.post(`${API_URL}/api/player/previous`);
   },
   search: async (
     query: string,
