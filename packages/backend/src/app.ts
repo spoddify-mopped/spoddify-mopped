@@ -23,6 +23,10 @@ import cors from 'cors';
 import express from 'express';
 import http from 'http';
 import path from 'path';
+import swaggerUi from 'swagger-ui-express';
+
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+const swaggerDocument = require('../swagger.json');
 
 const LOGGER = Logger.create(__filename);
 
@@ -90,6 +94,12 @@ export default class App {
     this.app.use('/api', new PlaylistController(playlistService).router);
     this.app.use('/api', new SearchController(spotifySearchService).router);
     this.app.use('/api', new SystemController(systemService).router);
+
+    this.app.use(
+      '/api/docs',
+      swaggerUi.serve,
+      swaggerUi.setup(swaggerDocument, { explorer: true })
+    );
 
     this.app.use(
       '*',

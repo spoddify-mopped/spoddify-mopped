@@ -1,0 +1,723 @@
+{
+  "definitions": {
+    "Artist": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "imageUrl": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Album": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "artists": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Artist"
+          }
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "releaseDate": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Albums": {
+      "properties": {
+        "albums": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Album"
+          }
+        }
+      },
+      "type": "object"
+    },
+    "AlbumWithTracks": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "artists": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Artist"
+          }
+        },
+        "imageUrl": {
+          "type": "string"
+        },
+        "releaseDate": {
+          "type": "string"
+        },
+        "tracks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Track"
+          }
+        }
+      },
+      "type": "object"
+    },
+    "ErrorResponse": {
+      "properties": {
+        "status": {
+          "type": "integer"
+        },
+        "message": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Player": {
+      "properties": {},
+      "type": "object"
+    },
+    "SearchResponse": {
+      "properties": {
+        "artists": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Artist"
+          }
+        },
+        "albums": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Album"
+          }
+        },
+        "tracks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Track"
+          }
+        }
+      },
+      "type": "object"
+    },
+    "SystemStatus": {
+      "properties": {
+        "ready": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
+    "Track": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "name": {
+          "type": "string"
+        },
+        "artists": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Artist"
+          }
+        },
+        "album": {
+          "type": "object",
+          "$ref": "#/definitions/Album"
+        },
+        "imageUrl": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
+    "Tracks": {
+      "properties": {
+        "tracks": {
+          "type": "array",
+          "items": {
+            "$ref": "#/definitions/Track"
+          }
+        }
+      },
+      "type": "object"
+    }
+  },
+  "info": {
+    "description": "Access the resources of Spoddify Mopped.",
+    "title": "Spoddify Mopped",
+    "version": "1.0.0"
+  },
+  "swagger": "2.0",
+  "basePath": "/api",
+  "paths": {
+    "/album/{id}": {
+      "get": {
+        "operationId": "getAlbum",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/AlbumWithTracks"
+            },
+            "description": "OK"
+          },
+          "400": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "invalid id"
+          },
+          "404": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "album with id not found"
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "internal server error"
+          }
+        },
+        "summary": "Get Album by id",
+        "tags": ["album"]
+      }
+    },
+    "/album/{id}/tracks": {
+      "get": {
+        "operationId": "getAlbumTracks",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Tracks"
+            },
+            "description": "OK"
+          },
+          "400": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "invalid id"
+          },
+          "404": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "album with id not found"
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "internal server error"
+          }
+        },
+        "summary": "Get Album tracks by id",
+        "tags": ["album"]
+      }
+    },
+    "/artist/{id}": {
+      "get": {
+        "operationId": "getArtist",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Artist"
+            },
+            "description": "OK"
+          },
+          "400": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "invalid id"
+          },
+          "404": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "artist with id not found"
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "internal server error"
+          }
+        },
+        "summary": "Get Artist by id",
+        "tags": ["artist"]
+      }
+    },
+    "/artist/{id}/tracks": {
+      "get": {
+        "operationId": "getArtistTracks",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Tracks"
+            },
+            "description": "OK"
+          },
+          "400": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "invalid id"
+          },
+          "404": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "artist with id not found"
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "internal server error"
+          }
+        },
+        "summary": "Get Artist's tracks by id",
+        "tags": ["artist"]
+      }
+    },
+    "/artist/{id}/albums": {
+      "get": {
+        "operationId": "getArtistsAlbums",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "type": "string",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Albums"
+            },
+            "description": "OK"
+          },
+          "400": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "invalid id"
+          },
+          "404": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "artist with id not found"
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "internal server error"
+          }
+        },
+        "summary": "Get Artist's albums by id",
+        "tags": ["artist"]
+      }
+    },
+    "/event": {
+      "post": {
+        "operationId": "newEvent",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "summary": "Trigger a player event sent to socket.io clients.",
+        "tags": ["event"]
+      }
+    },
+    "/player": {
+      "get": {
+        "operationId": "getPlayer",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/Player"
+            },
+            "description": "OK"
+          },
+          "204": {
+            "description": "No playback"
+          },
+          "404": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "Spotify player device not found"
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "internal server error"
+          }
+        },
+        "summary": "Get player",
+        "tags": ["player"]
+      }
+    },
+    "/player/pause": {
+      "post": {
+        "operationId": "playerPause",
+        "responses": {
+          "204": {
+            "description": "No playback"
+          },
+          "404": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "Spotify player device not found"
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "internal server error"
+          }
+        },
+        "summary": "Pause",
+        "tags": ["player"]
+      }
+    },
+    "/player/forwards": {
+      "post": {
+        "operationId": "playerForwards",
+        "responses": {
+          "204": {
+            "description": "No playback"
+          },
+          "404": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "Spotify player device not found"
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "internal server error"
+          }
+        },
+        "summary": "Forwards",
+        "tags": ["player"]
+      }
+    },
+    "/player/previous": {
+      "post": {
+        "operationId": "playerPrevious",
+        "responses": {
+          "204": {
+            "description": "No playback"
+          },
+          "404": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "Spotify player device not found"
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "internal server error"
+          }
+        },
+        "summary": "Previous",
+        "tags": ["player"]
+      }
+    },
+    "/player/seek": {
+      "post": {
+        "operationId": "playerSeek",
+        "parameters": [
+          {
+            "name": "position",
+            "required": true,
+            "in": "query",
+            "type": "integer",
+            "x-example": 36000
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No playback"
+          },
+          "404": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "Spotify player device not found"
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "internal server error"
+          }
+        },
+        "summary": "Seek to position",
+        "tags": ["player"]
+      }
+    },
+    "/player/volume": {
+      "post": {
+        "operationId": "setPlayerVolume",
+        "parameters": [
+          {
+            "name": "volume",
+            "description": "Volume in percent (0-100)",
+            "required": true,
+            "in": "query",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100,
+            "x-example": 80
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No playback"
+          },
+          "404": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "Spotify player device not found"
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "internal server error"
+          }
+        },
+        "summary": "Set volume in percent",
+        "tags": ["player"]
+      }
+    },
+    "/player/play": {
+      "post": {
+        "operationId": "playerPlay",
+        "parameters": [
+          {
+            "collectionFormat": "multi",
+            "description": "Spotify track uri",
+            "in": "query",
+            "items": {
+              "type": "string"
+            },
+            "name": "type",
+            "required": false,
+            "type": "array",
+            "x-example": "spotify:track:5MxNLUsfh7uzROypsoO5qe"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No playback"
+          },
+          "404": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "Spotify player device not found"
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "internal server error"
+          }
+        },
+        "summary": "Play",
+        "tags": ["player"]
+      }
+    },
+    "/player/queue": {
+      "post": {
+        "operationId": "playerQueue",
+        "parameters": [
+          {
+            "name": "query",
+            "description": "Spotify track uri",
+            "required": true,
+            "in": "query",
+            "type": "string",
+            "x-example": "spotify:track:5MxNLUsfh7uzROypsoO5qe"
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No playback"
+          },
+          "404": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "Spotify player device not found"
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "internal server error"
+          }
+        },
+        "summary": "Queue",
+        "tags": ["player"]
+      }
+    },
+    "/search": {
+      "get": {
+        "operationId": "search",
+        "parameters": [
+          {
+            "collectionFormat": "multi",
+            "description": "Filter by type",
+            "in": "query",
+            "items": {
+              "type": "string",
+              "enum": ["artist", "album", "track"]
+            },
+            "name": "type",
+            "required": true,
+            "type": "array",
+            "x-example": "artist,track"
+          },
+          {
+            "name": "query",
+            "required": true,
+            "in": "query",
+            "type": "string",
+            "x-example": "some artist"
+          },
+          {
+            "name": "limit",
+            "required": false,
+            "in": "query",
+            "type": "integer",
+            "x-example": 10,
+            "default": 20
+          }
+        ],
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/SearchResponse"
+            },
+            "description": "OK"
+          },
+          "400": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "invalid query parameters"
+          },
+          "500": {
+            "schema": {
+              "$ref": "#/definitions/ErrorResponse"
+            },
+            "description": "internal server error"
+          }
+        },
+        "summary": "Search for different types by a query",
+        "tags": ["search"]
+      }
+    },
+    "/system/status": {
+      "get": {
+        "operationId": "getSystemStatus",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/SystemStatus"
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Get system status",
+        "tags": ["system"]
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "album"
+    },
+    {
+      "name": "artist"
+    },
+    {
+      "name": "event"
+    },
+    {
+      "name": "search"
+    },
+    {
+      "name": "player"
+    },
+    {
+      "name": "system"
+    }
+  ]
+}
