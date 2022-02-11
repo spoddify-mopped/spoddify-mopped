@@ -1,6 +1,7 @@
 import { matchedData, query } from 'express-validator';
 
 import RequestError from '../error/request';
+import { SpotifyApiError } from '../clients/spotify/error';
 import SpotifySearchService from '../services/search';
 import express from 'express';
 
@@ -74,6 +75,12 @@ export default class SearchController {
       .then((result) => {
         response.send(result);
       })
-      .catch((err) => next(err));
+      .catch((err) => {
+        if (err instanceof SpotifyApiError) {
+          next(RequestError.fromSpotifyApiError(err));
+        } else {
+          next(err);
+        }
+      });
   };
 }
