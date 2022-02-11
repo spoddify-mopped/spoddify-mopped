@@ -1,3 +1,5 @@
+import RequestError from '../error/request';
+import { SpotifyApiError } from '../clients/spotify/error';
 import SpotifySearchService from '../services/search';
 import express from 'express';
 
@@ -20,7 +22,8 @@ export default class AlbumController {
 
   private getAlbum = async (
     request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ) => {
     const { params } = request;
 
@@ -29,14 +32,19 @@ export default class AlbumController {
       .then((album) => {
         response.send(album);
       })
-      .catch(() => {
-        response.sendStatus(503);
+      .catch((error) => {
+        if (error instanceof SpotifyApiError) {
+          next(RequestError.fromSpotifyApiError(error));
+        } else {
+          next(error);
+        }
       });
   };
 
   private getAlbumTracks = async (
     request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ) => {
     const { params } = request;
 
@@ -45,8 +53,12 @@ export default class AlbumController {
       .then((tracks) => {
         response.send({ tracks });
       })
-      .catch(() => {
-        response.sendStatus(503);
+      .catch((error) => {
+        if (error instanceof SpotifyApiError) {
+          next(RequestError.fromSpotifyApiError(error));
+        } else {
+          next(error);
+        }
       });
   };
 }
