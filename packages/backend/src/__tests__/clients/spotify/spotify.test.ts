@@ -7,10 +7,13 @@ import {
   TracksResponse,
   UserDevicesResponse,
 } from './../../../clients/spotify/responses';
+import SpotifyClient, {
+  mapAxiosErrorToSpotifyApiError,
+} from '../../../clients/spotify/spotify';
 import axios, { AxiosError } from 'axios';
 
 import { PagingObject } from './../../../clients/spotify/types/common';
-import SpotifyClient from '../../../clients/spotify/spotify';
+import { SpotifyApiError } from './../../../clients/spotify/error';
 
 /* eslint-disable camelcase */
 
@@ -197,6 +200,31 @@ describe('setAccessToken', () => {
   expect(axiosMock.defaults.headers['Authorization']).toBe('Bearer TOKEN');
 });
 
+describe('mapAxiosErrorToSpotifyApiError', () => {
+  it('maps an axios error to a spotify api error', async () => {
+    await expect(
+      mapAxiosErrorToSpotifyApiError({
+        isAxiosError: true,
+        response: {
+          data: {
+            error: {
+              message: 'invalid token',
+              status: 401,
+            },
+          },
+          status: 401,
+        },
+      } as AxiosError)
+    ).rejects.toThrowError(SpotifyApiError);
+  });
+
+  it('passthrough any other error', async () => {
+    await expect(
+      mapAxiosErrorToSpotifyApiError(new Error())
+    ).rejects.toThrowError(Error);
+  });
+});
+
 /*
   This tests the internal implementation which refreshes the access token and retries the request
   when the spotify api returned a http status code 401.
@@ -212,12 +240,7 @@ describe('tryWithToken implementation', () => {
       if (url === '/me/player') {
         if (tries === 1) {
           tries++;
-          return Promise.reject({
-            isAxiosError: true,
-            response: {
-              status: 401,
-            },
-          } as AxiosError);
+          return Promise.reject(new SpotifyApiError('invalid token', 401));
         } else {
           return Promise.resolve({
             data: expectedResponse,
