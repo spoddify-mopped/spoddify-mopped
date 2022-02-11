@@ -95,7 +95,7 @@ export default class PlayerController {
   ): Promise<void> => {
     await this.spotifyPlayerService
       .playPause()
-      .then(() => response.sendStatus(204))
+      .then(() => response.sendStatus(StatusCodes.NO_CONTENT))
       .catch((err) => next(this.handleError(err)));
   };
 
@@ -106,7 +106,7 @@ export default class PlayerController {
   ): Promise<void> => {
     await this.spotifyPlayerService
       .next()
-      .then(() => response.sendStatus(204))
+      .then(() => response.sendStatus(StatusCodes.NO_CONTENT))
       .catch((err) => next(this.handleError(err)));
   };
 
@@ -117,7 +117,7 @@ export default class PlayerController {
   ): Promise<void> => {
     await this.spotifyPlayerService
       .previous()
-      .then(() => response.sendStatus(204))
+      .then(() => response.sendStatus(StatusCodes.NO_CONTENT))
       .catch((err) => next(this.handleError(err)));
   };
 
@@ -136,7 +136,7 @@ export default class PlayerController {
 
     await this.spotifyPlayerService
       .seek(Number.parseInt(data.position))
-      .then(() => response.sendStatus(204))
+      .then(() => response.sendStatus(StatusCodes.NO_CONTENT))
       .catch((err) => next(this.handleError(err)));
   };
 
@@ -155,7 +155,7 @@ export default class PlayerController {
 
     await this.spotifyPlayerService
       .setVolume(data.volume)
-      .then(() => response.sendStatus(204))
+      .then(() => response.sendStatus(StatusCodes.NO_CONTENT))
       .catch((err) => next(this.handleError(err)));
   };
 
@@ -174,7 +174,7 @@ export default class PlayerController {
 
     await this.spotifyPlayerService
       .play(data.uri)
-      .then(() => response.sendStatus(204))
+      .then(() => response.sendStatus(StatusCodes.NO_CONTENT))
       .catch((err) => next(this.handleError(err)));
   };
 
@@ -193,7 +193,7 @@ export default class PlayerController {
 
     await this.spotifyPlayerService
       .addQueue(data.uri)
-      .then(() => response.sendStatus(204))
+      .then(() => response.sendStatus(StatusCodes.NO_CONTENT))
       .catch((err) => next(this.handleError(err)));
   };
 }
