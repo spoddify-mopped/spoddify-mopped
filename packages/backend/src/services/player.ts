@@ -1,10 +1,8 @@
 import { Device, Player } from '../clients/spotify/types/player';
 
 import SpotifyClient from '../clients/spotify/spotify';
-import { UserDevicesResponse } from '../clients/spotify/responses';
 
 export class DeviceNotFoundError extends Error {}
-export class SpotifyApiError extends Error {}
 
 export default class SpotifyPlayerService {
   private spotifyClient: SpotifyClient;
@@ -18,13 +16,7 @@ export default class SpotifyPlayerService {
   }
 
   private findTargetDevice = async (): Promise<Device> => {
-    let spotifyDeviceResponse: UserDevicesResponse;
-
-    try {
-      spotifyDeviceResponse = await this.spotifyClient.getMyDevices();
-    } catch (error) {
-      throw new SpotifyApiError();
-    }
+    const spotifyDeviceResponse = await this.spotifyClient.getMyDevices();
 
     const device = spotifyDeviceResponse.devices.find(
       (device) => device && device.name === this.deviceName
@@ -42,13 +34,7 @@ export default class SpotifyPlayerService {
       this.targetDevice = await this.findTargetDevice();
     }
 
-    let spotifyPlayerResponse: Player | undefined;
-
-    try {
-      spotifyPlayerResponse = await this.spotifyClient.getPlayer();
-    } catch (error) {
-      throw new SpotifyApiError();
-    }
+    const spotifyPlayerResponse = await this.spotifyClient.getPlayer();
 
     if (!spotifyPlayerResponse) {
       return spotifyPlayerResponse;
@@ -68,21 +54,18 @@ export default class SpotifyPlayerService {
 
     const player = await this.getPlayer();
 
-    try {
-      if (player.is_playing) {
-        await this.spotifyClient.pause({
-          // eslint-disable-next-line camelcase
-          device_id: this.targetDevice.id,
-        });
-      } else {
-        await this.spotifyClient.play({
-          // eslint-disable-next-line camelcase
-          device_id: this.targetDevice.id,
-        });
-      }
-    } catch (error) {
-      throw new SpotifyApiError();
+    if (player.is_playing) {
+      await this.spotifyClient.pause({
+        // eslint-disable-next-line camelcase
+        device_id: this.targetDevice.id,
+      });
+      return;
     }
+
+    await this.spotifyClient.play({
+      // eslint-disable-next-line camelcase
+      device_id: this.targetDevice.id,
+    });
   };
 
   public next = async (): Promise<void> => {
@@ -90,14 +73,10 @@ export default class SpotifyPlayerService {
       this.targetDevice = await this.findTargetDevice();
     }
 
-    try {
-      await this.spotifyClient.next({
-        // eslint-disable-next-line camelcase
-        device_id: this.targetDevice.id,
-      });
-    } catch (error) {
-      throw new SpotifyApiError();
-    }
+    await this.spotifyClient.next({
+      // eslint-disable-next-line camelcase
+      device_id: this.targetDevice.id,
+    });
   };
 
   public previous = async (): Promise<void> => {
@@ -105,14 +84,10 @@ export default class SpotifyPlayerService {
       this.targetDevice = await this.findTargetDevice();
     }
 
-    try {
-      await this.spotifyClient.previous({
-        // eslint-disable-next-line camelcase
-        device_id: this.targetDevice.id,
-      });
-    } catch (error) {
-      throw new SpotifyApiError();
-    }
+    await this.spotifyClient.previous({
+      // eslint-disable-next-line camelcase
+      device_id: this.targetDevice.id,
+    });
   };
 
   public seek = async (position: number): Promise<void> => {
@@ -120,14 +95,10 @@ export default class SpotifyPlayerService {
       this.targetDevice = await this.findTargetDevice();
     }
 
-    try {
-      await this.spotifyClient.seek(position, {
-        // eslint-disable-next-line camelcase
-        device_id: this.targetDevice.id,
-      });
-    } catch (error) {
-      throw new SpotifyApiError();
-    }
+    await this.spotifyClient.seek(position, {
+      // eslint-disable-next-line camelcase
+      device_id: this.targetDevice.id,
+    });
   };
 
   public play = async (uris: string[] = []): Promise<void> => {
@@ -135,15 +106,11 @@ export default class SpotifyPlayerService {
       this.targetDevice = await this.findTargetDevice();
     }
 
-    try {
-      await this.spotifyClient.play({
-        // eslint-disable-next-line camelcase
-        device_id: this.targetDevice.id,
-        uris,
-      });
-    } catch (error) {
-      throw new SpotifyApiError();
-    }
+    await this.spotifyClient.play({
+      // eslint-disable-next-line camelcase
+      device_id: this.targetDevice.id,
+      uris,
+    });
   };
 
   public pause = async (): Promise<void> => {
@@ -151,14 +118,10 @@ export default class SpotifyPlayerService {
       this.targetDevice = await this.findTargetDevice();
     }
 
-    try {
-      await this.spotifyClient.pause({
-        // eslint-disable-next-line camelcase
-        device_id: this.targetDevice.id,
-      });
-    } catch (error) {
-      throw new SpotifyApiError();
-    }
+    await this.spotifyClient.pause({
+      // eslint-disable-next-line camelcase
+      device_id: this.targetDevice.id,
+    });
   };
 
   public addQueue = async (uri: string): Promise<void> => {
@@ -166,14 +129,10 @@ export default class SpotifyPlayerService {
       this.targetDevice = await this.findTargetDevice();
     }
 
-    try {
-      await this.spotifyClient.addToQueue(uri, {
-        // eslint-disable-next-line camelcase
-        device_id: this.targetDevice.id,
-      });
-    } catch (error) {
-      throw new SpotifyApiError();
-    }
+    await this.spotifyClient.addToQueue(uri, {
+      // eslint-disable-next-line camelcase
+      device_id: this.targetDevice.id,
+    });
   };
 
   public setVolume = async (volume: number): Promise<void> => {
@@ -181,13 +140,9 @@ export default class SpotifyPlayerService {
       this.targetDevice = await this.findTargetDevice();
     }
 
-    try {
-      await this.spotifyClient.setVolume(volume, {
-        // eslint-disable-next-line camelcase
-        device_id: this.targetDevice.id,
-      });
-    } catch (error) {
-      throw new SpotifyApiError();
-    }
+    await this.spotifyClient.setVolume(volume, {
+      // eslint-disable-next-line camelcase
+      device_id: this.targetDevice.id,
+    });
   };
 }

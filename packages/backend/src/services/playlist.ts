@@ -1,11 +1,8 @@
-import SpotifyPlayerService, { SpotifyApiError } from './player';
-
-import { AlbumTracksResponse } from '../clients/spotify/responses';
-import { Artist } from '../clients/spotify/types/artist';
 import DateUtils from '../utils/date';
 import { Track as FullTrack } from '../models/track';
 import Playlist from '../entities/playlist';
 import SpotifyClient from '../clients/spotify/spotify';
+import SpotifyPlayerService from './player';
 import Track from '../entities/track';
 import { mapSpotifyTrackToTrack } from './../models/track';
 
@@ -40,17 +37,11 @@ export default class PlaylistService {
       await track.save();
     }
 
-    let spotifyArtist: Artist;
+    const spotifyTrack = await this.spotifyClient.getTrack(spotifyTrackId);
 
-    try {
-      const spotifyTrack = await this.spotifyClient.getTrack(spotifyTrackId);
-
-      spotifyArtist = await this.spotifyClient.getArtist(
-        spotifyTrack.artists[0].id
-      );
-    } catch {
-      throw new SpotifyApiError();
-    }
+    const spotifyArtist = await this.spotifyClient.getArtist(
+      spotifyTrack.artists[0].id
+    );
 
     for (const genre of spotifyArtist.genres) {
       let playlist = await Playlist.findOne(
@@ -75,18 +66,12 @@ export default class PlaylistService {
   };
 
   public sortInAlbum = async (spotifyAlbumId: string): Promise<void> => {
-    let spotifyAlbumTracks: AlbumTracksResponse;
-
-    try {
-      spotifyAlbumTracks = await this.spotifyClient.getAlbumTracks(
-        spotifyAlbumId,
-        {
-          limit: 50,
-        }
-      );
-    } catch {
-      throw new SpotifyApiError();
-    }
+    const spotifyAlbumTracks = await this.spotifyClient.getAlbumTracks(
+      spotifyAlbumId,
+      {
+        limit: 50,
+      }
+    );
 
     for (const track of spotifyAlbumTracks.items) {
       await this.sortInTrack(track.id);

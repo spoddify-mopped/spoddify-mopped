@@ -1,7 +1,9 @@
+import SpotifyPlayerService, { DeviceNotFoundError } from '../services/player';
 import { matchedData, query } from 'express-validator';
 
 import RequestError from '../error/request';
-import SpotifyPlayerService from '../services/player';
+import { SpotifyApiError } from '../clients/spotify/error';
+import { StatusCodes } from 'http-status-codes';
 import express from 'express';
 
 type SeekQuery = {
@@ -62,6 +64,19 @@ export default class PlayerController {
     );
   }
 
+  private handleError = (err: Error) => {
+    if (err instanceof SpotifyApiError) {
+      return RequestError.fromSpotifyApiError(err);
+    }
+    if (err instanceof DeviceNotFoundError) {
+      return new RequestError(
+        'Spotify player device not found',
+        StatusCodes.NOT_FOUND
+      );
+    }
+    return err;
+  };
+
   private getPlayer = async (
     _request: express.Request,
     response: express.Response,
@@ -70,7 +85,7 @@ export default class PlayerController {
     await this.spotifyPlayerService
       .getPlayer()
       .then((player) => response.send(player))
-      .catch((err) => next(err));
+      .catch((err) => next(this.handleError(err)));
   };
 
   private playPause = async (
@@ -81,7 +96,7 @@ export default class PlayerController {
     await this.spotifyPlayerService
       .playPause()
       .then(() => response.sendStatus(204))
-      .catch((err) => next(err));
+      .catch((err) => next(this.handleError(err)));
   };
 
   private next = async (
@@ -92,7 +107,7 @@ export default class PlayerController {
     await this.spotifyPlayerService
       .next()
       .then(() => response.sendStatus(204))
-      .catch((err) => next(err));
+      .catch((err) => next(this.handleError(err)));
   };
 
   private previous = async (
@@ -103,7 +118,7 @@ export default class PlayerController {
     await this.spotifyPlayerService
       .previous()
       .then(() => response.sendStatus(204))
-      .catch((err) => next(err));
+      .catch((err) => next(this.handleError(err)));
   };
 
   private seek = async (
@@ -122,7 +137,7 @@ export default class PlayerController {
     await this.spotifyPlayerService
       .seek(Number.parseInt(data.position))
       .then(() => response.sendStatus(204))
-      .catch((err) => next(err));
+      .catch((err) => next(this.handleError(err)));
   };
 
   private setVolume = async (
@@ -141,7 +156,7 @@ export default class PlayerController {
     await this.spotifyPlayerService
       .setVolume(data.volume)
       .then(() => response.sendStatus(204))
-      .catch((err) => next(err));
+      .catch((err) => next(this.handleError(err)));
   };
 
   private play = async (
@@ -160,7 +175,7 @@ export default class PlayerController {
     await this.spotifyPlayerService
       .play(data.uri)
       .then(() => response.sendStatus(204))
-      .catch((err) => next(err));
+      .catch((err) => next(this.handleError(err)));
   };
 
   private addQueue = async (
@@ -179,6 +194,6 @@ export default class PlayerController {
     await this.spotifyPlayerService
       .addQueue(data.uri)
       .then(() => response.sendStatus(204))
-      .catch((err) => next(err));
+      .catch((err) => next(this.handleError(err)));
   };
 }
