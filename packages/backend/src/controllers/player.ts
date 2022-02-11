@@ -7,7 +7,7 @@ import { StatusCodes } from 'http-status-codes';
 import express from 'express';
 
 type SeekQuery = {
-  position: string;
+  position: number;
 };
 
 type VolumeQuery = {
@@ -41,7 +41,7 @@ export default class PlayerController {
     this.router.post(`${this.path}/previous`, this.previous);
     this.router.put(
       `${this.path}/seek`,
-      query('position').isString(),
+      query('position').isInt().toInt(),
       this.seek
     );
     this.router.put(
@@ -135,7 +135,7 @@ export default class PlayerController {
     const data = matchedData(request) as SeekQuery;
 
     await this.spotifyPlayerService
-      .seek(Number.parseInt(data.position))
+      .seek(data.position)
       .then(() => response.sendStatus(StatusCodes.NO_CONTENT))
       .catch((err) => next(this.handleError(err)));
   };
