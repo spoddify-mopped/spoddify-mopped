@@ -141,6 +141,8 @@ export default class App {
     if (error instanceof RequestError) {
       response.status(error.statusCode).send(error.getErrorResponse());
     } else {
+      LOGGER.error(error);
+
       response
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
         .send(
