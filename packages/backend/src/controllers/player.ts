@@ -84,7 +84,13 @@ export default class PlayerController {
   ): Promise<void> => {
     await this.spotifyPlayerService
       .getPlayer()
-      .then((player) => response.send(player))
+      .then((player) => {
+        if (player) {
+          response.send(player);
+        } else {
+          response.sendStatus(StatusCodes.NO_CONTENT);
+        }
+      })
       .catch((err) => next(this.handleError(err)));
   };
 
