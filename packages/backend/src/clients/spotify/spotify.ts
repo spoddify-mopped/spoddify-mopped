@@ -16,6 +16,7 @@ import {
   MarketOptions,
   PlayOptions,
 } from './options';
+import { SpotifyApiError, SpotifyErrorResponse } from './error';
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 
 import Logger from '../../logger/logger';
@@ -33,6 +34,18 @@ const SPOTIFY_BASE_URL = 'https://api.spotify.com/v1';
 
 const LOGGER = Logger.create(__filename);
 
+export const mapAxiosErrorToSpotifyApiError = (
+  err: Error
+): Promise<undefined> => {
+  if (axios.isAxiosError(err)) {
+    const { error } = err.response.data as SpotifyErrorResponse;
+
+    return Promise.reject(new SpotifyApiError(error.message, error.status));
+  }
+
+  return Promise.reject(err);
+};
+
 export default class SpotifyClient {
   private config: Config;
 
@@ -46,6 +59,11 @@ export default class SpotifyClient {
     this.httpClient = axios.create({
       baseURL: SPOTIFY_BASE_URL,
     });
+
+    this.httpClient.interceptors.response.use(
+      (res) => res,
+      mapAxiosErrorToSpotifyApiError
+    );
   }
 
   public getOAuthUrl = (scopes: string[]): string => {
@@ -126,7 +144,7 @@ export default class SpotifyClient {
     try {
       return await cb();
     } catch (error) {
-      if (axios.isAxiosError(error) && error.response.status === 401) {
+      if (error instanceof SpotifyApiError && error.status === 401) {
         LOGGER.info('Access token is expired. Trying to refresh it.');
 
         const response = await this.requestRefreshedToken(this.refreshToken);
