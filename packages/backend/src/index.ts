@@ -20,6 +20,7 @@ Logger.setVerbose(true);
 const LOGGER = Logger.create(__filename);
 
 LOGGER.info(`Starting SpoddifyMopped on PID: ${process.pid}`);
+LOGGER.info(`Running on node: ${process.version}`);
 
 const spotifyClient = new SpotifyClient({
   clientId: config.get('spotify:clientId'),
