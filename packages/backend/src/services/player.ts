@@ -1,5 +1,7 @@
-import { Player } from '../clients/spotify/types/player';
+import { Device, Player } from '../clients/spotify/types/player';
+
 import SpotifyClient from '../clients/spotify/spotify';
+import { UserDevicesResponse } from '../clients/spotify/responses';
 
 export class DeviceNotFoundError extends Error {}
 export class SpotifyApiError extends Error {}
@@ -8,15 +10,15 @@ export default class SpotifyPlayerService {
   private spotifyClient: SpotifyClient;
   private deviceName: string;
 
-  private targetDevice?: SpotifyApi.UserDevice;
+  private targetDevice?: Device;
 
   public constructor(spotifyClient: SpotifyClient, deviceName: string) {
     this.spotifyClient = spotifyClient;
     this.deviceName = deviceName;
   }
 
-  private findTargetDevice = async (): Promise<SpotifyApi.UserDevice> => {
-    let spotifyDeviceResponse: SpotifyApi.UserDevicesResponse;
+  private findTargetDevice = async (): Promise<Device> => {
+    let spotifyDeviceResponse: UserDevicesResponse;
 
     try {
       spotifyDeviceResponse = await this.spotifyClient.getMyDevices();
