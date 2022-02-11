@@ -1,3 +1,5 @@
+import RequestError from '../error/request';
+import { SpotifyApiError } from '../clients/spotify/error';
 import SpotifyAuth from '../entities/spotify_auth';
 import SpotifyClient from '../clients/spotify/spotify';
 import express from 'express';
@@ -38,7 +40,8 @@ export default class AuthController {
 
   private callback = (
     request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ): void => {
     const code = request.query.code as string;
     const redirectUri = request.cookies['redirect_uri'] as string;
@@ -55,8 +58,12 @@ export default class AuthController {
         this.spotifyClient.setAccessToken(data.access_token);
         response.redirect(redirectUri ? redirectUri : '/');
       })
-      .catch(() => {
-        response.sendStatus(503);
+      .catch((error) => {
+        if (error instanceof SpotifyApiError) {
+          next(RequestError.fromSpotifyApiError(error));
+        } else {
+          next(error);
+        }
       });
   };
 }
