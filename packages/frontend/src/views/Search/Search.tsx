@@ -113,6 +113,9 @@ export const Search = (): ReactElement => {
             value={query}
             onChange={handleSearchInputChange}
           />
+          <span className="deleteInput" onClick={() => navigate('/search')}>
+            X
+          </span>
         </div>
       </div>
       {renderResult()}

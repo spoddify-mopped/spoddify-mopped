@@ -24,9 +24,19 @@ svg.searchIcon {
   left: 1rem;
 }
 
+span.deleteInput {
+  right: 1rem;
+  position: absolute;
+  color: rgba(180, 180, 180, 0.7);
+  cursor: pointer;
+}
+
+span.deleteInput:hover {
+  opacity: 0.5;
+}
+
 input.searchInput {
-  padding: 0.5rem 1rem;
-  padding-left: 3rem;
+  padding: 0.5rem 3rem;
   border-radius: 15px;
   border: 1px solid rgba(180, 180, 180, 0.3);
   background-color: #121212;
