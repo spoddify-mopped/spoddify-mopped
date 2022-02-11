@@ -1,3 +1,5 @@
+import RequestError from '../error/request';
+import { SpotifyApiError } from '../clients/spotify/error';
 import SpotifySearchService from '../services/search';
 import express from 'express';
 
@@ -21,7 +23,8 @@ export default class ArtistController {
 
   private getArtist = async (
     request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ) => {
     const { params } = request;
 
@@ -30,14 +33,19 @@ export default class ArtistController {
       .then((artist) => {
         response.send(artist);
       })
-      .catch(() => {
-        response.sendStatus(503);
+      .catch((error) => {
+        if (error instanceof SpotifyApiError) {
+          next(RequestError.fromSpotifyApiError(error));
+        } else {
+          next(error);
+        }
       });
   };
 
   private getArtistTopTracks = async (
     request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ) => {
     const { params } = request;
 
@@ -46,14 +54,19 @@ export default class ArtistController {
       .then((tracks) => {
         response.send({ tracks });
       })
-      .catch(() => {
-        response.sendStatus(503);
+      .catch((error) => {
+        if (error instanceof SpotifyApiError) {
+          next(RequestError.fromSpotifyApiError(error));
+        } else {
+          next(error);
+        }
       });
   };
 
   private getArtistsAlbums = async (
     request: express.Request,
-    response: express.Response
+    response: express.Response,
+    next: express.NextFunction
   ) => {
     const { params } = request;
 
@@ -65,8 +78,12 @@ export default class ArtistController {
       .then((albums) => {
         response.send({ albums });
       })
-      .catch(() => {
-        response.sendStatus(503);
+      .catch((error) => {
+        if (error instanceof SpotifyApiError) {
+          next(RequestError.fromSpotifyApiError(error));
+        } else {
+          next(error);
+        }
       });
   };
 }
