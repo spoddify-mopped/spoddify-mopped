@@ -112,6 +112,13 @@ const ApiClient = {
 
     return data;
   },
+  setVolume: async (volume: number): Promise<void> => {
+    await axios.put(`${API_URL}/api/player/volume`, null, {
+      params: {
+        volume,
+      },
+    });
+  },
 };
 
 export default ApiClient;

@@ -1,13 +1,16 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 
+import ApiClient from '../../clients/api';
 import { Artist } from '../../clients/api.types';
 import CoverReplacement from '../../resources/cover_replacement.png';
 import { ReactComponent as FullScreen } from '../../resources/fullscreen.svg';
+import InputRange from '../InputRange/InputRange';
 import { ReactComponent as Next } from '../../resources/step-forward-solid.svg';
 import { ReactComponent as Pause } from '../../resources/pause-circle-solid.svg';
 import { ReactComponent as Play } from '../../resources/play-circle-solid.svg';
 import { ReactComponent as Prev } from '../../resources/step-backward-solid.svg';
 import ProgressBar from '../ProgressBar/ProgressBar';
+import { ReactComponent as Volume } from '../../resources/volume.svg';
 import styles from './PlayerBar.module.scss';
 import { useNavigate } from 'react-router';
 
@@ -19,6 +22,7 @@ export type PlayerInformation = {
   isPlaying?: boolean;
   progress?: number;
   duration?: number;
+  volume?: number;
 };
 
 type Props = {
@@ -30,6 +34,14 @@ type Props = {
 
 const PlayerBar = (props: Props): ReactElement => {
   const navigate = useNavigate();
+
+  const [volume, setVolume] = useState(0);
+
+  useEffect(() => {
+    setVolume(props.playerInformation.volume || 0);
+  }, [props.playerInformation.volume]);
+
+  const sendVolume = async () => await ApiClient.setVolume(volume);
 
   const renderArtists = () => {
     if (props.playerInformation.artists) {
@@ -97,12 +109,21 @@ const PlayerBar = (props: Props): ReactElement => {
         />
       </div>
       <div className={styles.right}>
-        <span className={styles.fullscreen}>
-          <FullScreen
-            className={styles.fullscreen}
-            onClick={() => navigate('/player')}
-          />
-        </span>
+        <Volume className={styles.volumeLogo} />
+        <InputRange
+          onChange={(evt) => {
+            setVolume(Number.parseInt(evt.target.value));
+          }}
+          onMouseUp={sendVolume}
+          onTouchEnd={sendVolume}
+          value={volume}
+          min={0}
+          max={100}
+        />
+        <FullScreen
+          className={styles.fullscreen}
+          onClick={() => navigate('/player')}
+        />
       </div>
     </div>
   );

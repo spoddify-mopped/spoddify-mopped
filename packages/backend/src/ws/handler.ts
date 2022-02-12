@@ -74,6 +74,7 @@ export default class WebsocketHandler {
           progress: player.progress_ms,
           track: player.item.name,
           trackId: player.item.id,
+          volume: player.device.volume_percent,
         },
         type: 'WS_TO_CLIENT_SET_PLAYER_STATE',
       });

@@ -75,10 +75,19 @@ div.playerbar {
     flex: 1;
     display: flex;
     justify-content: flex-end;
+    align-items: center;
+
+    svg.volumeLogo {
+      fill: white;
+      width: 1.2rem;
+      height: 1.2rem;
+      margin-right: 1rem;
+    }
 
     svg.fullscreen {
       width: 1.2rem;
       height: 1.2rem;
+      margin-left: 1rem;
       cursor: pointer;
       &:hover {
         opacity: 0.5;

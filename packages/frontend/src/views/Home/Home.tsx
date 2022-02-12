@@ -89,6 +89,7 @@ const Home = (): ReactElement => {
           isPlaying: player.isPlaying,
           progress: player.progress,
           trackName: player.track,
+          volume: player.volume,
         }}
       />
     </div>

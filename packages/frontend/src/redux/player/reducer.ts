@@ -9,6 +9,7 @@ export type PlayerState = {
   coverUrl?: string;
   progress?: number;
   duration?: number;
+  volume?: number;
   isPlaying: boolean;
 };
 
