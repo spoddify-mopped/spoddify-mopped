@@ -22,6 +22,7 @@ import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
 import http from 'http';
+import loggerMiddleware from './middleware/logger';
 import path from 'path';
 import swaggerUi from 'swagger-ui-express';
 
@@ -74,6 +75,7 @@ export default class App {
     this.app.use(cors());
     this.app.use(cookieParser());
     this.app.use(express.json());
+    this.app.use(loggerMiddleware);
     this.app.use(express.static(path.join(__dirname, '..', 'public')));
 
     this.app.use(this.systemMiddleware.checkReadiness);
