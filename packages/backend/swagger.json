@@ -487,7 +487,7 @@
       }
     },
     "/player/seek": {
-      "post": {
+      "put": {
         "operationId": "playerSeek",
         "parameters": [
           {
@@ -520,7 +520,7 @@
       }
     },
     "/player/volume": {
-      "post": {
+      "put": {
         "operationId": "setPlayerVolume",
         "parameters": [
           {
