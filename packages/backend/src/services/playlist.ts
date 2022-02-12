@@ -94,15 +94,24 @@ export default class PlaylistService {
       throw new PlaylistNotFoundError();
     }
 
-    const response = await this.spotifyClient.getTracks(
-      playlist.tracks.map((track) => track.id)
-    );
+    /*
+    The spotify api is limited by fetching 50 tracks in one request.
+    If a playlist has more than 50 tracks, this splits it to multiple requests.
+    */
+    const tracks = [];
+    for (let i = 0; i <= playlist.tracks.length; i = i + 50) {
+      const t = await this.spotifyClient.getTracks(
+        playlist.tracks.slice(i, i + 50).map((track) => track.id)
+      );
+
+      tracks.push(...t.tracks);
+    }
 
     return {
       createdAt: playlist.createdAt,
       id: playlist.id,
       name: playlist.name,
-      tracks: response.tracks.map(mapSpotifyTrackToTrack),
+      tracks: tracks.map(mapSpotifyTrackToTrack),
       updatedAt: playlist.updatedAt,
     };
   };
