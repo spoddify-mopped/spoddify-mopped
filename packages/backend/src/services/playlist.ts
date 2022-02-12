@@ -4,16 +4,22 @@ import Playlist from '../entities/playlist';
 import SpotifyClient from '../clients/spotify/spotify';
 import SpotifyPlayerService from './player';
 import Track from '../entities/track';
+import { TracksToPlaylists } from '../entities/tracks_to_playlists';
 import { mapSpotifyTrackToTrack } from './../models/track';
 
 export class PlaylistNotFoundError extends Error {}
+
+type PlaylistTracks = {
+  addedAt: number;
+  track: FullTrack;
+}[];
 
 type FullPlaylist = {
   id: number;
   name: string;
   updatedAt: number;
   createdAt: number;
-  tracks: FullTrack[];
+  tracks: PlaylistTracks;
 };
 
 export default class PlaylistService {
@@ -47,21 +53,28 @@ export default class PlaylistService {
       let playlist = await Playlist.findOne(
         { name: genre },
         {
-          relations: ['tracks'],
+          relations: ['tracksToPlaylists'],
         }
       );
 
       if (!playlist) {
         playlist = new Playlist();
         playlist.name = genre;
-        playlist.tracks = [track];
+        playlist.updatedAt = DateUtils.now();
         playlist.createdAt = DateUtils.now();
-      } else {
-        playlist.tracks.push(track);
-      }
-      playlist.updatedAt = DateUtils.now();
 
-      await playlist.save();
+        await playlist.save();
+      } else {
+        playlist.updatedAt = DateUtils.now();
+        await playlist.save();
+      }
+
+      const tracksToPlaylists = new TracksToPlaylists();
+      tracksToPlaylists.playlist = playlist;
+      tracksToPlaylists.track = track;
+      tracksToPlaylists.createdAt = DateUtils.now();
+
+      await tracksToPlaylists.save();
     }
   };
 
@@ -86,7 +99,7 @@ export default class PlaylistService {
     const playlist = await Playlist.findOne(
       { id },
       {
-        relations: ['tracks'],
+        relations: ['tracksToPlaylists', 'tracksToPlaylists.track'],
       }
     );
 
@@ -99,9 +112,11 @@ export default class PlaylistService {
     If a playlist has more than 50 tracks, this splits it to multiple requests.
     */
     const tracks = [];
-    for (let i = 0; i <= playlist.tracks.length; i = i + 50) {
+    for (let i = 0; i <= playlist.tracksToPlaylists.length; i = i + 50) {
       const t = await this.spotifyClient.getTracks(
-        playlist.tracks.slice(i, i + 50).map((track) => track.id)
+        playlist.tracksToPlaylists
+          .slice(i, i + 50)
+          .map((trackToPlaylist) => trackToPlaylist.track.id)
       );
 
       tracks.push(...t.tracks);
@@ -111,7 +126,10 @@ export default class PlaylistService {
       createdAt: playlist.createdAt,
       id: playlist.id,
       name: playlist.name,
-      tracks: tracks.map(mapSpotifyTrackToTrack),
+      tracks: tracks.map((track, index) => ({
+        addedAt: playlist.tracksToPlaylists[index].createdAt,
+        track: mapSpotifyTrackToTrack(track),
+      })),
       updatedAt: playlist.updatedAt,
     };
   };
@@ -120,7 +138,7 @@ export default class PlaylistService {
     const playlist = await Playlist.findOne(
       { id },
       {
-        relations: ['tracks'],
+        relations: ['tracksToPlaylists', 'tracksToPlaylists.track'],
       }
     );
 
@@ -128,9 +146,9 @@ export default class PlaylistService {
       throw new PlaylistNotFoundError();
     }
 
-    const tracks = playlist.tracks
+    const tracks = playlist.tracksToPlaylists
       .sort(() => Math.random() - 0.5)
-      .map((track) => `spotify:track:${track.id}`);
+      .map((trackToPlaylist) => `spotify:track:${trackToPlaylist.track.id}`);
 
     await this.spotifyPlayerService.play(tracks);
   };

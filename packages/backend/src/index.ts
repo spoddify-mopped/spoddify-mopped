@@ -10,6 +10,7 @@ import SpotifyPlayerService from './services/player';
 import SpotifySearchService from './services/search';
 import SystemService from './services/system';
 import Track from './entities/track';
+import { TracksToPlaylists } from './entities/tracks_to_playlists';
 import config from 'nconf';
 import initializeConfig from './config/config';
 
@@ -43,7 +44,7 @@ const systemService = new SystemService(spotifyClient);
 
 const databaseConnectionOptions: ConnectionOptions = {
   database: `${config.get('server:dataPath')}/database.sqlite`,
-  entities: [Track, Playlist, SpotifyAuth],
+  entities: [Track, Playlist, SpotifyAuth, TracksToPlaylists],
   synchronize: true,
   type: 'sqlite',
 };

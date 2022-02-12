@@ -2,12 +2,11 @@ import {
   BaseEntity,
   Column,
   Entity,
-  JoinTable,
-  ManyToMany,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
-import Track from './track';
+import { TracksToPlaylists } from './tracks_to_playlists';
 
 @Entity()
 export default class Playlist extends BaseEntity {
@@ -23,7 +22,9 @@ export default class Playlist extends BaseEntity {
   @Column()
   updatedAt: number;
 
-  @ManyToMany(() => Track)
-  @JoinTable()
-  tracks: Track[];
+  @OneToMany(
+    () => TracksToPlaylists,
+    (tracksToPlaylists) => tracksToPlaylists.playlist
+  )
+  tracksToPlaylists: TracksToPlaylists[];
 }

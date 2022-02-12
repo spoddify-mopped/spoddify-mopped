@@ -4,14 +4,15 @@ import {
   TrackResponse,
   TracksResponse,
 } from '../../clients/spotify/responses';
-import SpotifyPlayerService, { SpotifyApiError } from '../../services/player';
 import { createConnection, getConnection } from 'typeorm';
 
 import Playlist from '../../entities/playlist';
 import { PlaylistNotFoundError } from './../../services/playlist';
 import PlaylistService from '../../services/playlist';
 import SpotifyClient from '../../clients/spotify/spotify';
+import SpotifyPlayerService from '../../services/player';
 import Track from '../../entities/track';
+import { TracksToPlaylists } from './../../entities/tracks_to_playlists';
 
 /* eslint-disable camelcase */
 
@@ -70,7 +71,7 @@ const connectDB = async () => {
   await createConnection({
     database: `:memory:`,
     dropSchema: true,
-    entities: [Track, Playlist],
+    entities: [Track, Playlist, TracksToPlaylists],
     logging: false,
     synchronize: true,
     type: 'sqlite',
@@ -139,31 +140,9 @@ describe('sortInTrack', () => {
 
     expect(playlistsInDb[1].name).toBe('rock');
   });
-
-  it('throws SpotifyApiError on error communicating with the spotify api', async () => {
-    const getTrackSpy = jest.spyOn(spotifyClientMock, 'getTrack');
-    getTrackSpy.mockRejectedValue(new Error('some error'));
-
-    const playlistService = new PlaylistService(spotifyClientMock, null);
-
-    await expect(playlistService.sortInTrack('some track id')).rejects.toThrow(
-      new SpotifyApiError()
-    );
-  });
 });
 
 describe('sortInAlbum', () => {
-  it('throws SpotifyApiError on error communicating with the spotify api', async () => {
-    const getAlbumTracksSpy = jest.spyOn(spotifyClientMock, 'getAlbumTracks');
-    getAlbumTracksSpy.mockRejectedValue(new Error('some error'));
-
-    const playlistService = new PlaylistService(spotifyClientMock, null);
-
-    await expect(playlistService.sortInAlbum('some album id')).rejects.toThrow(
-      new SpotifyApiError()
-    );
-  });
-
   it('sorts in all album tracks successfully', async () => {
     const getAlbumTracksSpy = jest.spyOn(spotifyClientMock, 'getAlbumTracks');
     getAlbumTracksSpy.mockResolvedValue(spotifyAlbumTracks);
@@ -237,14 +216,24 @@ describe('getPlaylist', () => {
     newPlaylist.name = 'pop';
     newPlaylist.createdAt = 1;
     newPlaylist.updatedAt = 1;
-    newPlaylist.tracks = [newTrack];
+    await newPlaylist.save();
+
+    const tracksToPlaylists = new TracksToPlaylists();
+    tracksToPlaylists.playlist = newPlaylist;
+    tracksToPlaylists.track = newTrack;
+    tracksToPlaylists.createdAt = 1;
+
+    await tracksToPlaylists.save();
+
+    newPlaylist.tracksToPlaylists = [tracksToPlaylists];
     await newPlaylist.save();
 
     const playlist = await playlistService.getPlaylist(1);
 
     expect(playlist.name).toBe('pop');
     expect(playlist.tracks.length).toBe(1);
-    expect(playlist.tracks[0].name).toBe('some name');
+    expect(playlist.tracks[0].track.name).toBe('some name');
+    expect(playlist.tracks[0].addedAt).toBe(1);
   });
 
   it('throws PlaylistNotFoundError when playlist could not be found', async () => {
@@ -293,8 +282,24 @@ describe('playPlaylist', () => {
     newPlaylist.name = 'pop';
     newPlaylist.createdAt = 1;
     newPlaylist.updatedAt = 1;
-    newPlaylist.tracks = [newTrack, newTrack2];
     await newPlaylist.save();
+
+    const tracksToPlaylistsOne = new TracksToPlaylists();
+    tracksToPlaylistsOne.playlist = newPlaylist;
+    tracksToPlaylistsOne.track = newTrack;
+    tracksToPlaylistsOne.createdAt = 1;
+    await tracksToPlaylistsOne.save();
+
+    const tracksToPlaylistsTwo = new TracksToPlaylists();
+    tracksToPlaylistsTwo.playlist = newPlaylist;
+    tracksToPlaylistsTwo.track = newTrack2;
+    tracksToPlaylistsTwo.createdAt = 1;
+    await tracksToPlaylistsTwo.save();
+
+    newPlaylist.tracksToPlaylists = [
+      tracksToPlaylistsOne,
+      tracksToPlaylistsTwo,
+    ];
 
     await playlistService.playPlaylist(1);
 

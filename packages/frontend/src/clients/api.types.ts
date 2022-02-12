@@ -47,6 +47,11 @@ export type Playlist = {
   name: string;
 };
 
+type PlaylistTracks = {
+  addedAt: number;
+  track: Track;
+}[];
+
 export type FullPlaylist = Playlist & {
-  tracks: Track[];
+  tracks: PlaylistTracks;
 };

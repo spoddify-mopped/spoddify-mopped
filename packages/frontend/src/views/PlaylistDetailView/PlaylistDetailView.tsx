@@ -31,9 +31,10 @@ const PlaylistDetailView = (): React.ReactElement => {
     const images = playlist.tracks
       .filter(
         (value, index, self) =>
-          index === self.findIndex((t) => t.imageUrl === value.imageUrl)
+          index ===
+          self.findIndex((t) => t.track.imageUrl === value.track.imageUrl)
       )
-      .map((track) => track.imageUrl || '');
+      .map((pt) => pt.track.imageUrl || '');
 
     while (images.length < 4) {
       images.push(...images);
@@ -62,7 +63,7 @@ const PlaylistDetailView = (): React.ReactElement => {
         </div>
       </div>
       <div className={styles.innerContainer}>
-        <TrackView tracks={playlist.tracks} />
+        <TrackView tracks={playlist.tracks.map((tracks) => tracks.track)} />
       </div>
     </div>
   );
