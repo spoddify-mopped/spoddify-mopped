@@ -2,15 +2,15 @@ import { ConnectionOptions, createConnection } from 'typeorm';
 
 import App from './app';
 import Logger from './logger/logger';
-import Playlist from './entities/playlist';
+import Playlist from './db/playlist';
 import PlaylistService from './services/playlist';
-import SpotifyAuth from './entities/spotify_auth';
+import SpotifyAuth from './db/spotify_auth';
 import SpotifyClient from './clients/spotify/spotify';
 import SpotifyPlayerService from './services/player';
 import SpotifySearchService from './services/search';
 import SystemService from './services/system';
-import Track from './entities/track';
-import { TracksToPlaylists } from './entities/tracks_to_playlists';
+import Track from './db/track';
+import { TracksToPlaylists } from './db/tracks_to_playlists';
 import config from 'nconf';
 import initializeConfig from './config/config';
 

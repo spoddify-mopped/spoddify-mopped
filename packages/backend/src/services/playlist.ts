@@ -1,10 +1,10 @@
 import DateUtils from '../utils/date';
 import { Track as FullTrack } from '../models/track';
-import Playlist from '../entities/playlist';
+import Playlist from '../db/playlist';
 import SpotifyClient from '../clients/spotify/spotify';
 import SpotifyPlayerService from './player';
-import Track from '../entities/track';
-import { TracksToPlaylists } from '../entities/tracks_to_playlists';
+import Track from '../db/track';
+import { TracksToPlaylists } from '../db/tracks_to_playlists';
 import { mapSpotifyTrackToTrack } from './../models/track';
 
 export class PlaylistNotFoundError extends Error {}

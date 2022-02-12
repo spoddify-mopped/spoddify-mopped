@@ -6,13 +6,13 @@ import {
 } from '../../clients/spotify/responses';
 import { createConnection, getConnection } from 'typeorm';
 
-import Playlist from '../../entities/playlist';
+import Playlist from '../../db/playlist';
 import { PlaylistNotFoundError } from './../../services/playlist';
 import PlaylistService from '../../services/playlist';
 import SpotifyClient from '../../clients/spotify/spotify';
 import SpotifyPlayerService from '../../services/player';
-import Track from '../../entities/track';
-import { TracksToPlaylists } from './../../entities/tracks_to_playlists';
+import Track from '../../db/track';
+import { TracksToPlaylists } from '../../db/tracks_to_playlists';
 
 /* eslint-disable camelcase */
 

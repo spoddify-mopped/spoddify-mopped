@@ -1,6 +1,6 @@
 import RequestError from '../error/request';
 import { SpotifyApiError } from '../clients/spotify/error';
-import SpotifyAuth from '../entities/spotify_auth';
+import SpotifyAuth from '../db/spotify_auth';
 import SpotifyClient from '../clients/spotify/spotify';
 import express from 'express';
 
