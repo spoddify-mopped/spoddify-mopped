@@ -37,11 +37,13 @@ export default class PlaylistService {
   public sortInTrack = async (spotifyTrackId: string): Promise<void> => {
     let track = await Track.findOne({ id: spotifyTrackId });
 
-    if (!track) {
-      track = new Track();
-      track.id = spotifyTrackId;
-      await track.save();
+    if (track) {
+      return;
     }
+
+    track = new Track();
+    track.id = spotifyTrackId;
+    await track.save();
 
     const spotifyTrack = await this.spotifyClient.getTrack(spotifyTrackId);
 
