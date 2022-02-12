@@ -1,41 +1,10 @@
-.container {
+div.container {
   display: flex;
   justify-content: center;
   align-items: center;
 }
 
-.progressBar {
+input.progressBar {
   margin: 1rem;
   width: 20rem;
-  height: 0.4rem;
-  background-color: #535353;
-  border-radius: 20px;
-
-  &:hover {
-    .filledProgressBar::after {
-      content: '';
-      display: block;
-      position: relative;
-      background-color: white;
-      width: 0.7rem;
-      height: 0.7rem;
-      border-radius: 50px;
-      bottom: 50%;
-      margin-left: auto;
-    }
-
-    .filledProgressBar {
-      background-color: green;
-    }
-  }
-}
-
-.filledProgressBar {
-  height: 0.4rem;
-  background-color: #bbbbbb;
-  border-radius: 20px;
-}
-
-.time {
-  font-size: 0.8rem;
 }

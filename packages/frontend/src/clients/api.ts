@@ -112,6 +112,13 @@ const ApiClient = {
 
     return data;
   },
+  seek: async (position: number): Promise<void> => {
+    await axios.put(`${API_URL}/api/player/seek`, null, {
+      params: {
+        position,
+      },
+    });
+  },
   setVolume: async (volume: number): Promise<void> => {
     await axios.put(`${API_URL}/api/player/volume`, null, {
       params: {

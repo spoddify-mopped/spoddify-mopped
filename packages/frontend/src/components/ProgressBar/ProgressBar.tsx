@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
+import ApiClient from '../../clients/api';
+import InputRange from '../InputRange/InputRange';
 import styles from './ProgressBar.module.scss';
 
 let interval: NodeJS.Timeout;
@@ -63,17 +65,24 @@ const ProgressBar = ({
     setProgress(startProgress || 0);
   }, [startProgress]);
 
+  const seek = async () => {
+    await ApiClient.seek(progress);
+  };
+
   return (
     <div className={styles.container}>
       <span className={styles.time}>{parseMs(progress, 'mm:ss')}</span>
-      <div className={styles.progressBar}>
-        <div
-          className={styles.filledProgressBar}
-          style={{
-            width: `${(progress / (duration || 1)) * 100}%`,
-          }}
-        ></div>
-      </div>
+      <InputRange
+        className={styles.progressBar}
+        min={0}
+        max={duration}
+        value={progress}
+        onChange={(evt) => {
+          setProgress(Number.parseInt(evt.target.value));
+        }}
+        onMouseUp={seek}
+        onTouchEnd={seek}
+      />
       <span className={styles.time}>{parseMs(duration || 0, 'mm:ss')}</span>
     </div>
   );
