@@ -1,14 +1,16 @@
-import React, { ReactElement, useEffect } from 'react';
+import React, { ReactElement, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import ApiClient from '../../clients/api';
 import { AppState } from '../../redux/reducers';
 import CoverReplacement from '../../resources/cover_replacement.png';
+import InputRange from '../../components/InputRange/InputRange';
 import { ReactComponent as Next } from '../../resources/step-forward-solid.svg';
 import { ReactComponent as Pause } from '../../resources/pause-circle-solid.svg';
 import { ReactComponent as Play } from '../../resources/play-circle-solid.svg';
 import { ReactComponent as Prev } from '../../resources/step-backward-solid.svg';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
+import { ReactComponent as Volume } from '../../resources/volume.svg';
 import { playerActions } from '../../redux/player/actions';
 import styles from './Player.module.scss';
 import { useNavigate } from 'react-router-dom';
@@ -29,6 +31,14 @@ export default function Player(): ReactElement {
   useEffect(() => {
     dispatch(playerActions.getPlayer());
   }, [dispatch]);
+
+  const [volume, setVolume] = useState(0);
+
+  useEffect(() => {
+    setVolume(player.volume || 0);
+  }, [player.volume]);
+
+  const sendVolume = async () => await ApiClient.setVolume(volume);
 
   const getPlayerBackgroundStyles = () => {
     if (player.coverUrl) {
@@ -100,38 +110,57 @@ export default function Player(): ReactElement {
           {renderAlbumAndArtist()}
         </div>
       </div>
-      <div>
-        <div className={styles.control}>
-          <button
-            className={styles.button}
-            onClick={() => {
-              ApiClient.previous();
-            }}
-          >
-            <Prev />
-          </button>
-          <button
-            className={`${styles.button} ${styles.playpause}`}
-            onClick={() => {
-              ApiClient.playPause();
-            }}
-          >
-            {player.isPlaying ? <Pause /> : <Play />}
-          </button>
-          <button
-            className={styles.button}
-            onClick={() => {
-              ApiClient.next();
-            }}
-          >
-            <Next />
-          </button>
+      <div className={styles.bottom}>
+        <div className={styles.progress}>
+          <ProgressBar
+            duration={player.duration}
+            isPlaying={player.isPlaying}
+            startProgress={player.progress}
+          />
         </div>
-        <ProgressBar
-          duration={player.duration}
-          isPlaying={player.isPlaying}
-          startProgress={player.progress}
-        />
+        <div className={styles.control}>
+          <div className={styles.left}></div>
+          <div className={styles.mid}>
+            <button
+              className={styles.button}
+              onClick={() => {
+                ApiClient.previous();
+              }}
+            >
+              <Prev />
+            </button>
+            <button
+              className={`${styles.button} ${styles.playpause}`}
+              onClick={() => {
+                ApiClient.playPause();
+              }}
+            >
+              {player.isPlaying ? <Pause /> : <Play />}
+            </button>
+            <button
+              className={styles.button}
+              onClick={() => {
+                ApiClient.next();
+              }}
+            >
+              <Next />
+            </button>
+          </div>
+          <div className={styles.right}>
+            <Volume className={styles.volumeLogo} />
+            <InputRange
+              className={styles.volumeInput}
+              onChange={(evt) => {
+                setVolume(Number.parseInt(evt.target.value));
+              }}
+              onMouseUp={sendVolume}
+              onTouchEnd={sendVolume}
+              value={volume}
+              min={0}
+              max={100}
+            />
+          </div>
+        </div>
       </div>
     </div>
   );

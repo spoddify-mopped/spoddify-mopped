@@ -2,9 +2,10 @@ div.container {
   display: flex;
   justify-content: center;
   align-items: center;
+  flex: 1;
 }
 
 input.progressBar {
   margin: 1rem;
-  width: 20rem;
+  flex: 1;
 }

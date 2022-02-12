@@ -102,11 +102,13 @@ const PlayerBar = (props: Props): ReactElement => {
           )}
           <Next className={styles.next} onClick={props.onNext} />
         </div>
-        <ProgressBar
-          duration={props.playerInformation.duration}
-          isPlaying={props.playerInformation.isPlaying}
-          startProgress={props.playerInformation.progress}
-        />
+        <div className={styles.progress}>
+          <ProgressBar
+            duration={props.playerInformation.duration}
+            isPlaying={props.playerInformation.isPlaying}
+            startProgress={props.playerInformation.progress}
+          />
+        </div>
       </div>
       <div className={styles.right}>
         <Volume className={styles.volumeLogo} />
