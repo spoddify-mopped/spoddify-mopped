@@ -17,11 +17,11 @@ export default class EventController {
     this.router.post(`${this.path}`, this.newEvent);
   }
 
-  private newEvent = async (
+  private newEvent = (
     _request: express.Request,
     response: express.Response
-  ): Promise<void> => {
-    await this.websocketHandler.sendPlayerState();
+  ): void => {
+    this.websocketHandler.sendPlayerState();
     response.sendStatus(204);
   };
 }
