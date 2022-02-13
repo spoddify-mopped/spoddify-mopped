@@ -10,6 +10,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ApiClient from '../../clients/api';
 import CoverReplacement from '../../resources/cover_replacement.png';
 import ImageUtils from '../../utils/image';
+import { ReactComponent as Play } from '../../resources/play-circle-solid.svg';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import styles from './PlaylistDetailView.module.scss';
 
@@ -90,7 +91,11 @@ const PlaylistDetailView = (): React.ReactElement => {
         </div>
       </div>
       <div className={styles.innerContainer}>
-        <div className={styles.searchInput}>
+        <div className={styles.innerHeader}>
+          <Play
+            className={styles.play}
+            onClick={async () => ApiClient.playPlaylist(playlist.id)}
+          />
           <SearchInput
             value={search}
             onChange={(evt) => {

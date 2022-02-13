@@ -29,13 +29,26 @@ div.header {
 }
 
 div.innerContainer {
-  margin: 5rem 5rem 0 5rem;
+  margin: 2rem 5rem 0 5rem;
   padding-bottom: 5rem;
 }
 
-div.searchInput {
+svg.play {
+  color: #1fdf64;
+  width: 3rem;
+  height: 3rem;
+  margin-right: 2rem;
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.5;
+  }
+}
+
+div.innerHeader {
   margin-bottom: 1rem;
   width: min-content;
+  display: flex;
 }
 
 th.index,
