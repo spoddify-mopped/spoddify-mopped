@@ -31,6 +31,7 @@ div.header {
 div.innerContainer {
   margin: 2rem 5rem 0 5rem;
   padding-bottom: 5rem;
+  max-width: 150rem;
 }
 
 svg.play {
@@ -45,9 +46,12 @@ svg.play {
   }
 }
 
+.search {
+  margin-left: auto;
+}
+
 div.innerHeader {
   margin-bottom: 1rem;
-  width: min-content;
   display: flex;
 }
 

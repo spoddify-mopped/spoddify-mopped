@@ -97,6 +97,7 @@ const PlaylistDetailView = (): React.ReactElement => {
             onClick={async () => ApiClient.playPlaylist(playlist.id)}
           />
           <SearchInput
+            className={styles.search}
             value={search}
             onChange={(evt) => {
               setSearch(evt.target.value);
