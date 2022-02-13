@@ -1,10 +1,14 @@
 import { AlbumWithTracks, Artist } from '../../clients/api.types';
 import React, { useEffect, useState } from 'react';
+import Table, {
+  TableData,
+  TableHead,
+  TableRow,
+} from '../../components/Table/Table';
 import { useNavigate, useParams } from 'react-router';
 
 import { ReactComponent as AddImage } from '../../resources/add.svg';
 import ApiClient from '../../clients/api';
-import SearchTrackView from '../../components/SearchTrackView/SearchTrackView';
 import styles from './AlbumView.module.scss';
 
 const AlbumView = (): React.ReactElement => {
@@ -29,6 +33,20 @@ const AlbumView = (): React.ReactElement => {
   if (!album || !artist) {
     return <></>;
   }
+
+  const renderArtistSubtitle = (artists: Artist[]) => {
+    return artists.map((artist, index) => (
+      <>
+        <span
+          className={styles.artist}
+          onClick={() => navigate(`/artist/${artist.id}`)}
+        >
+          {artist.name}
+        </span>
+        {index !== artists.length - 1 ? ', ' : ''}
+      </>
+    ));
+  };
 
   return (
     <div>
@@ -70,12 +88,31 @@ const AlbumView = (): React.ReactElement => {
             await ApiClient.addAlbum(album.id);
           }}
         />
-        <SearchTrackView
-          tracks={album.tracks}
-          onAddTrackClick={async (track) => {
-            await ApiClient.addTrack(track.id);
-          }}
-        />
+        <Table>
+          <TableHead className={styles.index}>#</TableHead>
+          <TableHead>TITLE</TableHead>
+          {album.tracks.map((track, index) => (
+            <TableRow>
+              <TableData className={styles.index} dataLabel="#">
+                {++index}
+              </TableData>
+              <TableData dataLabel="TITLE">
+                <div className={styles.trackTitle}>
+                  <span>{track.name}</span>
+                  <span>{renderArtistSubtitle(track.artists)}</span>
+                </div>
+              </TableData>
+              <span
+                className={styles.addTrackButton}
+                onClick={async () => {
+                  await ApiClient.addTrack(track.id);
+                }}
+              >
+                +
+              </span>
+            </TableRow>
+          ))}
+        </Table>
       </div>
     </div>
   );

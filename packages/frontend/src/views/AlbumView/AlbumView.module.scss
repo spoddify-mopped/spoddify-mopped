@@ -60,6 +60,45 @@ svg.addAlbumButton {
   }
 }
 
+th.index,
+td.index {
+  display: flex;
+  justify-content: flex-end;
+  max-width: 1rem;
+  opacity: 0.5;
+}
+
+div.trackTitle {
+  display: flex;
+  flex-direction: column;
+
+  span.artist {
+    opacity: 0.6;
+    font-size: 0.9rem;
+    cursor: pointer;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+span.addTrackButton {
+  visibility: hidden;
+  font-size: 2rem;
+  display: flex;
+  align-items: center;
+  margin-right: 1rem;
+  cursor: pointer;
+  margin-bottom: 0.5rem;
+}
+
+tr:hover {
+  span.addTrackButton {
+    visibility: visible;
+  }
+}
+
 @media screen and (max-width: 1200px) {
   div.header {
     img.albumImage {
