@@ -4,6 +4,7 @@ aside.menu {
   background-color: black;
   display: flex;
   flex-direction: column;
+  z-index: 10000;
 
   justify-content: space-between;
 

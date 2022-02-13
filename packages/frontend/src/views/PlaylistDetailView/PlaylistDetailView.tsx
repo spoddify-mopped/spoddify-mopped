@@ -1,14 +1,19 @@
+import { Artist, FullPlaylist } from '../../clients/api.types';
 import React, { useEffect, useState } from 'react';
+import Table, {
+  TableData,
+  TableHead,
+  TableRow,
+} from '../../components/Table/Table';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import ApiClient from '../../clients/api';
 import CoverReplacement from '../../resources/cover_replacement.png';
-import { FullPlaylist } from '../../clients/api.types';
 import ImageUtils from '../../utils/image';
-import TrackView from '../../components/TrackView/TrackView';
 import styles from './PlaylistDetailView.module.scss';
-import { useParams } from 'react-router-dom';
 
 const PlaylistDetailView = (): React.ReactElement => {
+  const navigate = useNavigate();
   const params = useParams();
 
   const [playlist, setPlaylist] = useState<FullPlaylist | undefined>(undefined);
@@ -43,6 +48,20 @@ const PlaylistDetailView = (): React.ReactElement => {
     ImageUtils.collage(images, 600).then(setImage);
   }, [playlist]);
 
+  const renderArtistSubtitle = (artists: Artist[]) => {
+    return artists.map((artist, index) => (
+      <>
+        <span
+          className={styles.artist}
+          onClick={() => navigate(`/artist/${artist.id}`)}
+        >
+          {artist.name}
+        </span>
+        {index !== artists.length - 1 ? ', ' : ''}
+      </>
+    ));
+  };
+
   if (!playlist) {
     return <></>;
   }
@@ -63,7 +82,37 @@ const PlaylistDetailView = (): React.ReactElement => {
         </div>
       </div>
       <div className={styles.innerContainer}>
-        <TrackView tracks={playlist.tracks.map((tracks) => tracks.track)} />
+        <Table>
+          <TableHead className={styles.index}>#</TableHead>
+          <TableHead>TITLE</TableHead>
+          <TableHead className={styles.album}>ALBUM</TableHead>
+          <TableHead className={styles.addedAt}>ADDED AT</TableHead>
+          {playlist.tracks.map(({ track, addedAt }, index) => (
+            <TableRow>
+              <TableData className={styles.index} dataLabel="#">
+                {++index}
+              </TableData>
+              <TableData dataLabel="TITLE">
+                <img className={styles.cover} src={track.imageUrl} alt="" />
+                <div className={styles.trackTitle}>
+                  <span>{track.name}</span>
+                  <span>{renderArtistSubtitle(track.artists)}</span>
+                </div>
+              </TableData>
+              <TableData className={styles.album} data-label="ALBUM">
+                <span
+                  className={styles.album}
+                  onClick={() => navigate(`/album/${track.album.id}`)}
+                >
+                  {track.album.name}
+                </span>
+              </TableData>
+              <TableData className={styles.addedAt} data-label="ADDED AT">
+                {new Date(addedAt * 1000).toLocaleDateString()}
+              </TableData>
+            </TableRow>
+          ))}
+        </Table>
       </div>
     </div>
   );

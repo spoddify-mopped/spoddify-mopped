@@ -1,0 +1,64 @@
+table.flexTable {
+  display: flex;
+  flex-direction: column;
+  max-width: 150rem;
+
+  thead {
+    border-bottom: 1px solid rgba(180, 180, 180, 0.3);
+    color: rgba(180, 180, 180, 0.3);
+    font-size: 0.9rem;
+  }
+
+  tbody tr:hover {
+    background-color: rgba($color: #ffffff, $alpha: 0.15);
+    border-radius: 5px;
+  }
+
+  tbody {
+    margin-top: 1rem;
+  }
+
+  thead.sticky {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    max-width: 150rem;
+    background-color: #0e0e0e;
+    border-bottom: none;
+    z-index: 1000;
+
+    &::before {
+      content: '';
+      position: fixed;
+      display: block;
+      background-color: #0e0e0e;
+      border-bottom: 1px solid rgba(180, 180, 180, 0.3);
+      height: 2rem;
+      left: 0;
+      top: 0;
+      width: 100%;
+      z-index: -1;
+
+      th {
+        flex: 1 0;
+      }
+    }
+  }
+
+  thead tr,
+  tbody tr {
+    display: flex;
+  }
+
+  thead tr th {
+    font-weight: 500;
+  }
+
+  thead tr th,
+  tbody tr td {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    padding: 0.5em;
+  }
+}
