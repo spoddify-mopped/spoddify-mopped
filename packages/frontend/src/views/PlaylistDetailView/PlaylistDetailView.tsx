@@ -9,6 +9,8 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import ApiClient from '../../clients/api';
 import CoverReplacement from '../../resources/cover_replacement.png';
+import Error from '../../components/Error/Error';
+import FullLoadingView from '../FullLoadingView/FullLoadingView';
 import ImageUtils from '../../utils/image';
 import { ReactComponent as Play } from '../../resources/play-circle-solid.svg';
 import SearchInput from '../../components/SearchInput/SearchInput';
@@ -26,14 +28,22 @@ const PlaylistDetailView = (): React.ReactElement => {
 
   const [tracks, setTracks] = useState<PlaylistTracks>([]);
 
+  const [isLoading, setIsLoading] = useState(false);
+
+  const [isError, setIsError] = useState(false);
+
   useEffect(() => {
     const id = params['id'];
 
     if (id) {
-      ApiClient.getPlaylist(Number.parseInt(id)).then((playlist) => {
-        setPlaylist(playlist);
-        setTracks(playlist.tracks);
-      });
+      setIsLoading(true);
+      ApiClient.getPlaylist(Number.parseInt(id))
+        .then((playlist) => {
+          setPlaylist(playlist);
+          setTracks(playlist.tracks);
+        })
+        .catch(() => setIsError(true))
+        .finally(() => setIsLoading(false));
     }
   }, [params]);
 
@@ -41,7 +51,6 @@ const PlaylistDetailView = (): React.ReactElement => {
     if (!playlist) {
       return;
     }
-
     const images = playlist.tracks
       .filter(
         (value, index, self) =>
@@ -70,6 +79,14 @@ const PlaylistDetailView = (): React.ReactElement => {
       </>
     ));
   };
+
+  if (isLoading) {
+    return <FullLoadingView />;
+  }
+
+  if (isError) {
+    return <Error />;
+  }
 
   if (!playlist) {
     return <></>;
