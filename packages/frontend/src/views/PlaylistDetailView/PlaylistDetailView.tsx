@@ -1,4 +1,4 @@
-import { Artist, FullPlaylist } from '../../clients/api.types';
+import { Artist, FullPlaylist, PlaylistTracks } from '../../clients/api.types';
 import React, { useEffect, useState } from 'react';
 import Table, {
   TableData,
@@ -10,6 +10,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ApiClient from '../../clients/api';
 import CoverReplacement from '../../resources/cover_replacement.png';
 import ImageUtils from '../../utils/image';
+import SearchInput from '../../components/SearchInput/SearchInput';
 import styles from './PlaylistDetailView.module.scss';
 
 const PlaylistDetailView = (): React.ReactElement => {
@@ -20,11 +21,18 @@ const PlaylistDetailView = (): React.ReactElement => {
 
   const [image, setImage] = useState<string | undefined>(undefined);
 
+  const [search, setSearch] = useState('');
+
+  const [tracks, setTracks] = useState<PlaylistTracks>([]);
+
   useEffect(() => {
     const id = params['id'];
 
     if (id) {
-      ApiClient.getPlaylist(Number.parseInt(id)).then(setPlaylist);
+      ApiClient.getPlaylist(Number.parseInt(id)).then((playlist) => {
+        setPlaylist(playlist);
+        setTracks(playlist.tracks);
+      });
     }
   }, [params]);
 
@@ -82,12 +90,40 @@ const PlaylistDetailView = (): React.ReactElement => {
         </div>
       </div>
       <div className={styles.innerContainer}>
+        <div className={styles.searchInput}>
+          <SearchInput
+            value={search}
+            onChange={(evt) => {
+              setSearch(evt.target.value);
+              setTracks(
+                playlist.tracks.filter(
+                  ({ track }) =>
+                    track.name
+                      .toLowerCase()
+                      .includes(evt.target.value.toLowerCase()) ||
+                    track.album.name
+                      .toLowerCase()
+                      .includes(evt.target.value.toLowerCase()) ||
+                    track.artists.filter((artist) =>
+                      artist.name
+                        .toLowerCase()
+                        .includes(evt.target.value.toLowerCase())
+                    ).length > 0
+                )
+              );
+            }}
+            onDeleteInputClick={() => {
+              setSearch('');
+              setTracks(playlist.tracks);
+            }}
+          />
+        </div>
         <Table>
           <TableHead className={styles.index}>#</TableHead>
           <TableHead>TITLE</TableHead>
           <TableHead className={styles.album}>ALBUM</TableHead>
           <TableHead className={styles.addedAt}>ADDED AT</TableHead>
-          {playlist.tracks.map(({ track, addedAt }, index) => (
+          {tracks.map(({ track, addedAt }, index) => (
             <TableRow>
               <TableData className={styles.index} dataLabel="#">
                 {++index}

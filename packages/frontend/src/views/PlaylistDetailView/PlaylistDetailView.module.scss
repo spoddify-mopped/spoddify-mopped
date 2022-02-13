@@ -33,6 +33,11 @@ div.innerContainer {
   padding-bottom: 5rem;
 }
 
+div.searchInput {
+  margin-bottom: 1rem;
+  width: min-content;
+}
+
 th.index,
 td.index {
   display: flex;

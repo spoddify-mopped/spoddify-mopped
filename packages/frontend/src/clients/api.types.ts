@@ -47,7 +47,7 @@ export type Playlist = {
   name: string;
 };
 
-type PlaylistTracks = {
+export type PlaylistTracks = {
   addedAt: number;
   track: Track;
 }[];
