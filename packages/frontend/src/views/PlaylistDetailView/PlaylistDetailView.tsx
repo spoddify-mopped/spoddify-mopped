@@ -1,4 +1,4 @@
-import { Artist, FullPlaylist, PlaylistTracks } from '../../clients/api.types';
+import { FullPlaylist, PlaylistTracks } from '../../clients/api.types';
 import React, { useEffect, useState } from 'react';
 import Table, {
   TableData,
@@ -8,6 +8,7 @@ import Table, {
 import { useNavigate, useParams } from 'react-router-dom';
 
 import ApiClient from '../../clients/api';
+import ArtistsTitle from '../../components/ArtistsTitle/ArtistsTitle';
 import CoverReplacement from '../../resources/cover_replacement.png';
 import Error from '../../components/Error/Error';
 import FullLoadingView from '../FullLoadingView/FullLoadingView';
@@ -65,20 +66,6 @@ const PlaylistDetailView = (): React.ReactElement => {
 
     ImageUtils.collage(images, 600).then(setImage);
   }, [playlist]);
-
-  const renderArtistSubtitle = (artists: Artist[]) => {
-    return artists.map((artist, index) => (
-      <>
-        <span
-          className={styles.artist}
-          onClick={() => navigate(`/artist/${artist.id}`)}
-        >
-          {artist.name}
-        </span>
-        {index !== artists.length - 1 ? ', ' : ''}
-      </>
-    ));
-  };
 
   if (isLoading) {
     return <FullLoadingView />;
@@ -147,7 +134,7 @@ const PlaylistDetailView = (): React.ReactElement => {
           <TableHead className={styles.album}>ALBUM</TableHead>
           <TableHead className={styles.addedAt}>ADDED AT</TableHead>
           {tracks.map(({ track, addedAt }, index) => (
-            <TableRow>
+            <TableRow key={`table_row_${track.name}_${index}`}>
               <TableData className={styles.index} dataLabel="#">
                 {++index}
               </TableData>
@@ -155,7 +142,11 @@ const PlaylistDetailView = (): React.ReactElement => {
                 <img className={styles.cover} src={track.imageUrl} alt="" />
                 <div className={styles.trackTitle}>
                   <span>{track.name}</span>
-                  <span>{renderArtistSubtitle(track.artists)}</span>
+                  <ArtistsTitle
+                    className={styles.artist}
+                    artists={track.artists}
+                    onArtistClick={(id) => navigate(`/artist/${id}`)}
+                  />
                 </div>
               </TableData>
               <TableData className={styles.album} data-label="ALBUM">

@@ -16,7 +16,7 @@ const AlbumWithArtistCover = ({
 }: Props): React.ReactElement => {
   const renderArtistSubtitle = () => {
     return item.artists.map((artist, index) => (
-      <>
+      <React.Fragment key={`artist_${artist.name}_${index}`}>
         <span
           className={styles.artist}
           onClick={() => onArtistClick(artist.id)}
@@ -24,7 +24,7 @@ const AlbumWithArtistCover = ({
           {artist.name}
         </span>
         {index !== item.artists.length - 1 ? ', ' : ''}
-      </>
+      </React.Fragment>
     ));
   };
 

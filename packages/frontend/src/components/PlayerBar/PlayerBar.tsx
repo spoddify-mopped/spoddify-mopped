@@ -2,6 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react';
 
 import ApiClient from '../../clients/api';
 import { Artist } from '../../clients/api.types';
+import ArtistsTitle from '../ArtistsTitle/ArtistsTitle';
 import CoverReplacement from '../../resources/cover_replacement.png';
 import { ReactComponent as FullScreen } from '../../resources/fullscreen.svg';
 import InputRange from '../InputRange/InputRange';
@@ -43,29 +44,6 @@ const PlayerBar = (props: Props): ReactElement => {
 
   const sendVolume = async () => await ApiClient.setVolume(volume);
 
-  const renderArtists = () => {
-    if (props.playerInformation.artists) {
-      const artistCount = props.playerInformation.artists.length;
-
-      return (
-        <span className={styles.artist}>
-          {props.playerInformation.artists.map((artist, index) => (
-            <>
-              <span
-                className={styles.link}
-                key={artist.id}
-                onClick={() => navigate(`/artist/${artist.id}`)}
-              >
-                {artist.name}
-              </span>
-              {index === artistCount - 1 ? ' ' : ', '}
-            </>
-          ))}
-        </span>
-      );
-    }
-  };
-
   return (
     <div className={styles.playerbar}>
       <div className={styles.infoContainer}>
@@ -89,7 +67,11 @@ const PlayerBar = (props: Props): ReactElement => {
           >
             {props.playerInformation.trackName || ''}
           </span>
-          {renderArtists()}
+          <ArtistsTitle
+            className={styles.artist}
+            artists={props.playerInformation.artists || []}
+            onArtistClick={(id) => navigate(`/artist/${id}`)}
+          />
         </div>
       </div>
       <div className={styles.player}>

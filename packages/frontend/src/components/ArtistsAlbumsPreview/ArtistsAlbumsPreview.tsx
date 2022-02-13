@@ -13,6 +13,7 @@ const ArtistsAlbumsPreview = (props: Props): React.ReactElement => {
     <div className={styles.container}>
       {props.items.map((item) => (
         <AlbumCover
+          key={`albumCover_${item.name}`}
           item={item}
           onClick={() => {
             props.onItemClick && props.onItemClick(item.id);

@@ -9,6 +9,7 @@ import { useNavigate, useParams } from 'react-router';
 
 import { ReactComponent as AddImage } from '../../resources/add.svg';
 import ApiClient from '../../clients/api';
+import ArtistsTitle from '../../components/ArtistsTitle/ArtistsTitle';
 import styles from './AlbumView.module.scss';
 
 const AlbumView = (): React.ReactElement => {
@@ -33,20 +34,6 @@ const AlbumView = (): React.ReactElement => {
   if (!album || !artist) {
     return <></>;
   }
-
-  const renderArtistSubtitle = (artists: Artist[]) => {
-    return artists.map((artist, index) => (
-      <>
-        <span
-          className={styles.artist}
-          onClick={() => navigate(`/artist/${artist.id}`)}
-        >
-          {artist.name}
-        </span>
-        {index !== artists.length - 1 ? ', ' : ''}
-      </>
-    ));
-  };
 
   return (
     <div>
@@ -92,14 +79,18 @@ const AlbumView = (): React.ReactElement => {
           <TableHead className={styles.index}>#</TableHead>
           <TableHead>TITLE</TableHead>
           {album.tracks.map((track, index) => (
-            <TableRow>
+            <TableRow key={`table_row_${track.name}_${index}`}>
               <TableData className={styles.index} dataLabel="#">
                 {++index}
               </TableData>
               <TableData dataLabel="TITLE">
                 <div className={styles.trackTitle}>
                   <span>{track.name}</span>
-                  <span>{renderArtistSubtitle(track.artists)}</span>
+                  <ArtistsTitle
+                    className={styles.artist}
+                    artists={track.artists}
+                    onArtistClick={(id) => navigate(`/artist/${id}`)}
+                  />
                 </div>
               </TableData>
               <span

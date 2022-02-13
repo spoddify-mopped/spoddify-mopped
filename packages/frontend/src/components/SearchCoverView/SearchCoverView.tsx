@@ -17,6 +17,7 @@ const SearchCoverView = (props: Props): ReactElement => {
       if ('artists' in item) {
         return (
           <AlbumWithArtistCover
+            key={`albumWithArtistCover_${item.name}`}
             item={item}
             onAlbumClick={(id) => props.onCoverClick && props.onCoverClick(id)}
             onArtistClick={(id) =>
@@ -28,6 +29,7 @@ const SearchCoverView = (props: Props): ReactElement => {
 
       return (
         <ArtistCover
+          key={`artistCover${item.name}`}
           item={item}
           onClick={(id) => props.onCoverClick && props.onCoverClick(id)}
         />

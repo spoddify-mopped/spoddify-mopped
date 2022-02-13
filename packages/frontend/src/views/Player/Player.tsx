@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import ApiClient from '../../clients/api';
 import { AppState } from '../../redux/reducers';
+import ArtistsTitle from '../../components/ArtistsTitle/ArtistsTitle';
 import CoverReplacement from '../../resources/cover_replacement.png';
 import InputRange from '../../components/InputRange/InputRange';
 import { ReactComponent as Next } from '../../resources/step-forward-solid.svg';
@@ -59,22 +60,12 @@ export default function Player(): ReactElement {
       return <></>;
     }
 
-    const artistCount = player.artists.length;
-
     return (
       <span className={styles.artistAlbum}>
-        {player.artists.map((artist, index) => (
-          <>
-            <span
-              className={styles.link}
-              key={artist.id}
-              onClick={() => navigate(`/artist/${artist.id}`)}
-            >
-              {artist.name}
-            </span>
-            {index === artistCount - 1 ? ' ' : ', '}
-          </>
-        ))}{' '}
+        <ArtistsTitle
+          artists={player.artists || []}
+          onArtistClick={(id) => navigate(`/artist/${id}`)}
+        />{' '}
         -{' '}
         <span
           className={styles.link}
