@@ -11,39 +11,6 @@ div.searchInputContainer {
   margin-left: 5rem;
 }
 
-div.searchInputWrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-svg.searchIcon {
-  fill: rgba(180, 180, 180, 0.7);
-  width: 1.2rem;
-  position: absolute;
-  left: 1rem;
-}
-
-span.deleteInput {
-  right: 1rem;
-  position: absolute;
-  color: rgba(180, 180, 180, 0.7);
-  cursor: pointer;
-}
-
-span.deleteInput:hover {
-  opacity: 0.5;
-}
-
-input.searchInput {
-  padding: 0.5rem 3rem;
-  border-radius: 15px;
-  border: 1px solid rgba(180, 180, 180, 0.3);
-  background-color: #121212;
-  color: white;
-  outline: none;
-}
-
 .category {
   padding: 1rem 5rem;
 }

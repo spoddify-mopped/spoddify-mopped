@@ -7,7 +7,7 @@ import ApiClient from '../../clients/api';
 import Error from '../../components/Error/Error';
 import FullLoadingView from '../FullLoadingView/FullLoadingView';
 import SearchCoverView from '../../components/SearchCoverView/SearchCoverView';
-import { ReactComponent as SearchIcon } from '../../resources/search.svg';
+import SearchInput from '../../components/SearchInput/SearchInput';
 import { SearchResponse } from '../../clients/api.types';
 import SearchTrackView from '../../components/SearchTrackView/SearchTrackView';
 
@@ -105,22 +105,11 @@ export const Search = (): ReactElement => {
   return (
     <div className="searchView">
       <div className="searchInputContainer">
-        <div className="searchInputWrapper">
-          <SearchIcon className="searchIcon" />
-          <input
-            className="searchInput"
-            placeholder="Search"
-            value={query}
-            onChange={handleSearchInputChange}
-          />
-          {query !== '' ? (
-            <span className="deleteInput" onClick={() => navigate('/search')}>
-              X
-            </span>
-          ) : (
-            <></>
-          )}
-        </div>
+        <SearchInput
+          value={query}
+          onChange={handleSearchInputChange}
+          onDeleteInputClick={() => navigate('/search')}
+        />
       </div>
       {renderResult()}
     </div>
