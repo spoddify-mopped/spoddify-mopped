@@ -1,4 +1,10 @@
-import React, { PropsWithChildren, useCallback, useState } from 'react';
+import React, {
+  PropsWithChildren,
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
 
 import styles from './Table.module.scss';
 
@@ -39,6 +45,7 @@ export const TableData = (
 const Table = ({
   children,
 }: PropsWithChildren<unknown>): React.ReactElement => {
+  const mounted = useRef(false);
   const [stickyHeader, setStickyHeader] = useState(false);
 
   const tableHeaderRef = useCallback((node) => {
@@ -47,7 +54,9 @@ const Table = ({
     let tableHeaderY = 0;
 
     const onScroll = () => {
-      setStickyHeader(content.scrollTop > tableHeaderY);
+      if (mounted.current) {
+        setStickyHeader(content.scrollTop > tableHeaderY);
+      }
     };
 
     if (node) {
@@ -55,9 +64,13 @@ const Table = ({
     }
 
     content.addEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    mounted.current = true;
 
     return () => {
-      content.removeEventListener('scroll', onScroll);
+      mounted.current = false;
     };
   }, []);
 
