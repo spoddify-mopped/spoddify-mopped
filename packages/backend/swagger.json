@@ -123,6 +123,14 @@
       },
       "type": "object"
     },
+    "SpotifydStatus": {
+      "properties": {
+        "isRunning": {
+          "type": "boolean"
+        }
+      },
+      "type": "object"
+    },
     "Track": {
       "properties": {
         "id": {
@@ -696,6 +704,33 @@
           }
         },
         "summary": "Get system status",
+        "tags": ["system"]
+      }
+    },
+    "/system/spotifyd/status": {
+      "get": {
+        "operationId": "getSpotifydStatus",
+        "responses": {
+          "200": {
+            "schema": {
+              "$ref": "#/definitions/SpotifydStatus"
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Get spotifyd status",
+        "tags": ["system"]
+      }
+    },
+    "/system/spotifyd/restart": {
+      "post": {
+        "operationId": "restartSpotifyd",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "summary": "Restart spotifyd",
         "tags": ["system"]
       }
     }

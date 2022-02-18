@@ -6,6 +6,7 @@ import {
   FullPlaylist,
   Playlist,
   SearchResponse,
+  SpotifydStatus,
   SystemStatus,
 } from './api.types';
 
@@ -81,6 +82,12 @@ const ApiClient = {
     const { data } = await axios.get<Playlist[]>(`${API_URL}/api/playlist`);
     return data;
   },
+  getSpotifydStatus: async (): Promise<SpotifydStatus> => {
+    const { data } = await axios.get<SpotifydStatus>(
+      `${API_URL}/api/system/spotifyd/status`
+    );
+    return data;
+  },
   getSystemStatus: async (): Promise<SystemStatus> => {
     const { data } = await axios.get<SystemStatus>(
       `${API_URL}/api/system/status`
@@ -98,6 +105,9 @@ const ApiClient = {
   },
   previous: async (): Promise<void> => {
     await axios.post(`${API_URL}/api/player/previous`);
+  },
+  restartSpotifyd: async (): Promise<void> => {
+    await axios.post(`${API_URL}/api/system/spotifyd/restart`);
   },
   search: async (
     query: string,

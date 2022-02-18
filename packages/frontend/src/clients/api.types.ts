@@ -2,6 +2,10 @@ export type SystemStatus = {
   ready: boolean;
 };
 
+export type SpotifydStatus = {
+  isRunning: boolean;
+};
+
 export type Artist = {
   id: string;
   name: string;

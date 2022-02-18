@@ -2,18 +2,28 @@ import RequestError from '../error/request';
 import { SpotifyApiError } from '../clients/spotify/error';
 import SpotifyAuth from '../db/spotify_auth';
 import SpotifyClient from '../clients/spotify/spotify';
+import { SpotifydService } from '../services/spotifyd';
 import express from 'express';
 
-const OAUTH_SCOPES = ['user-read-playback-state', 'user-modify-playback-state'];
+const OAUTH_SCOPES = [
+  'streaming',
+  'user-read-playback-state',
+  'user-modify-playback-state',
+];
 
 export default class AuthController {
   public path = '';
   public router = express.Router();
 
   private spotifyClient: SpotifyClient;
+  private spotifydService: SpotifydService;
 
-  public constructor(spotifyClient: SpotifyClient) {
+  public constructor(
+    spotifyClient: SpotifyClient,
+    spotifydService: SpotifydService
+  ) {
     this.spotifyClient = spotifyClient;
+    this.spotifydService = spotifydService;
 
     this.initializeRoutes();
   }
@@ -56,6 +66,9 @@ export default class AuthController {
 
         this.spotifyClient.setRefreshToken(data.refresh_token);
         this.spotifyClient.setAccessToken(data.access_token);
+
+        await this.spotifydService.start();
+
         response.redirect(redirectUri ? redirectUri : '/');
       })
       .catch((error) => {

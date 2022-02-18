@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 export type ExternalUrls = {
   spotify: string;
 };
@@ -24,4 +25,9 @@ export type PagingObject<T> = {
 
 export type Restrictions = {
   reason: 'market' | 'product' | 'explicit';
+};
+
+export type ExplicitContent = {
+  filter_enabled: boolean;
+  filter_locked: boolean;
 };
