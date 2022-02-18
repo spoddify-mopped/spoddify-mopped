@@ -81,6 +81,13 @@ export class SpotifydService {
       LOGGER.info(`Spotifyd started on PID: ${this.spotifydProcess.pid} `);
     });
 
+    this.spotifydProcess.on('error', () => {
+      LOGGER.error(
+        'Spotifyd could not be started. Check the path of the spotifyd binary or disable spotifyd.'
+      );
+      process.exit(1);
+    });
+
     this.spotifydProcess.stdout.on('data', (data) => {
       const rows = this.prettifyLog(data);
       rows.map((row) => LOGGER.info(row));
