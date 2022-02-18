@@ -138,7 +138,9 @@ export class SpotifydService {
   };
 
   public stop = (): void => {
-    this.spotifydProcess.kill('SIGINT');
+    if (this.spotifydProcess) {
+      this.spotifydProcess.kill('SIGINT');
+    }
   };
 
   public getStatus = (): SpotifydStatus => {
