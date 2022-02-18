@@ -6,6 +6,7 @@ import {
   TrackResponse,
   TracksResponse,
   UserDevicesResponse,
+  UserResponse,
 } from './../../../clients/spotify/responses';
 import SpotifyClient, {
   mapAxiosErrorToSpotifyApiError,
@@ -343,6 +344,38 @@ describe('getPlayer', () => {
     );
 
     expect(axiosSpy).toBeCalledWith('/me/player');
+  });
+});
+
+describe('getCurrentUser', () => {
+  it('succeeds', async () => {
+    const expectedResponse: UserResponse = {
+      country: 'some country',
+      display_name: 'some user',
+      email: 'some email',
+      explicit_content: undefined,
+      external_urls: undefined,
+      followers: undefined,
+      href: '',
+      id: '',
+      images: [],
+      product: '',
+      type: '',
+      uri: '',
+    };
+
+    const axiosSpy = jest.spyOn(axios, 'get').mockImplementation(() =>
+      Promise.resolve({
+        data: expectedResponse,
+        status: 200,
+      })
+    );
+
+    const spotifyClient = new SpotifyClient(testConfig);
+    const response = await spotifyClient.getCurrentUser();
+
+    expect(response).toBe(expectedResponse);
+    expect(axiosSpy).toBeCalledWith('/me');
   });
 });
 

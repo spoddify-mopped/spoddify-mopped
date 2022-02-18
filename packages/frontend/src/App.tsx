@@ -9,6 +9,7 @@ import Player from './views/Player/Player';
 import PlaylistDetailView from './views/PlaylistDetailView/PlaylistDetailView';
 import PlaylistsView from './views/PlaylistsView/PlaylistView';
 import { Search } from './views/Search/Search';
+import SettingsView from './views/SettingsView/SettingsView';
 import SetupView from './views/SetupView/SetupView';
 
 export default function App(): ReactElement {
@@ -42,6 +43,7 @@ export default function App(): ReactElement {
           <Route path="/playlist/:id" element={<PlaylistDetailView />} />
           <Route path="/artist/:id" element={<ArtistView />} />
           <Route path="/album/:id" element={<AlbumView />} />
+          <Route path="/settings" element={<SettingsView />} />
         </Route>
         <Route path="/player" element={<Player />} />
       </Routes>

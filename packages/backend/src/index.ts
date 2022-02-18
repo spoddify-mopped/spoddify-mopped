@@ -8,6 +8,7 @@ import SpotifyAuth from './db/spotify_auth';
 import SpotifyClient from './clients/spotify/spotify';
 import SpotifyPlayerService from './services/player';
 import SpotifySearchService from './services/search';
+import { SpotifydService } from './services/spotifyd';
 import SystemService from './services/system';
 import Track from './db/track';
 import { TracksToPlaylists } from './db/tracks_to_playlists';
@@ -49,17 +50,32 @@ const databaseConnectionOptions: ConnectionOptions = {
   type: 'sqlite',
 };
 
+const spotifydService = new SpotifydService(
+  spotifyClient,
+  config.get('spotifyd:enabled'),
+  {
+    backend: config.get('spotifyd:backend'),
+    bitrate: '320',
+    deviceName: config.get('app:name'),
+    deviceType: 'speaker',
+  },
+  config.get('spotifyd:path')
+);
+
 createConnection(databaseConnectionOptions)
   .then(async () => {
     const spotifyAuth = await SpotifyAuth.findOne({ tokenType: 'refresh' });
 
     if (spotifyAuth) {
       spotifyClient.setRefreshToken(spotifyAuth.tokenValue);
+
+      await spotifydService.start();
     }
 
     const app = new App(
       playlistService,
       spotifyClient,
+      spotifydService,
       spotifyPlayerService,
       spotifySearchService,
       systemService

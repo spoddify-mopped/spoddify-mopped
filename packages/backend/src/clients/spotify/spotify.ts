@@ -9,6 +9,7 @@ import {
   TrackResponse,
   TracksResponse,
   UserDevicesResponse,
+  UserResponse,
 } from './responses';
 import {
   CombinedOptions,
@@ -130,6 +131,11 @@ export default class SpotifyClient {
     this.httpClient.defaults.headers['Authorization'] = `Bearer ${accessToken}`;
   };
 
+  public getAccessToken = async (): Promise<string> => {
+    const response = await this.requestRefreshedToken(this.refreshToken);
+    return response.access_token;
+  };
+
   public setRefreshToken = (refreshToken: string): void => {
     this.refreshToken = refreshToken;
   };
@@ -154,6 +160,14 @@ export default class SpotifyClient {
         throw error;
       }
     }
+  };
+
+  public getCurrentUser = async (): Promise<UserResponse> => {
+    const { data } = await this.tryWithToken<UserResponse>(
+      async () => await this.httpClient.get('/me')
+    );
+
+    return data;
   };
 
   public getPlayer = async (): Promise<PlayerResponse | undefined> => {

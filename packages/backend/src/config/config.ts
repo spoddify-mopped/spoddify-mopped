@@ -13,6 +13,11 @@ const initializeConfig = (): void => {
     spotify: {
       redirectBaseUri: 'http://localhost:8080',
     },
+    spotifyd: {
+      backend: 'alsa',
+      enabled: true,
+      path: 'spotifyd',
+    },
   });
 };
 

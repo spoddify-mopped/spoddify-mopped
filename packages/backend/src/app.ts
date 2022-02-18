@@ -14,6 +14,7 @@ import { Server } from 'socket.io';
 import SpotifyClient from './clients/spotify/spotify';
 import SpotifyPlayerService from './services/player';
 import SpotifySearchService from './services/search';
+import { SpotifydService } from './services/spotifyd';
 import SystemController from './controllers/system';
 import SystemMiddleware from './middleware/system';
 import SystemService from './services/system';
@@ -50,6 +51,7 @@ export default class App {
   public constructor(
     playlistService: PlaylistService,
     spotifyClient: SpotifyClient,
+    spotifydService: SpotifydService,
     spotifyPlayerService: SpotifyPlayerService,
     spotifySearchService: SpotifySearchService,
     systemService: SystemService
@@ -65,6 +67,7 @@ export default class App {
     this.initializeControllers(
       playlistService,
       spotifyClient,
+      spotifydService,
       spotifyPlayerService,
       spotifySearchService,
       systemService
@@ -84,18 +87,25 @@ export default class App {
   private initializeControllers(
     playlistService: PlaylistService,
     spotifyClient: SpotifyClient,
+    spotifydService: SpotifydService,
     spotifyPlayerService: SpotifyPlayerService,
     spotifySearchService: SpotifySearchService,
     systemService: SystemService
   ): void {
     this.app.use('/api', new AlbumController(spotifySearchService).router);
     this.app.use('/api', new ArtistController(spotifySearchService).router);
-    this.app.use('/api', new AuthController(spotifyClient).router);
+    this.app.use(
+      '/api',
+      new AuthController(spotifyClient, spotifydService).router
+    );
     this.app.use('/api', new EventController(this.websocketHandler).router);
     this.app.use('/api', new PlayerController(spotifyPlayerService).router);
     this.app.use('/api', new PlaylistController(playlistService).router);
     this.app.use('/api', new SearchController(spotifySearchService).router);
-    this.app.use('/api', new SystemController(systemService).router);
+    this.app.use(
+      '/api',
+      new SystemController(spotifydService, systemService).router
+    );
 
     this.app.use(
       '/api/docs',

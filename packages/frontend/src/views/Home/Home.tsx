@@ -10,6 +10,7 @@ import Aside from '../../components/Aside/Aside';
 import PlayerBar from '../../components/PlayerBar/PlayerBar';
 import { ReactComponent as PlaylistIcon } from '../../resources/playlist.svg';
 import { ReactComponent as SearchIcon } from '../../resources/search.svg';
+import { ReactComponent as SettingsIcon } from '../../resources/settings.svg';
 import { playerActions } from '../../redux/player/actions';
 
 const asideItems = [
@@ -24,6 +25,12 @@ const asideItems = [
     matcher: '/search/*',
     name: 'Search',
     path: '/search',
+  },
+  {
+    image: <SettingsIcon />,
+    matcher: '/settings',
+    name: 'Settings',
+    path: '/settings',
   },
 ];
 
