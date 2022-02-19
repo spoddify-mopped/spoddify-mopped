@@ -15,13 +15,8 @@ import { playerActions } from './redux/player/actions';
 
 const ACTION_PREFIX = 'WS_TO_SERVER_';
 
-let socket: SocketIOClient.Socket;
-
-if (process.env.REACT_APP_WS_URL) {
-  socket = io(process.env.REACT_APP_WS_URL);
-} else {
-  socket = io('http://localhost:8080');
-}
+const SOCKET_IO_URL = process.env.REACT_APP_API_URL || window.location.origin;
+const socket = io(SOCKET_IO_URL);
 
 const socketIoMiddleware = createSocketIoMiddleware(socket, ACTION_PREFIX);
 const createStoreWithMiddlewares = composeWithDevTools(
