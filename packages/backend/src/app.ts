@@ -118,8 +118,10 @@ export default class App {
       (_request: express.Request, response: express.Response): void => {
         response.sendFile(
           path.join(__dirname, '..', 'public', 'index.html'),
-          () => {
-            response.sendStatus(404);
+          (err) => {
+            if (err) {
+              response.sendStatus(404);
+            }
           }
         );
       }
