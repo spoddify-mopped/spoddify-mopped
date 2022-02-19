@@ -2,6 +2,9 @@
   "name": "@spoddify-mopped/backend",
   "version": "1.0.0",
   "description": "",
+  "bin": {
+    "spoddify-mopped": "./dist/bin/spoddify-mopped.js"
+  },
   "scripts": {
     "lint": "eslint --fix src",
     "format": "prettier --write src",
