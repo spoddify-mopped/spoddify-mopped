@@ -116,7 +116,12 @@ export default class App {
     this.app.use(
       '*',
       (_request: express.Request, response: express.Response): void => {
-        response.sendFile(path.join(__dirname, '..', 'public', 'index.html'));
+        response.sendFile(
+          path.join(__dirname, '..', 'public', 'index.html'),
+          () => {
+            response.sendStatus(404);
+          }
+        );
       }
     );
 
