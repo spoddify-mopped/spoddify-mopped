@@ -50,7 +50,7 @@ const databaseConnectionOptions: ConnectionOptions = {
   database: `${config.get('server:dataPath')}/database.sqlite`,
   entities: [Track, Playlist, SpotifyAuth, TracksToPlaylists],
   synchronize: true,
-  type: 'sqlite',
+  type: 'better-sqlite3',
 };
 
 const spotifydService = new SpotifydService(
