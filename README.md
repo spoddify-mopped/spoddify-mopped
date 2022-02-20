@@ -1,8 +1,11 @@
 <p align="center">
   <img src="https://user-images.githubusercontent.com/36125892/154850425-29281238-7515-4fc2-a0bf-0ab01fddc2b2.png" alt="Spoddify Mopped" height="300px" />
 </p>
+<span align="center">
+  
+  # Spoddify Mopped
 
-# Spoddify Mopped
+</span>
 
 Spoddify Mopped is a Spotify player for office use, with a voting system to select music and automatic song sorting.
 It is intended to run on a Raspberry Pi and some esp32 boards for remote controlling and voting.
