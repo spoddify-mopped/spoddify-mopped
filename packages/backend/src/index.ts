@@ -14,10 +14,13 @@ import Track from './db/track';
 import { TracksToPlaylists } from './db/tracks_to_playlists';
 import config from 'nconf';
 import initializeConfig from './config/config';
+import { program } from 'commander';
 
 initializeConfig();
 
-Logger.setVerbose(true);
+if (program.opts().verbose) {
+  Logger.setVerbose(true);
+}
 
 const LOGGER = Logger.create(__filename);
 
