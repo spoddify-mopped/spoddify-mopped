@@ -13,8 +13,10 @@
 #define SERVICE_UUID        "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
 #define CHARACTERISTIC_UUID "beb5483e-36e1-4688-b7f5-ea07361b26a8"
 
-#define Button1Pin 25
-#define Button2Pin 26
+#define BUTTON1PIN 25
+#define BUTTON2PIN 26
+#define TIMEOUT 20
+#define TOUCH_TRESHOLD 10
 
 #include <GxEPD2_BW.h>
 #include <SD.h>
@@ -38,69 +40,72 @@ BLECharacteristic *cArtist;
 BLECharacteristic *cAlbum;
 BLECharacteristic *cID;
 BLECharacteristic *cVote;
+BLECharacteristic *cUpdate;
 
 //Variablen
-String cpSong = "SongInfo";
-String cpArtist = "ArtistInfo";
-String cpAlbum = "AlbumInfo";
-String cpID = "4cOdK2wGLETKBW3PvgPWqT";
-uint8_t vote = 1;
-int cpDuration = 500;
-int timeoutCounter = 0;
-int timeoutSec = 10;
-unsigned long lastTimestamp = 0;
-bool button1, button2, songInfoChanged, waitingOnVoteRead, blesetupdone = false;
+RTC_DATA_ATTR char songName[100];
+RTC_DATA_ATTR char artistName[100];
+RTC_DATA_ATTR char albumName[100];
+RTC_DATA_ATTR char idName[100];
+bool button1, button2, timeout;
 
-uint16_t touch_treshold = 10;
+void drawSongInfos();
 
 class SongCallback: public BLECharacteristicCallbacks  {
     void onWrite(BLECharacteristic* cSongInfos) {
-      cpSong = cSongInfos->getValue().c_str();
-      Serial.println(cpSong);
-      songInfoChanged = true;
+      const char* cpSong = cSongInfos->getValue().c_str();
+      strcpy(songName, cpSong);
+      drawSongInfos();
     };
 };
 
 class ArtistCallback: public BLECharacteristicCallbacks  {
     void onWrite(BLECharacteristic* cArtist) {
-      cpArtist = cArtist->getValue().c_str();
-      songInfoChanged = true;
+      const char* cpArtist = cArtist->getValue().c_str();
+      strcpy(artistName, cpArtist);
     };
 };
  
 class AlbumCallback: public BLECharacteristicCallbacks  {
     void onWrite(BLECharacteristic* cAlbum) {
-      cpAlbum = cAlbum->getValue().c_str();
-      songInfoChanged = true;
+      const char* cpAlbum = cAlbum->getValue().c_str();
+      strcpy(albumName, cpAlbum);
     };
 };
  
 class IDCallback: public BLECharacteristicCallbacks  {
     void onWrite(BLECharacteristic* cID) {
-      cpID = cID->getValue().c_str();
-      songInfoChanged = true;
+      const char* cpID = cID->getValue().c_str();
+      strcpy(idName, cpID);
     };
 };
 
-class VoteCallback: public BLECharacteristicCallbacks  {
+class UpdateCallback: public BLECharacteristicCallbacks  {
     void onWrite(BLECharacteristic* cVote) {
-      waitingOnVoteRead = false;
-      
+      Serial.println("Going to sleep.");
+      //esp_sleep_enable_ext1_wakeup(0x6000000,ESP_EXT1_WAKEUP_ANY_HIGH);
+      //esp_sleep_enable_ext0_wakeup(GPIO_NUM_25, 0);
+      //esp_sleep_enable_ext0_wakeup(GPIO_NUM_26, 0);
+      //esp_sleep_enable_touchpad_wakeup();
+      esp_sleep_enable_timer_wakeup(20*1000000);
+      esp_deep_sleep_start();
     };
 };
 
 void setup() {
+  button1 = false;
+  button2 = false;
   Serial.begin(115200);
 
   //Button Setup
-  pinMode(Button1Pin, INPUT_PULLUP);
-  pinMode(Button2Pin, INPUT_PULLUP);
+  pinMode(BUTTON1PIN, INPUT_PULLUP);
+  pinMode(BUTTON2PIN, INPUT_PULLUP);
   
   //Interupts
   //attachInterrupt(Button1Pin, button1pressed, RISING);
   //attachInterrupt(Button2Pin, button2pressed, RISING);
-  touchAttachInterrupt(T1, button1pressed, touch_treshold);
-  touchAttachInterrupt(T5, button2pressed, touch_treshold);
+  touchAttachInterrupt(T1, button1pressed, TOUCH_TRESHOLD);
+  touchAttachInterrupt(T5, button2pressed, TOUCH_TRESHOLD);
 
   // put your setup code here, to run once:
   //display.init(115200);
@@ -110,144 +115,86 @@ void setup() {
   display.setFont(&FiraSans_Medium_1_8pt7b);
   
   display.setTextColor(GxEPD_BLACK);
-  songInfoChanged=true;
+
+  blesetup();
+
+  if (songName[0] == 0) {
+    drawLoading();
+  }
 }
 
 
 void loop() {
-  if ((millis()-lastTimestamp) > 5000) {
-    Serial.print("Entering Loop");
-    lastTimestamp = millis();
-    //Timeout zum Lesen der Vote-Characteristik überschritten:
-    if (timeoutCounter > timeoutSec){
-      Serial.println("loop-1");
-      waitingOnVoteRead = false;
-      timeoutCounter = 0;
-      drawTimeout();
-    }
-    //Warte auf Lesen der Vote-Charakteristik:
-    if(waitingOnVoteRead == true){
-      Serial.println("loop-2");
-      drawLoading();
-    }
-    //Button 1 pressed> Upvote
-    else if (button1 == true){
-      Serial.println("loop-3");
-      upvoteSong();
-      button1 = false;
-      songInfoChanged=true; //waitingOnVoteRead=true;
-    }
-    //Button 2 pressed> Downvote
-    else if (button2 == true){
-      Serial.println("loop-4");
-      downvoteSong();
-      button2 = false;
-      songInfoChanged=true; //waitingOnVoteRead=true;
-    }
-    else if(blesetupdone == false){
-      Serial.println("loop-5");
-      blesetup();
-      blesetupdone = true;
-    } 
-    else if(songInfoChanged == true){
-      Serial.println("loop-6");
-      drawSongInfos();
-      songInfoChanged = false;
-    } 
-    else{
-      
-      Serial.println("Going to sleep.");
-      //esp_sleep_enable_ext1_wakeup(0x6000000,ESP_EXT1_WAKEUP_ANY_HIGH);
-      //esp_sleep_enable_ext0_wakeup(GPIO_NUM_25, 0);
-      //esp_sleep_enable_ext0_wakeup(GPIO_NUM_26, 0);
-      esp_sleep_enable_touchpad_wakeup();
-      esp_sleep_enable_timer_wakeup(20*1000000);
-      //esp_deep_sleep_start();
-    }
-    
+  if (millis() > TIMEOUT * 1000 && !timeout) {
+    timeout = true;
+    cSongInfos->setValue("");
+    cAlbum->setValue("");
+    cArtist->setValue("");
+    cID->setValue("");
+    drawTimeout();
   }
-  
-
 }
-
- 
   
-  /*  
-  display.setPartialWindow(20, 16, display.width(), 32);
+void drawSongInfos() {
   display.firstPage();
-  display.setCursor(0, 40);
-  display.print("partial update");
-  delay(1000);
-  display.nextPage();
-  
-
-
-  display.firstPage();
-  display.fillScreen(GxEPD_BLACK);
-  display.nextPage();
-  delay(5000);
-  */
-  
-void drawSongInfos(){
-  display.firstPage();
-  display.fillScreen(GxEPD_WHITE);
-  display.drawInvertedBitmap(0,4,icon_title, 18, 18, GxEPD_BLACK);
-  display.drawInvertedBitmap(0,22,icon_album, 18, 18, GxEPD_BLACK);
-  display.drawInvertedBitmap(0,40,icon_artist, 18, 18, GxEPD_BLACK);
-  display.setCursor(18, 18);
-  display.print(cpSong);
-  display.setCursor(18, 36);
-  display.print(cpArtist);
-  display.setCursor(18, 54);
-  display.print(cpAlbum);
-  display.nextPage();
+  do {
+    display.fillScreen(GxEPD_WHITE);
+    display.drawInvertedBitmap(0,4,icon_title, 18, 18, GxEPD_BLACK);
+    display.drawInvertedBitmap(0,22,icon_album, 18, 18, GxEPD_BLACK);
+    display.drawInvertedBitmap(0,40,icon_artist, 18, 18, GxEPD_BLACK);
+    display.setCursor(18, 18);
+    display.print(songName);
+    display.setCursor(18, 36);
+    display.print(artistName);
+    display.setCursor(18, 54);
+    display.print(albumName);
+  } while(display.nextPage());
   Serial.println("Songdrawing done.");
 }
 
 void upvoteSong(){
+  cVote->setValue("upvote");
   display.firstPage();
-  display.fillScreen(GxEPD_WHITE);
-  display.setCursor(18, 18);
-  display.print("Upvote");
-  display.nextPage();
-  cVote->setValue((std::string)"Upvote");
+  do {
+    display.fillScreen(GxEPD_WHITE);
+    display.setCursor(18, 18);
+    display.print("Upvote");
+  } while(display.nextPage());
 }
 
-void downvoteSong(){
+void downvoteSong() {
+  cVote->setValue("downvote");
   display.firstPage();
-  display.fillScreen(GxEPD_WHITE);
-  display.setCursor(18, 18);
-  display.print("Downvote");
-  display.nextPage();
-  cVote->setValue((std::string)"Downvote");
-  //cVote->setValue("Downvote");
+  do {
+    display.fillScreen(GxEPD_WHITE);
+    display.setCursor(18, 18);
+    display.print("Downvote");
+  } while(display.nextPage());
 }
 
 void drawLoading(){
   display.firstPage();
-  display.print("..");
-  display.nextPage();
-  timeoutCounter++;
+  do {
+    display.print("..");
+  } while(display.nextPage());
 }
 
-void drawTimeout(){
+void drawTimeout() {
   display.firstPage();
-  display.setCursor(20,20);
-  display.print("Timeout");
-  display.nextPage();
-  
+  do {
+    display.setCursor(20,20);
+    display.print("Timeout");
+  } while (display.nextPage());
 }
 
-void button1pressed(){
-  button1=true;
+void button1pressed() {
   Serial.print("button 1 was registered.");
-  Serial.println(millis());
+  upvoteSong();
 }
 
 void button2pressed(){
-  button2=true;
   Serial.print("button 2 was registered.");
-  Serial.println(millis());
+  downvoteSong();
 }
 
 void blesetup(){
@@ -255,17 +202,23 @@ void blesetup(){
   BLEServer *pServer = BLEDevice::createServer();
   BLEService *pService = pServer->createService(SERVICE_UUID);
   
-  BLECharacteristic *cSongInfos = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130000",BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE | BLECharacteristic::PROPERTY_NOTIFY);
-  BLECharacteristic *cArtist = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130001",BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE | BLECharacteristic::PROPERTY_NOTIFY);
-  BLECharacteristic *cAlbum = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130002",BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE | BLECharacteristic::PROPERTY_NOTIFY);
-  BLECharacteristic *cID = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130003",BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE | BLECharacteristic::PROPERTY_NOTIFY);
-  BLECharacteristic *cVote = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130005",BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE | BLECharacteristic::PROPERTY_NOTIFY);
+  cSongInfos = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130000",BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
+  cArtist = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130001",BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
+  cAlbum = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130002",BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
+  cID = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130003",BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
+  cVote = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130004",BLECharacteristic::PROPERTY_READ);
+  cUpdate = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130005", BLECharacteristic::PROPERTY_WRITE);
 
   cSongInfos-> setCallbacks(new SongCallback());
   cArtist-> setCallbacks(new ArtistCallback());
   cAlbum-> setCallbacks(new AlbumCallback());
   cID->setCallbacks(new IDCallback());
-  cVote->setCallbacks(new VoteCallback());
+  cUpdate->setCallbacks(new UpdateCallback());
+
+  cSongInfos->setValue(songName);
+  cArtist->setValue(artistName);
+  cAlbum->setValue(albumName);
+  cID->setValue(idName);
 
   pService->start();
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();
