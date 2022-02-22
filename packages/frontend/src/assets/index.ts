@@ -9,7 +9,8 @@ import { ReactComponent as PlaylistIcon } from './svgs/playlist.svg';
 import { ReactComponent as PreviousIcon } from './svgs/previous.svg';
 import { ReactComponent as SearchIcon } from './svgs/search.svg';
 import { ReactComponent as SettingsIcon } from './svgs/settings.svg';
-import { ReactComponent as SpoddifyMoppedLogo } from './svgs/logo.svg';
+//import { ReactComponent as SpoddifyMoppedLogo } from './svgs/logo.svg';
+import { ReactComponent as SpoddifyMoppedLogo } from './svgs/spoddify-mopped-logo.svg';
 import { ReactComponent as VolumeIcon } from './svgs/volume.svg';
 
 export {

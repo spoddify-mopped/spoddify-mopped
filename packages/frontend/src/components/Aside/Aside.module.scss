@@ -10,14 +10,14 @@ aside.menu {
 
   div.header {
     display: flex;
-    height: 5rem;
+    height: 7rem;
 
     flex-direction: column;
 
     justify-content: center;
     align-items: center;
 
-    margin-top: 1rem;
+    margin-top: 2rem;
     margin-bottom: 2rem;
 
     svg.logo {
@@ -59,6 +59,7 @@ aside.menu {
 @media screen and (max-width: 700px) {
   aside.menu {
     min-width: auto;
+    max-width: 4rem;
   }
 
   div.header {
