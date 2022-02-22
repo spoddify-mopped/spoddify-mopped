@@ -36,7 +36,7 @@ const LOGGER = Logger.create(__filename);
 const socketIoCors = {
   allowedHeaders: [],
   methods: [],
-  origin: ['http://localhost:8080'],
+  origin: ['http://localhost:8080', 'http://localhost:3000'],
 };
 
 export default class App {
@@ -78,7 +78,7 @@ export default class App {
   private initializeMiddleware(): void {
     this.app.use(
       cors({
-        origin: 'http://localhost:8080',
+        origin: ['http://localhost:8080', 'http://localhost:3000'],
       })
     );
 
