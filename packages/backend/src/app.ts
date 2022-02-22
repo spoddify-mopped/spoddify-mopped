@@ -22,6 +22,7 @@ import WebsocketHandler from './ws/handler';
 import cookieParser from 'cookie-parser';
 import cors from 'cors';
 import express from 'express';
+import helmet from 'helmet';
 import http from 'http';
 import loggerMiddleware from './middleware/logger';
 import path from 'path';
@@ -33,9 +34,9 @@ const swaggerDocument = require('../swagger.json');
 const LOGGER = Logger.create(__filename);
 
 const socketIoCors = {
-  allowedHeaders: '*',
-  methods: '*',
-  origin: '*',
+  allowedHeaders: [],
+  methods: [],
+  origin: ['http://localhost:8080'],
 };
 
 export default class App {
@@ -75,7 +76,31 @@ export default class App {
   }
 
   private initializeMiddleware(): void {
-    this.app.use(cors());
+    this.app.use(
+      cors({
+        origin: 'http://localhost:8080',
+      })
+    );
+
+    this.app.use(
+      helmet({
+        contentSecurityPolicy: {
+          directives: {
+            connectSrc: ["'self'", (req) => `ws://${req.headers.host}`],
+            defaultSrc: ["'self'"],
+            imgSrc: ['https://i.scdn.co', "'self'", 'data:'],
+            scriptSrc: ["'self'", "'unsafe-inline'"],
+            styleSrc: ["'self'"],
+          },
+        },
+        crossOriginEmbedderPolicy: false,
+        crossOriginResourcePolicy: {
+          policy: 'cross-origin',
+        },
+        hsts: false,
+      })
+    );
+
     this.app.use(cookieParser());
     this.app.use(express.json());
     this.app.use(loggerMiddleware);
