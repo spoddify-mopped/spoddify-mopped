@@ -90,7 +90,7 @@ export default class App {
             defaultSrc: ["'self'"],
             imgSrc: ['https://i.scdn.co', "'self'", 'data:'],
             scriptSrc: ["'self'", "'unsafe-inline'"],
-            styleSrc: ["'self'"],
+            styleSrc: ["'self'", "'unsafe-inline'"],
           },
         },
         crossOriginEmbedderPolicy: false,
