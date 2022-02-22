@@ -1,5 +1,3 @@
-import './Home.css';
-
 import { Outlet, matchPath, useLocation, useNavigate } from 'react-router';
 import { PlaylistIcon, SearchIcon, SettingsIcon } from '../../assets';
 import React, { ReactElement, useEffect, useState } from 'react';
@@ -10,6 +8,7 @@ import { AppState } from '../../redux/reducers';
 import Aside from '../../components/Aside/Aside';
 import PlayerBar from '../../components/PlayerBar/PlayerBar';
 import { playerActions } from '../../redux/player/actions';
+import styles from './Home.module.scss';
 
 const asideItems = [
   {
@@ -57,8 +56,8 @@ const Home = (): ReactElement => {
   }, [location, navigate]);
 
   return (
-    <div className="home">
-      <div className="top">
+    <div className={styles.home}>
+      <div className={styles.top}>
         <Aside
           items={asideItems.map((item) => ({
             image: item.image,
@@ -72,7 +71,7 @@ const Home = (): ReactElement => {
             }
           }}
         />
-        <div className="content">
+        <div className={styles.content}>
           <Outlet />
         </div>
       </div>

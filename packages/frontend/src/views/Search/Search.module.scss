@@ -11,11 +11,11 @@ div.searchInputContainer {
   margin-left: 5rem;
 }
 
-.category {
+div.category {
   padding: 1rem 5rem;
 }
 
-.categoryHeader {
+div.categoryHeader {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -27,8 +27,8 @@ div.noContent {
   justify-content: center;
   align-items: center;
   height: 100%;
-}
 
-div.noContent span {
-  font-size: 2rem;
+  span {
+    font-size: 2rem;
+  }
 }

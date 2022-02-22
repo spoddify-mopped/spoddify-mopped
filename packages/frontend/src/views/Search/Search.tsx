@@ -1,5 +1,3 @@
-import './Search.css';
-
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
@@ -10,6 +8,7 @@ import SearchCoverView from '../../components/SearchCoverView/SearchCoverView';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import { SearchResponse } from '../../clients/api.types';
 import SearchTrackView from '../../components/SearchTrackView/SearchTrackView';
+import styles from './Search.module.scss';
 
 export const Search = (): ReactElement => {
   const navigate = useNavigate();
@@ -54,7 +53,7 @@ export const Search = (): ReactElement => {
 
     if (!result) {
       return (
-        <div className="noContent">
+        <div className={styles.noContent}>
           <span>Get started and search for titles, artists or albums.</span>
         </div>
       );
@@ -62,8 +61,8 @@ export const Search = (): ReactElement => {
 
     return (
       <div>
-        <div className="category">
-          <div className="categoryHeader">
+        <div className={styles.category}>
+          <div className={styles.categoryHeader}>
             <h3>Artists</h3>
           </div>
           <SearchCoverView
@@ -73,8 +72,8 @@ export const Search = (): ReactElement => {
             items={result.artists}
           />
         </div>
-        <div className="category">
-          <div className="categoryHeader">
+        <div className={styles.category}>
+          <div className={styles.categoryHeader}>
             <h3>Albums</h3>
           </div>
           <SearchCoverView
@@ -87,8 +86,8 @@ export const Search = (): ReactElement => {
             items={result.albums}
           />
         </div>
-        <div className="category">
-          <div className="categoryHeader">
+        <div className={styles.category}>
+          <div className={styles.categoryHeader}>
             <h3>Tracks</h3>
           </div>
           <SearchTrackView
@@ -103,8 +102,8 @@ export const Search = (): ReactElement => {
   };
 
   return (
-    <div className="searchView">
-      <div className="searchInputContainer">
+    <div className={styles.searchView}>
+      <div className={styles.searchInputContainer}>
         <SearchInput
           value={query}
           onChange={handleSearchInputChange}
