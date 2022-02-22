@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 
-import { ReactComponent as AddImage } from '../../resources/add.svg';
+import { AddIcon } from '../../assets';
 import { Track } from '../../clients/api.types';
 import TrackView from '../TrackView/TrackView';
 import styles from './SearchTrackView.module.scss';
@@ -15,7 +15,7 @@ const SearchTrackView = (props: Props): ReactElement => {
     <TrackView
       tracks={props.tracks}
       onTrackActionClick={props.onAddTrackClick}
-      clickElement={<AddImage className={styles.addTrackButton} />}
+      clickElement={<AddIcon className={styles.addTrackButton} />}
     />
   );
 };

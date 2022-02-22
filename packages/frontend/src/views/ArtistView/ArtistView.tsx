@@ -8,7 +8,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import ApiClient from '../../clients/api';
 import ArtistsAlbumsPreview from '../../components/ArtistsAlbumsPreview/ArtistsAlbumsPreview';
-import CoverReplacement from '../../resources/cover_replacement.png';
+import { CoverReplacement } from '../../assets';
 import TopTracksView from '../../components/TopTracksView/TopTracksView';
 import styles from './ArtistView.module.scss';
 

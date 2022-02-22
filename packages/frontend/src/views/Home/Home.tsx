@@ -1,6 +1,7 @@
 import './Home.css';
 
 import { Outlet, matchPath, useLocation, useNavigate } from 'react-router';
+import { PlaylistIcon, SearchIcon, SettingsIcon } from '../../assets';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
@@ -8,9 +9,6 @@ import ApiClient from '../../clients/api';
 import { AppState } from '../../redux/reducers';
 import Aside from '../../components/Aside/Aside';
 import PlayerBar from '../../components/PlayerBar/PlayerBar';
-import { ReactComponent as PlaylistIcon } from '../../resources/playlist.svg';
-import { ReactComponent as SearchIcon } from '../../resources/search.svg';
-import { ReactComponent as SettingsIcon } from '../../resources/settings.svg';
 import { playerActions } from '../../redux/player/actions';
 
 const asideItems = [

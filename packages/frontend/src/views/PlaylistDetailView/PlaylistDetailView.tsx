@@ -1,3 +1,4 @@
+import { CoverReplacement, PlayCircleIcon } from '../../assets';
 import { FullPlaylist, PlaylistTracks } from '../../clients/api.types';
 import React, { useEffect, useState } from 'react';
 import Table, {
@@ -9,11 +10,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import ApiClient from '../../clients/api';
 import ArtistsTitle from '../../components/ArtistsTitle/ArtistsTitle';
-import CoverReplacement from '../../resources/cover_replacement.png';
 import Error from '../../components/Error/Error';
 import FullLoadingView from '../FullLoadingView/FullLoadingView';
 import ImageUtils from '../../utils/image';
-import { ReactComponent as Play } from '../../resources/play-circle-solid.svg';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import styles from './PlaylistDetailView.module.scss';
 
@@ -96,7 +95,7 @@ const PlaylistDetailView = (): React.ReactElement => {
       </div>
       <div className={styles.innerContainer}>
         <div className={styles.innerHeader}>
-          <Play
+          <PlayCircleIcon
             className={styles.play}
             onClick={async () => ApiClient.playPlaylist(playlist.id)}
           />

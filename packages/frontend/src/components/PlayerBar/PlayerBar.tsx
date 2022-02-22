@@ -1,17 +1,19 @@
+import {
+  CoverReplacement,
+  FullscreenIcon,
+  NextIcon,
+  PauseIcon,
+  PlayCircleIcon,
+  PreviousIcon,
+  VolumeIcon,
+} from '../../assets';
 import React, { ReactElement, useEffect, useState } from 'react';
 
 import ApiClient from '../../clients/api';
 import { Artist } from '../../clients/api.types';
 import ArtistsTitle from '../ArtistsTitle/ArtistsTitle';
-import CoverReplacement from '../../resources/cover_replacement.png';
-import { ReactComponent as FullScreen } from '../../resources/fullscreen.svg';
 import InputRange from '../InputRange/InputRange';
-import { ReactComponent as Next } from '../../resources/step-forward-solid.svg';
-import { ReactComponent as Pause } from '../../resources/pause-circle-solid.svg';
-import { ReactComponent as Play } from '../../resources/play-circle-solid.svg';
-import { ReactComponent as Prev } from '../../resources/step-backward-solid.svg';
 import ProgressBar from '../ProgressBar/ProgressBar';
-import { ReactComponent as Volume } from '../../resources/volume.svg';
 import styles from './PlayerBar.module.scss';
 import { useNavigate } from 'react-router';
 
@@ -76,13 +78,16 @@ const PlayerBar = (props: Props): ReactElement => {
       </div>
       <div className={styles.player}>
         <div className={styles.controls}>
-          <Prev className={styles.prev} onClick={props.onPrevious} />
+          <PreviousIcon className={styles.prev} onClick={props.onPrevious} />
           {props.playerInformation.isPlaying ? (
-            <Pause className={styles.pause} onClick={props.onPlayPause} />
+            <PauseIcon className={styles.pause} onClick={props.onPlayPause} />
           ) : (
-            <Play className={styles.play} onClick={props.onPlayPause} />
+            <PlayCircleIcon
+              className={styles.play}
+              onClick={props.onPlayPause}
+            />
           )}
-          <Next className={styles.next} onClick={props.onNext} />
+          <NextIcon className={styles.next} onClick={props.onNext} />
         </div>
         <div className={styles.progress}>
           <ProgressBar
@@ -93,7 +98,7 @@ const PlayerBar = (props: Props): ReactElement => {
         </div>
       </div>
       <div className={styles.right}>
-        <Volume className={styles.volumeLogo} />
+        <VolumeIcon className={styles.volumeLogo} />
         <InputRange
           onChange={(evt) => {
             setVolume(Number.parseInt(evt.target.value));
@@ -104,7 +109,7 @@ const PlayerBar = (props: Props): ReactElement => {
           min={0}
           max={100}
         />
-        <FullScreen
+        <FullscreenIcon
           className={styles.fullscreen}
           onClick={() => navigate('/player')}
         />

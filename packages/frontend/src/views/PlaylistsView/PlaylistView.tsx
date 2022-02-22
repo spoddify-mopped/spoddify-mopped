@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import ApiClient from '../../clients/api';
 import Error from '../../components/Error/Error';
 import FullLoadingView from '../FullLoadingView/FullLoadingView';
-import { ReactComponent as Play } from '../../resources/play-solid.svg';
+import { PlayIcon } from '../../assets';
 import { Playlist } from '../../clients/api.types';
 import styles from './PlaylistView.module.scss';
 import { useNavigate } from 'react-router-dom';
@@ -36,7 +36,7 @@ export default function PlaylistView(): React.ReactElement {
           className={styles.button}
           onClick={() => ApiClient.playPlaylist(playlist.id)}
         >
-          <Play />
+          <PlayIcon />
         </button>
       </div>
     ));

@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react';
 
-import { ReactComponent as Logo } from '../../resources/logo.svg';
+import { SpoddifyMoppedLogo } from '../../assets';
 import styles from './Aside.module.scss';
 
 export type AsideItem = {
@@ -33,7 +33,7 @@ const Aside = ({ items, onItemClick, active }: Props): ReactElement => {
     <aside className={`${styles.menu}`}>
       <div>
         <div className={styles.header}>
-          <Logo className={styles.logo} />
+          <SpoddifyMoppedLogo className={styles.logo} />
         </div>
         <div className={styles.entryContainer}>{renderAsideItems()}</div>
       </div>

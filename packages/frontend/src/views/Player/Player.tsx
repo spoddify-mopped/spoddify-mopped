@@ -1,17 +1,19 @@
+import {
+  CoverReplacement,
+  NextIcon,
+  PauseIcon,
+  PlayCircleIcon,
+  PreviousIcon,
+  VolumeIcon,
+} from '../../assets';
 import React, { ReactElement, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 import ApiClient from '../../clients/api';
 import { AppState } from '../../redux/reducers';
 import ArtistsTitle from '../../components/ArtistsTitle/ArtistsTitle';
-import CoverReplacement from '../../resources/cover_replacement.png';
 import InputRange from '../../components/InputRange/InputRange';
-import { ReactComponent as Next } from '../../resources/step-forward-solid.svg';
-import { ReactComponent as Pause } from '../../resources/pause-circle-solid.svg';
-import { ReactComponent as Play } from '../../resources/play-circle-solid.svg';
-import { ReactComponent as Prev } from '../../resources/step-backward-solid.svg';
 import ProgressBar from '../../components/ProgressBar/ProgressBar';
-import { ReactComponent as Volume } from '../../resources/volume.svg';
 import { playerActions } from '../../redux/player/actions';
 import styles from './Player.module.scss';
 import { useNavigate } from 'react-router-dom';
@@ -118,7 +120,7 @@ export default function Player(): ReactElement {
                 ApiClient.previous();
               }}
             >
-              <Prev />
+              <PreviousIcon />
             </button>
             <button
               className={`${styles.button} ${styles.playpause}`}
@@ -126,7 +128,7 @@ export default function Player(): ReactElement {
                 ApiClient.playPause();
               }}
             >
-              {player.isPlaying ? <Pause /> : <Play />}
+              {player.isPlaying ? <PauseIcon /> : <PlayCircleIcon />}
             </button>
             <button
               className={styles.button}
@@ -134,11 +136,11 @@ export default function Player(): ReactElement {
                 ApiClient.next();
               }}
             >
-              <Next />
+              <NextIcon />
             </button>
           </div>
           <div className={styles.right}>
-            <Volume className={styles.volumeLogo} />
+            <VolumeIcon className={styles.volumeLogo} />
             <InputRange
               className={styles.volumeInput}
               onChange={(evt) => {

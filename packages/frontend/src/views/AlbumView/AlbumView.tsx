@@ -7,7 +7,7 @@ import Table, {
 } from '../../components/Table/Table';
 import { useNavigate, useParams } from 'react-router';
 
-import { ReactComponent as AddImage } from '../../resources/add.svg';
+import { AddIcon } from '../../assets';
 import ApiClient from '../../clients/api';
 import ArtistsTitle from '../../components/ArtistsTitle/ArtistsTitle';
 import styles from './AlbumView.module.scss';
@@ -68,7 +68,7 @@ const AlbumView = (): React.ReactElement => {
         </div>
       </div>
       <div className={styles.innerContainer}>
-        <AddImage
+        <AddIcon
           className={styles.addAlbumButton}
           title="Add album"
           onClick={async () => {

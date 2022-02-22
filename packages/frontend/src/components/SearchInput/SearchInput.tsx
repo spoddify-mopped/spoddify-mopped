@@ -1,6 +1,6 @@
 import React, { ChangeEventHandler } from 'react';
 
-import { ReactComponent as SearchIcon } from '../../resources/search.svg';
+import { SearchIcon } from '../../assets';
 import styles from './SearchInput.module.scss';
 
 type Props = {

@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 
-import CoverReplacement from '../../resources/cover_replacement.png';
+import { CoverReplacement } from '../../assets';
 import styles from './Cover.module.scss';
 
 type CoverItem = {
