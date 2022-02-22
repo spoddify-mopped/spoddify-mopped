@@ -55,6 +55,7 @@ export default class AuthController {
   ): void => {
     const code = request.query.code as string;
     const redirectUri = request.cookies['redirect_uri'] as string;
+    response.clearCookie('redirect_uri');
 
     this.spotifyClient
       .authorizationCodeGrant(code)
