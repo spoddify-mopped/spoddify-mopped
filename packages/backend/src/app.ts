@@ -139,7 +139,14 @@ export default class App {
     );
 
     this.app.use(
-      '*',
+      '/api/*',
+      (_request: express.Request, response: express.Response) => {
+        response.sendStatus(404);
+      }
+    );
+
+    this.app.use(
+      '/',
       (_request: express.Request, response: express.Response): void => {
         response.sendFile(
           path.join(__dirname, '..', 'public', 'index.html'),
