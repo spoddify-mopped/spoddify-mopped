@@ -6,6 +6,7 @@ import React, {
   useState,
 } from 'react';
 
+import containerStyles from '../../views/Home/Home.module.scss';
 import styles from './Table.module.scss';
 
 type TableHeadProps = {
@@ -49,12 +50,14 @@ const Table = ({
   const [stickyHeader, setStickyHeader] = useState(false);
 
   const tableHeaderRef = useCallback((node) => {
-    const content = document.querySelector('.content') as HTMLDivElement;
+    const content = document.querySelector(
+      `.${containerStyles.content}`
+    ) as HTMLDivElement;
 
     let tableHeaderY = 0;
 
     const onScroll = () => {
-      if (mounted.current) {
+      if (mounted.current && content) {
         setStickyHeader(content.scrollTop > tableHeaderY);
       }
     };
@@ -63,7 +66,7 @@ const Table = ({
       tableHeaderY = node.getBoundingClientRect().y;
     }
 
-    content.addEventListener('scroll', onScroll);
+    content && content.addEventListener('scroll', onScroll);
   }, []);
 
   useEffect(() => {
