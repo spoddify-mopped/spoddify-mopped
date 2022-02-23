@@ -2,6 +2,9 @@
   <img src="https://user-images.githubusercontent.com/36125892/155200580-ac94b87c-8992-40ff-b506-9cdcd244aae7.png" alt="Spoddify Mopped" height="300px" />
 </p>
 <span align="center">
+
+[![Test](https://github.com/spoddify-mopped/spoddify-mopped/actions/workflows/test.yml/badge.svg)](https://github.com/spoddify-mopped/spoddify-mopped/actions/workflows/test.yml)
+
 </span>
 
 Spoddify Mopped is a Spotify player for office use, with a voting system to select music and automatic song sorting.
