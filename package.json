@@ -1,9 +1,8 @@
 {
   "name": "spoddify-mopped",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "description": "A spotify player for office use with a voting system to select music and automatic song sorting.",
   "repository": "git@github.com:davidborzek/spoddify-mopped.git",
-  "license": "MIT",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -14,7 +13,7 @@
     "lint": "yarn backend lint & yarn frontend lint",
     "format": "yarn backend format & yarn frontend format",
     "start": "yarn backend start & yarn frontend start",
-    "build": "yarn frontend build; yarn backend build",
+    "build": "./build.sh",
     "postinstall": "husky install"
   },
   "devDependencies": {

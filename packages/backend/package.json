@@ -1,7 +1,9 @@
 {
   "name": "spoddify-mopped",
-  "version": "1.0.0",
-  "description": "",
+  "version": "0.0.0",
+  "repository": "https://github.com/spoddify-mopped/spoddify-mopped.git",
+  "description": "A spotify player for office use with a voting system to select music and automatic song sorting.",
+  "license": "MIT",
   "bin": {
     "spoddify-mopped": "./dist/bin/spoddify-mopped.js"
   },
@@ -21,7 +23,6 @@
     "test:coverage": "jest --coverage",
     "test:watch": "jest --watch"
   },
-  "license": "ISC",
   "dependencies": {
     "axios": "^0.26.0",
     "better-sqlite3": "^7.5.0",
