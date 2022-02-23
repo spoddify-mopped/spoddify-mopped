@@ -74,7 +74,7 @@ const connectDB = async () => {
     entities: [Track, Playlist, TracksToPlaylists],
     logging: false,
     synchronize: true,
-    type: 'sqlite',
+    type: 'better-sqlite3',
   });
 };
 
