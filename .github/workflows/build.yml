@@ -1,0 +1,28 @@
+name: Build
+
+on: workflow_dispatch
+
+jobs:
+  run-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: "npm"
+      - run: yarn install --frozen-lockfile
+      - run: yarn backend test
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+          cache: "npm"
+      - run: yarn install --frozen-lockfile
+      - run: yarn build
