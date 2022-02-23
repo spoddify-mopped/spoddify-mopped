@@ -3,6 +3,7 @@
 </p>
 <span align="center">
 
+[![npm Version](https://badgen.net/npm/v/spoddify-mopped)](https://www.npmjs.com/package/spoddify-mopped)
 [![Test](https://github.com/spoddify-mopped/spoddify-mopped/actions/workflows/test.yml/badge.svg)](https://github.com/spoddify-mopped/spoddify-mopped/actions/workflows/test.yml)
 [![Build](https://github.com/spoddify-mopped/spoddify-mopped/actions/workflows/build.yml/badge.svg)](https://github.com/spoddify-mopped/spoddify-mopped/actions/workflows/build.yml)
 
