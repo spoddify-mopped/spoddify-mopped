@@ -4,6 +4,7 @@
 <span align="center">
 
 [![Test](https://github.com/spoddify-mopped/spoddify-mopped/actions/workflows/test.yml/badge.svg)](https://github.com/spoddify-mopped/spoddify-mopped/actions/workflows/test.yml)
+[![Build](https://github.com/spoddify-mopped/spoddify-mopped/actions/workflows/build.yml/badge.svg)](https://github.com/spoddify-mopped/spoddify-mopped/actions/workflows/build.yml)
 
 </span>
 
