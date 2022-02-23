@@ -1,11 +1,22 @@
 {
   "name": "spoddify-mopped",
-  "version": "0.0.0",
-  "repository": "https://github.com/spoddify-mopped/spoddify-mopped.git",
+  "displayName": "Spoddify Mopped",
   "description": "A spotify player for office use with a voting system to select music and automatic song sorting.",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/spoddify-mopped/spoddify-mopped.git"
+  },
+  "bugs": {
+    "url": "https://github.com/spoddify-mopped/spoddify-mopped/issues"
+  },
+  "main": "./dist/index.js",
   "license": "MIT",
   "bin": {
     "spoddify-mopped": "./dist/bin/spoddify-mopped.js"
+  },
+  "engines": {
+    "node": ">=12"
   },
   "files": [
     "dist",
