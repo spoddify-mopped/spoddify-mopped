@@ -1,19 +1,34 @@
 div.setup {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   width: 100%;
   height: 100%;
 
+  img.logo {
+    width: 500px;
+    margin-bottom: 2rem;
+  }
+
   span.loginButton {
-    color: white;
+    color: #1ab26b;
     cursor: pointer;
-    background-color: green;
+    border: 1px solid #1ab26b;
     padding: 0.5rem 1rem;
     border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
     &:hover {
       opacity: 0.5;
+    }
+
+    img.spotifyIcon {
+      width: 32px;
+      height: 32px;
+      margin-right: 0.5rem;
     }
   }
 }

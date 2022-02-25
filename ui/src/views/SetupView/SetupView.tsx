@@ -1,3 +1,5 @@
+import { SpoddiyMoppedLogoWithName, SpotifyIcon } from '../../assets';
+
 import React from 'react';
 import qs from 'qs';
 import styles from './SetupView.module.scss';
@@ -16,13 +18,19 @@ const loginUrl = () => {
 const SetupView = (): React.ReactElement => {
   return (
     <div className={styles.setup}>
+      <img
+        className={styles.logo}
+        src={SpoddiyMoppedLogoWithName}
+        alt="Spoddify Mopped"
+      />
       <span
         className={styles.loginButton}
         onClick={() => {
           window.location.replace(loginUrl());
         }}
       >
-        Login
+        <img className={styles.spotifyIcon} src={SpotifyIcon} alt="Spotify" />
+        Login with Spotify
       </span>
     </div>
   );
