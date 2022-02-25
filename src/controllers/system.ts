@@ -1,4 +1,5 @@
 import { SpotifydService } from '../services/spotifyd';
+import { StatusCodes } from 'http-status-codes';
 import SystemService from '../services/system';
 import express from 'express';
 
@@ -41,6 +42,6 @@ export default class SystemController {
   ) => {
     this.spotifydService.stop();
     this.spotifydService.start();
-    response.sendStatus(204);
+    response.sendStatus(StatusCodes.NO_CONTENT);
   };
 }

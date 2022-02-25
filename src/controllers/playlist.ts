@@ -48,11 +48,11 @@ export default class PlaylistController {
 
   private handleError = (error: Error, response: express.Response) => {
     if (error instanceof DeviceNotFoundError) {
-      response.status(503).send({
+      response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
         msg: 'Player not found',
       });
     } else {
-      response.status(503).send({
+      response.status(StatusCodes.INTERNAL_SERVER_ERROR).send({
         msg: 'Internal Server Error',
       });
     }

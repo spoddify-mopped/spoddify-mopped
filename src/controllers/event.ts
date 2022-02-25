@@ -1,3 +1,4 @@
+import { StatusCodes } from 'http-status-codes';
 import WebsocketHandler from '../ws/handler';
 import express from 'express';
 
@@ -18,6 +19,6 @@ export default class EventController {
     response: express.Response
   ): void => {
     this.websocketHandler.sendPlayerState();
-    response.sendStatus(204);
+    response.sendStatus(StatusCodes.NO_CONTENT);
   };
 }

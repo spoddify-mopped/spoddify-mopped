@@ -141,7 +141,7 @@ export default class App {
     this.app.use(
       '/api/*',
       (_request: express.Request, response: express.Response) => {
-        response.sendStatus(404);
+        response.sendStatus(StatusCodes.NOT_FOUND);
       }
     );
 
@@ -152,7 +152,7 @@ export default class App {
           path.join(__dirname, '..', 'public', 'index.html'),
           (err) => {
             if (err) {
-              response.sendStatus(404);
+              response.sendStatus(StatusCodes.NOT_FOUND);
             }
           }
         );
