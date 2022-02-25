@@ -15,16 +15,10 @@ export default class AuthController {
   public path = '';
   public router = express.Router();
 
-  private spotifyClient: SpotifyClient;
-  private spotifydService: SpotifydService;
-
   public constructor(
-    spotifyClient: SpotifyClient,
-    spotifydService: SpotifydService
+    private readonly spotifyClient: SpotifyClient,
+    private readonly spotifydService: SpotifydService
   ) {
-    this.spotifyClient = spotifyClient;
-    this.spotifydService = spotifydService;
-
     this.initializeRoutes();
   }
 

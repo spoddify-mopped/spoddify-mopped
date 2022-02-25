@@ -16,11 +16,7 @@ type SearchResult = {
 };
 
 export default class SpotifySearchService {
-  private spotifyClient: SpotifyClient;
-
-  public constructor(spotifyClient: SpotifyClient) {
-    this.spotifyClient = spotifyClient;
-  }
+  public constructor(private readonly spotifyClient: SpotifyClient) {}
 
   public search = async (
     query: string,

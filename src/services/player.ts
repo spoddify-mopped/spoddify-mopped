@@ -5,15 +5,12 @@ import SpotifyClient from '../clients/spotify/spotify';
 export class DeviceNotFoundError extends Error {}
 
 export default class SpotifyPlayerService {
-  private spotifyClient: SpotifyClient;
-  private deviceName: string;
-
   private targetDevice?: Device;
 
-  public constructor(spotifyClient: SpotifyClient, deviceName: string) {
-    this.spotifyClient = spotifyClient;
-    this.deviceName = deviceName;
-  }
+  public constructor(
+    private readonly spotifyClient: SpotifyClient,
+    private readonly deviceName: string
+  ) {}
 
   private findTargetDevice = async (): Promise<Device> => {
     const spotifyDeviceResponse = await this.spotifyClient.getMyDevices();

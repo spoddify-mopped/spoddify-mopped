@@ -10,11 +10,7 @@ enum LogType {
 export default class Logger {
   private static verbose = false;
 
-  private name: string;
-
-  private constructor(name: string) {
-    this.name = name;
-  }
+  private constructor(private readonly name: string) {}
 
   private generatePrefix = (logType: LogType): string => {
     const timestamp = `\x1b[36m${new Date().toISOString()}\x1b[0m`;

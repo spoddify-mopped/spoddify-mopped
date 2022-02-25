@@ -43,11 +43,9 @@ export default class SearchController {
   public path = '/search';
   public router = express.Router();
 
-  private spotifySearchService: SpotifySearchService;
-
-  public constructor(spotifySearchService: SpotifySearchService) {
-    this.spotifySearchService = spotifySearchService;
-
+  public constructor(
+    private readonly spotifySearchService: SpotifySearchService
+  ) {
     this.initializeRoutes();
   }
 

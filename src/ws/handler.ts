@@ -20,19 +20,11 @@ type Action<T = unknown> = {
 export default class WebsocketHandler {
   private handlers: Record<string, SocketHandler> = {};
 
-  private systemService: SystemService;
-  private spotifyPlayerService: SpotifyPlayerService;
-  private io: io.Server;
-
   public constructor(
-    systemService: SystemService,
-    spotifyPlayerService: SpotifyPlayerService,
-    io: io.Server
+    private readonly systemService: SystemService,
+    private readonly spotifyPlayerService: SpotifyPlayerService,
+    private readonly io: io.Server
   ) {
-    this.systemService = systemService;
-    this.spotifyPlayerService = spotifyPlayerService;
-    this.io = io;
-
     this.initializeHandlers();
   }
 

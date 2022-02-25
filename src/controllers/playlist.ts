@@ -18,11 +18,7 @@ export default class PlaylistController {
   public path = '/playlist';
   public router = express.Router();
 
-  private playlistService: PlaylistService;
-
-  public constructor(playlistService: PlaylistService) {
-    this.playlistService = playlistService;
-
+  public constructor(private readonly playlistService: PlaylistService) {
     this.initializeRoutes();
   }
 

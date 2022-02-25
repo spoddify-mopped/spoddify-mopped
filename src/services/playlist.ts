@@ -23,16 +23,10 @@ type FullPlaylist = {
 };
 
 export default class PlaylistService {
-  private spotifyClient: SpotifyClient;
-  private spotifyPlayerService: SpotifyPlayerService;
-
   public constructor(
-    spotifyClient: SpotifyClient,
-    spotifyPlayerService: SpotifyPlayerService
-  ) {
-    this.spotifyClient = spotifyClient;
-    this.spotifyPlayerService = spotifyPlayerService;
-  }
+    private readonly spotifyClient: SpotifyClient,
+    private readonly spotifyPlayerService: SpotifyPlayerService
+  ) {}
 
   public sortInTrack = async (spotifyTrackId: string): Promise<void> => {
     let track = await Track.findOne({ id: spotifyTrackId });

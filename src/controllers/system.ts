@@ -6,16 +6,10 @@ export default class SystemController {
   public path = '/system';
   public router = express.Router();
 
-  private spotifydService: SpotifydService;
-  private systemService: SystemService;
-
   public constructor(
-    spotifydService: SpotifydService,
-    systemService: SystemService
+    private readonly spotifydService: SpotifydService,
+    private readonly systemService: SystemService
   ) {
-    this.spotifydService = spotifydService;
-    this.systemService = systemService;
-
     this.initializeRoutes();
   }
 

@@ -4,11 +4,7 @@ import express from 'express';
 const availableRoutes = ['/api/auth', '/api/callback', '/api/system/status'];
 
 export default class SystemMiddleware {
-  private systemService: SystemService;
-
-  public constructor(systemService: SystemService) {
-    this.systemService = systemService;
-  }
+  public constructor(private readonly systemService: SystemService) {}
 
   public checkReadiness = (
     request: express.Request,

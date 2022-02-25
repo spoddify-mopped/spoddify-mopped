@@ -10,11 +10,8 @@ type RequestErrorResponse = {
 };
 
 export default class RequestError extends Error {
-  public statusCode: number;
-
-  public constructor(msg: string, statusCode: number) {
+  public constructor(msg: string, public readonly statusCode: number) {
     super(msg);
-    this.statusCode = statusCode;
   }
 
   public getErrorResponse = (): RequestErrorResponse => ({

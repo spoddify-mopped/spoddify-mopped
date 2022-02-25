@@ -48,15 +48,11 @@ export const mapAxiosErrorToSpotifyApiError = (
 };
 
 export default class SpotifyClient {
-  private config: Config;
-
   private refreshToken: string | undefined;
 
   private httpClient: AxiosInstance;
 
-  public constructor(config: Config) {
-    this.config = config;
-
+  public constructor(private readonly config: Config) {
     this.httpClient = axios.create({
       baseURL: SPOTIFY_BASE_URL,
     });

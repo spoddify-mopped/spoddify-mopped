@@ -26,11 +26,9 @@ export default class PlayerController {
   public path = '/player';
   public router = express.Router();
 
-  private spotifyPlayerService: SpotifyPlayerService;
-
-  public constructor(spotifyPlayerService: SpotifyPlayerService) {
-    this.spotifyPlayerService = spotifyPlayerService;
-
+  public constructor(
+    private readonly spotifyPlayerService: SpotifyPlayerService
+  ) {
     this.initializeRoutes();
   }
 

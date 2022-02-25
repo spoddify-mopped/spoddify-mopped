@@ -5,11 +5,7 @@ export default class EventController {
   public path = '/event';
   public router = express.Router();
 
-  private websocketHandler: WebsocketHandler;
-
-  public constructor(websocketHandler: WebsocketHandler) {
-    this.websocketHandler = websocketHandler;
-
+  public constructor(private readonly websocketHandler: WebsocketHandler) {
     this.initializeRoutes();
   }
 
