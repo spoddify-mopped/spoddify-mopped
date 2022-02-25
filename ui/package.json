@@ -32,6 +32,7 @@
     "@types/redux-socket.io": "^1.4.2",
     "@typescript-eslint/eslint-plugin": "^5.12.1",
     "@typescript-eslint/parser": "^5.12.1",
+    "cross-env": "^7.0.3",
     "eslint": "^8.9.0",
     "eslint-config-prettier": "^8.4.0",
     "eslint-plugin-import": "^2.25.4",
@@ -43,8 +44,8 @@
   "scripts": {
     "lint": "eslint --fix src",
     "format": "prettier --write src",
-    "start": "REACT_APP_API_URL=http://localhost:8080 react-scripts start",
-    "build": "BUILD_PATH='../public' react-scripts build",
+    "start": "cross-env REACT_APP_API_URL=http://localhost:8080 react-scripts start",
+    "build": "cross-env BUILD_PATH='../public' react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
