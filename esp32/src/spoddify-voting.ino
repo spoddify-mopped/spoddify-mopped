@@ -121,6 +121,7 @@ void setup() {
   if (songName[0] == 0) {
     drawLoading();
   }
+  upvoteSong();
 }
 
 
@@ -159,6 +160,7 @@ void upvoteSong(){
     display.fillScreen(GxEPD_WHITE);
     display.setCursor(18, 18);
     display.print("Upvote");
+    display.drawInvertedBitmap(107,40,icon_thumbup, 36, 36, GxEPD_BLACK);
   } while(display.nextPage());
 }
 
@@ -169,6 +171,7 @@ void downvoteSong() {
     display.fillScreen(GxEPD_WHITE);
     display.setCursor(18, 18);
     display.print("Downvote");
+    display.drawInvertedBitmap(107,40,icon_thumbdown, 36, 36, GxEPD_BLACK);
   } while(display.nextPage());
 }
 
@@ -189,12 +192,12 @@ void drawTimeout() {
 
 void button1pressed() {
   Serial.print("button 1 was registered.");
-  upvoteSong();
+  //upvoteSong();
 }
 
 void button2pressed(){
   Serial.print("button 2 was registered.");
-  downvoteSong();
+  //downvoteSong();
 }
 
 void blesetup(){
