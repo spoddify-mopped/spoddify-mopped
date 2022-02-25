@@ -7,6 +7,8 @@ export class DeviceNotFoundError extends Error {}
 export default class SpotifyPlayerService {
   private targetDevice?: Device;
 
+  private playerState?: Player;
+
   public constructor(
     private readonly spotifyClient: SpotifyClient,
     private readonly deviceName: string
@@ -34,12 +36,14 @@ export default class SpotifyPlayerService {
     const spotifyPlayerResponse = await this.spotifyClient.getPlayer();
 
     if (!spotifyPlayerResponse) {
-      return spotifyPlayerResponse;
+      return this.playerState;
     }
 
     if (spotifyPlayerResponse.device.id !== this.targetDevice.id) {
       throw new DeviceNotFoundError();
     }
+
+    this.playerState = spotifyPlayerResponse;
 
     return spotifyPlayerResponse;
   };
