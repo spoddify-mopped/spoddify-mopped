@@ -90,7 +90,13 @@ export class SpotifydService {
 
     this.spotifydProcess.stdout.on('data', (data) => {
       const rows = this.prettifyLog(data);
-      rows.map((row) => LOGGER.info(row));
+      rows
+        .filter(
+          (row) =>
+            !row.includes("couldn't parse packet") &&
+            !row.includes('error sending packet Os')
+        )
+        .map((row) => LOGGER.info(row));
     });
 
     this.spotifydProcess.stderr.on('data', (data) => {
