@@ -29,29 +29,15 @@ type SpotifydStatus = {
 const LOGGER = Logger.create(__filename);
 
 export class SpotifydService {
-  private spotifyClient: SpotifyClient;
-
-  private config?: SpotifydConfig;
-
-  private command?: string;
-
-  private enabled: boolean;
-
   private running = false;
-
-  private spotifydProcess?: ChildProcessWithoutNullStreams;
+  private process?: ChildProcessWithoutNullStreams;
 
   public constructor(
-    spotifyClient: SpotifyClient,
-    enabled: boolean,
-    config: SpotifydConfig,
-    command?: string
-  ) {
-    this.spotifyClient = spotifyClient;
-    this.enabled = enabled;
-    this.config = config;
-    this.command = command;
-  }
+    private readonly spotifyClient: SpotifyClient,
+    private readonly enabled: boolean,
+    private readonly config: SpotifydConfig,
+    private readonly command?: string
+  ) {}
 
   private parseConfig = () => {
     return Object.keys(this.config).flatMap((key) => {
@@ -73,22 +59,22 @@ export class SpotifydService {
   };
 
   private isRunning = (): boolean =>
-    !!this.spotifydProcess && !this.spotifydProcess.killed && this.running;
+    !!this.process && !this.process.killed && this.running;
 
   private addEventListeners = () => {
-    this.spotifydProcess.on('spawn', () => {
+    this.process.on('spawn', () => {
       this.running = true;
-      LOGGER.info(`Spotifyd started on PID: ${this.spotifydProcess.pid} `);
+      LOGGER.info(`Spotifyd started on PID: ${this.process.pid} `);
     });
 
-    this.spotifydProcess.on('error', () => {
+    this.process.on('error', () => {
       LOGGER.error(
         'Spotifyd could not be started. Check the path of the spotifyd binary or disable spotifyd.'
       );
       process.exit(1);
     });
 
-    this.spotifydProcess.stdout.on('data', (data) => {
+    this.process.stdout.on('data', (data) => {
       const rows = this.prettifyLog(data);
       rows
         .filter(
@@ -99,12 +85,12 @@ export class SpotifydService {
         .map((row) => LOGGER.info(row));
     });
 
-    this.spotifydProcess.stderr.on('data', (data) => {
+    this.process.stderr.on('data', (data) => {
       const rows = this.prettifyLog(data);
       rows.map((row) => LOGGER.error(row));
     });
 
-    this.spotifydProcess.on('close', (code) => {
+    this.process.on('close', (code) => {
       this.running = false;
       LOGGER.info(`Spotifyd exited with code ${code}`);
     });
@@ -117,7 +103,7 @@ export class SpotifydService {
     }
 
     if (this.isRunning()) {
-      this.spotifydProcess.removeAllListeners();
+      this.process.removeAllListeners();
     }
 
     const token = await this.spotifyClient.getAccessToken();
@@ -138,14 +124,14 @@ export class SpotifydService {
 
     const command = this.command || 'spotifyd';
 
-    this.spotifydProcess = spawn(command, config);
+    this.process = spawn(command, config);
 
     this.addEventListeners();
   };
 
   public stop = (): void => {
-    if (this.spotifydProcess) {
-      this.spotifydProcess.kill('SIGINT');
+    if (this.process) {
+      this.process.kill('SIGINT');
     }
   };
 
