@@ -31,8 +31,6 @@ import swaggerUi from 'swagger-ui-express';
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const swaggerDocument = require('../swagger.json');
 
-const LOGGER = Logger.create(__filename);
-
 const socketIoCors = {
   allowedHeaders: [],
   methods: [],
@@ -40,6 +38,8 @@ const socketIoCors = {
 };
 
 export default class App {
+  private readonly logger = Logger.create(App.name);
+
   private app: express.Application;
 
   private server: http.Server;
@@ -177,7 +177,7 @@ export default class App {
     );
 
     this.io.on('connection', (socket) => {
-      LOGGER.info(`New socket.io connection with id: ${socket.id}`);
+      this.logger.info(`New socket.io connection with id: ${socket.id}`);
       socket.on('action', this.websocketHandler.handle);
     });
   }
@@ -192,7 +192,7 @@ export default class App {
     if (error instanceof RequestError) {
       response.status(error.statusCode).send(error.getErrorResponse());
     } else {
-      LOGGER.error(error);
+      this.logger.error(error);
 
       response
         .status(StatusCodes.INTERNAL_SERVER_ERROR)
@@ -207,7 +207,7 @@ export default class App {
 
   public listen(port: number): void {
     this.server.listen(port, () => {
-      LOGGER.info(`Server is running at http://localhost:${port}`);
+      this.logger.info(`Server is running at http://localhost:${port}`);
     });
   }
 }

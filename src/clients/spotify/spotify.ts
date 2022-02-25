@@ -33,8 +33,6 @@ type Config = {
 const SPOTIFY_BASE_AUTH_URL = 'https://accounts.spotify.com';
 const SPOTIFY_BASE_URL = 'https://api.spotify.com/v1';
 
-const LOGGER = Logger.create(__filename);
-
 export const mapAxiosErrorToSpotifyApiError = (
   err: Error
 ): Promise<undefined> => {
@@ -48,6 +46,8 @@ export const mapAxiosErrorToSpotifyApiError = (
 };
 
 export default class SpotifyClient {
+  private readonly logger = Logger.create(SpotifyClient.name);
+
   private refreshToken: string | undefined;
 
   private httpClient: AxiosInstance;
@@ -147,7 +147,7 @@ export default class SpotifyClient {
       return await cb();
     } catch (error) {
       if (error instanceof SpotifyApiError && error.status === 401) {
-        LOGGER.info('Access token is expired. Trying to refresh it.');
+        this.logger.info('Access token is expired. Trying to refresh it.');
 
         const response = await this.requestRefreshedToken(this.refreshToken);
         this.setAccessToken(response.access_token);

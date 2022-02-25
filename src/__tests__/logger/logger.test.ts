@@ -2,7 +2,7 @@ import * as path from 'path';
 
 import Logger from '../../logger/logger';
 
-const LOGGER = Logger.create(__filename);
+const logger = Logger.create(__filename);
 
 beforeEach(() => {
   jest.spyOn(Date.prototype, 'toISOString').mockReturnValue('MOCKED-DATE');
@@ -17,7 +17,7 @@ describe('warn', () => {
     const consoleWarnMock = jest.spyOn(console, 'warn').mockImplementation();
     const message = 'This is a demo warning.';
 
-    LOGGER.warn(message);
+    logger.warn(message);
 
     const date = new Date().toISOString();
     const filepath = path.relative(process.cwd(), __filename);
@@ -36,7 +36,7 @@ describe('debug', () => {
     const consoleDebugMock = jest.spyOn(console, 'debug').mockImplementation();
     const message = 'This is a demo debug message.';
 
-    LOGGER.debug(message);
+    logger.debug(message);
 
     const date = new Date().toISOString();
     const filepath = path.relative(process.cwd(), __filename);
@@ -53,7 +53,7 @@ describe('debug', () => {
     const consoleDebugMock = jest.spyOn(console, 'debug').mockImplementation();
     const message = 'This is a demo debug message 2.';
 
-    LOGGER.debug(message);
+    logger.debug(message);
 
     expect(consoleDebugMock).toBeCalledTimes(0);
   });
@@ -64,7 +64,7 @@ describe('error', () => {
     const consoleErrorMock = jest.spyOn(console, 'error').mockImplementation();
     const message = 'This is a error.';
 
-    LOGGER.error(message);
+    logger.error(message);
 
     const date = new Date().toISOString();
     const filepath = path.relative(process.cwd(), __filename);
@@ -81,7 +81,7 @@ describe('info', () => {
     const consoleInfoMock = jest.spyOn(console, 'info').mockImplementation();
     const message = 'This is a info.';
 
-    LOGGER.info(message);
+    logger.info(message);
 
     const date = new Date().toISOString();
     const filepath = path.relative(process.cwd(), __filename);

@@ -26,9 +26,9 @@ type SpotifydStatus = {
   isRunning: boolean;
 };
 
-const LOGGER = Logger.create(__filename);
-
 export class SpotifydService {
+  private readonly logger = Logger.create(SpotifydService.name);
+
   private running = false;
   private process?: ChildProcessWithoutNullStreams;
 
@@ -64,11 +64,11 @@ export class SpotifydService {
   private addEventListeners = () => {
     this.process.on('spawn', () => {
       this.running = true;
-      LOGGER.info(`Spotifyd started on PID: ${this.process.pid} `);
+      this.logger.info(`Spotifyd started on PID: ${this.process.pid} `);
     });
 
     this.process.on('error', () => {
-      LOGGER.error(
+      this.logger.error(
         'Spotifyd could not be started. Check the path of the spotifyd binary or disable spotifyd.'
       );
       process.exit(1);
@@ -82,23 +82,23 @@ export class SpotifydService {
             !row.includes("couldn't parse packet") &&
             !row.includes('error sending packet Os')
         )
-        .map((row) => LOGGER.info(row));
+        .map((row) => this.logger.info(row));
     });
 
     this.process.stderr.on('data', (data) => {
       const rows = this.prettifyLog(data);
-      rows.map((row) => LOGGER.error(row));
+      rows.map((row) => this.logger.error(row));
     });
 
     this.process.on('close', (code) => {
       this.running = false;
-      LOGGER.info(`Spotifyd exited with code ${code}`);
+      this.logger.info(`Spotifyd exited with code ${code}`);
     });
   };
 
   public start = async (): Promise<void> => {
     if (!this.enabled) {
-      LOGGER.warn('Spotfiyd will not start becausee it is disabled.');
+      this.logger.warn('Spotfiyd will not start becausee it is disabled.');
       return;
     }
 

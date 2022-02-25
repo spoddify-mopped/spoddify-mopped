@@ -6,8 +6,6 @@ import io from 'socket.io';
 import { mapBaseSpotifyArtistToArtist } from './../models/artist';
 import { mapSpotifyAlbumToAlbum } from './../models/album';
 
-const LOGGER = Logger.create(__filename);
-
 const WS_EVENT_NAME = 'action';
 
 type SocketHandler = () => void;
@@ -18,6 +16,8 @@ type Action<T = unknown> = {
 };
 
 export default class WebsocketHandler {
+  private readonly logger = Logger.create(WebsocketHandler.name);
+
   private handlers: Record<string, SocketHandler> = {};
 
   public constructor(
@@ -76,7 +76,7 @@ export default class WebsocketHandler {
         return;
       }
 
-      LOGGER.error(error);
+      this.logger.error(error);
     }
   };
 }

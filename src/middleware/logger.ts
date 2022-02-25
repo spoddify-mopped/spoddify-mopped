@@ -1,7 +1,7 @@
 import Logger from '../logger/logger';
 import express from 'express';
 
-const LOGGER = Logger.create('router');
+const logger = Logger.create('router');
 
 const loggerMiddleware = (
   request: express.Request,
@@ -22,14 +22,14 @@ const loggerMiddleware = (
 
     if (response.statusCode >= 400) {
       const status = `\x1b[31m${response.statusCode} ${response.statusMessage}\x1b[0m`;
-      LOGGER.error(
+      logger.error(
         `${method} '${path}' for ${request.ip}, ${status} in ${duration}`
       );
       return;
     }
 
     const status = `\x1b[32m${response.statusCode} ${response.statusMessage}\x1b[0m`;
-    LOGGER.debug(
+    logger.debug(
       `${method} '${path}' for ${request.ip}, ${status} in ${duration}`
     );
   });

@@ -22,10 +22,10 @@ if (program.opts().verbose) {
   Logger.setVerbose(true);
 }
 
-const LOGGER = Logger.create(__filename);
+const logger = Logger.create('main');
 
-LOGGER.info(`Starting SpoddifyMopped on PID: ${process.pid}`);
-LOGGER.info(`Running on node: ${process.version}`);
+logger.info(`Starting SpoddifyMopped on PID: ${process.pid}`);
+logger.info(`Running on node: ${process.version}`);
 
 const spotifyClient = new SpotifyClient({
   clientId: config.get('spotify:clientId'),
@@ -86,4 +86,4 @@ createConnection(databaseConnectionOptions)
 
     app.listen(config.get('server:port'));
   })
-  .catch((error) => LOGGER.error('TypeORM connection error: ', error.message));
+  .catch((error) => logger.error('TypeORM connection error: ', error.message));
