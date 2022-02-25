@@ -39,7 +39,8 @@
     "test:server": "jest",
     "watch:server": "nodemon",
     "watch:ui": "yarn --cwd ui start",
-    "watch": "concurrently \"yarn watch:server\" \"yarn watch:ui\""
+    "watch": "concurrently \"yarn watch:server\" \"yarn watch:ui\"",
+    "postinstall": "husky install"
   },
   "dependencies": {
     "axios": "^0.26.0",
