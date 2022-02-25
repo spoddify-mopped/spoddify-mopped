@@ -16,6 +16,8 @@ import config from 'nconf';
 import initializeConfig from './config/config';
 import { program } from 'commander';
 
+const startTime = Date.now();
+
 initializeConfig();
 
 if (program.opts().verbose) {
@@ -65,25 +67,34 @@ const spotifydService = new SpotifydService(
   config.get('spotifyd:path')
 );
 
-createConnection(databaseConnectionOptions)
-  .then(async () => {
-    const spotifyAuth = await SpotifyAuth.findOne({ tokenType: 'refresh' });
+const start = async () => {
+  try {
+    await createConnection(databaseConnectionOptions);
+  } catch (error) {
+    logger.error('Database connection failed: ', error.message);
+    process.exit(1);
+  }
 
-    if (spotifyAuth) {
-      spotifyClient.setRefreshToken(spotifyAuth.tokenValue);
+  const spotifyAuth = await SpotifyAuth.findOne({ tokenType: 'refresh' });
 
-      await spotifydService.start();
-    }
+  if (spotifyAuth) {
+    spotifyClient.setRefreshToken(spotifyAuth.tokenValue);
 
-    const app = new App(
-      playlistService,
-      spotifyClient,
-      spotifydService,
-      spotifyPlayerService,
-      spotifySearchService,
-      systemService
-    );
+    await spotifydService.start();
+  }
 
-    app.listen(config.get('server:port'));
-  })
-  .catch((error) => logger.error('TypeORM connection error: ', error.message));
+  const app = new App(
+    playlistService,
+    spotifyClient,
+    spotifydService,
+    spotifyPlayerService,
+    spotifySearchService,
+    systemService
+  );
+
+  app.listen(config.get('server:port'));
+};
+
+start().finally(() =>
+  logger.debug(`SpoddifyMopped started in ${Date.now() - startTime}ms`)
+);
