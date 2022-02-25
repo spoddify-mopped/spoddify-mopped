@@ -177,7 +177,9 @@ export default class App {
     );
 
     this.io.on('connection', (socket) => {
-      this.logger.info(`New socket.io connection with id: ${socket.id}`);
+      this.logger.debug(
+        `New socket.io connection with id: ${socket.id} from ${socket.handshake.address}`
+      );
       socket.on('action', this.websocketHandler.handle);
     });
   }
