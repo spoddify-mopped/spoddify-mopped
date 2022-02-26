@@ -26,6 +26,7 @@ import helmet from 'helmet';
 import http from 'http';
 import loggerMiddleware from './middleware/logger';
 import path from 'path';
+import promBundle from 'express-prom-bundle';
 import swaggerUi from 'swagger-ui-express';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -36,6 +37,22 @@ const socketIoCors = {
   methods: [],
   origin: ['http://localhost:8080', 'http://localhost:3000'],
 };
+
+const metricsMiddleware = promBundle({
+  bypass: (req) => !req.path.includes('/api') || req.path.includes('/api/docs'),
+  includeMethod: true,
+  includePath: true,
+  includeStatusCode: true,
+  includeUp: true,
+  metricsPath: '/api/metrics',
+  promClient: {
+    collectDefaultMetrics: {},
+  },
+  urlPathReplacement: '#id',
+  urlValueParser: {
+    extraMasks: ['^([a-zA-Z0-9]){22}'],
+  },
+});
 
 export default class App {
   private readonly logger = Logger.create(App.name);
@@ -76,6 +93,8 @@ export default class App {
   }
 
   private initializeMiddleware(): void {
+    this.app.use(metricsMiddleware);
+
     this.app.use(
       cors({
         origin: ['http://localhost:8080', 'http://localhost:3000'],
