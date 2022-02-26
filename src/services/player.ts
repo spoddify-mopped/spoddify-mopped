@@ -55,7 +55,7 @@ export default class SpotifyPlayerService {
 
     const player = await this.getPlayer();
 
-    if (player.is_playing) {
+    if (player?.is_playing) {
       await this.spotifyClient.pause({
         // eslint-disable-next-line camelcase
         device_id: this.targetDevice.id,
