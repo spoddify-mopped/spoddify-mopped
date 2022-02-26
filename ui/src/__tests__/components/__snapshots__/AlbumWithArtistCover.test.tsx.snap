@@ -1,0 +1,108 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AlbumWithArtistCover renders required properties and image 1`] = `
+<div
+  className="cover "
+  onClick={[Function]}
+>
+  <img
+    alt="Thumb"
+    src="some image url"
+  />
+  <span
+    className="title"
+    title="some name"
+  >
+    some name
+  </span>
+  <span
+    className="subtitle"
+  />
+</div>
+`;
+
+exports[`AlbumWithArtistCover renders required properties and multiple artists 1`] = `
+<div
+  className="cover "
+  onClick={[Function]}
+>
+  <img
+    alt="Thumb"
+    src="cover_replacement.png"
+  />
+  <span
+    className="title"
+    title="some name"
+  >
+    some name
+  </span>
+  <span
+    className="subtitle"
+  >
+    <span
+      className="artist"
+      onClick={[Function]}
+    >
+      some artist name
+    </span>
+    , 
+    <span
+      className="artist"
+      onClick={[Function]}
+    >
+      another artist name
+    </span>
+    
+  </span>
+</div>
+`;
+
+exports[`AlbumWithArtistCover renders required properties and no artists 1`] = `
+<div
+  className="cover "
+  onClick={[Function]}
+>
+  <img
+    alt="Thumb"
+    src="cover_replacement.png"
+  />
+  <span
+    className="title"
+    title="some name"
+  >
+    some name
+  </span>
+  <span
+    className="subtitle"
+  />
+</div>
+`;
+
+exports[`AlbumWithArtistCover renders required properties and one artist 1`] = `
+<div
+  className="cover "
+  onClick={[Function]}
+>
+  <img
+    alt="Thumb"
+    src="cover_replacement.png"
+  />
+  <span
+    className="title"
+    title="some name"
+  >
+    some name
+  </span>
+  <span
+    className="subtitle"
+  >
+    <span
+      className="artist"
+      onClick={[Function]}
+    >
+      some artist name
+    </span>
+    
+  </span>
+</div>
+`;
