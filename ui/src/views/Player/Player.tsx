@@ -35,6 +35,20 @@ export default function Player(): ReactElement {
     dispatch(playerActions.getPlayer());
   }, [dispatch]);
 
+  useEffect(() => {
+    const closePlayer = (evt: KeyboardEvent) => {
+      if (evt.key === 'Escape') {
+        navigate(-1);
+      }
+    };
+
+    document.addEventListener('keydown', closePlayer);
+
+    return () => {
+      document.removeEventListener('keydown', closePlayer);
+    };
+  }, [navigate]);
+
   const [volume, setVolume] = useState(0);
 
   useEffect(() => {
