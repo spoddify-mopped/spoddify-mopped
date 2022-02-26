@@ -12,8 +12,21 @@ describe('checkReadiness', () => {
     const systemMiddleware = new SystemMiddleware(systemServiceMock);
 
     const request = {
-      headers: { authorization: 'INVALID' },
       url: '/api/auth',
+    } as express.Request;
+    const next = jest.fn();
+
+    systemMiddleware.checkReadiness(request, undefined, next);
+
+    expect(next).toBeCalledTimes(1);
+  });
+
+  it('calls next for a always available route with regexp matcher', async () => {
+    const systemServiceMock = new SystemService(null);
+    const systemMiddleware = new SystemMiddleware(systemServiceMock);
+
+    const request = {
+      url: '/api/docs/swagger-ui.css',
     } as express.Request;
     const next = jest.fn();
 
@@ -27,7 +40,6 @@ describe('checkReadiness', () => {
     const systemMiddleware = new SystemMiddleware(systemServiceMock);
 
     const request = {
-      headers: { authorization: 'INVALID' },
       url: '/api/player',
     } as express.Request;
     const next = jest.fn();
@@ -44,7 +56,6 @@ describe('checkReadiness', () => {
     const systemMiddleware = new SystemMiddleware(systemServiceMock);
 
     const request = {
-      headers: { authorization: 'INVALID' },
       url: '/api/player',
     } as express.Request;
 

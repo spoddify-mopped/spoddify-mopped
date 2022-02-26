@@ -1,7 +1,12 @@
 import SystemService from '../services/system';
 import express from 'express';
 
-const availableRoutes = ['/api/auth', '/api/callback', '/api/system/status'];
+const availableRoutes = [
+  '/api/auth',
+  '/api/callback',
+  '/api/system/status',
+  '/api/docs/*',
+];
 
 export default class SystemMiddleware {
   public constructor(private readonly systemService: SystemService) {}
@@ -16,7 +21,7 @@ export default class SystemMiddleware {
     // Always pass non api routes - like frontend routes - and other available routes.
     if (
       !matchingUrl.includes('/api') ||
-      availableRoutes.includes(matchingUrl)
+      availableRoutes.find((route) => matchingUrl.match(route))
     ) {
       return next();
     }
