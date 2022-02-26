@@ -108,5 +108,15 @@
       "eslint --fix",
       "prettier --write"
     ]
-  }
+  },
+  "keywords": [
+    "spotify",
+    "spotify-player",
+    "spoddify-mopped",
+    "music",
+    "audio",
+    "radio",
+    "raspberry pi",
+    "linux"
+  ]
 }
