@@ -1,0 +1,43 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ArtistCover renders with image 1`] = `
+<div
+  className="cover cover"
+  onClick={[Function]}
+>
+  <img
+    alt="Thumb"
+    src="some image url"
+  />
+  <span
+    className="title"
+    title="some name"
+  >
+    some name
+  </span>
+  <span
+    className="subtitle"
+  />
+</div>
+`;
+
+exports[`ArtistCover renders with required properties 1`] = `
+<div
+  className="cover cover"
+  onClick={[Function]}
+>
+  <img
+    alt="Thumb"
+    src="cover_replacement.png"
+  />
+  <span
+    className="title"
+    title="some name"
+  >
+    some name
+  </span>
+  <span
+    className="subtitle"
+  />
+</div>
+`;
