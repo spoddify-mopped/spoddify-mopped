@@ -37,6 +37,8 @@
     "lint": "yarn lint:server && yarn lint:ui",
     "start": "node --inspect=5858 -r ts-node/register ./src/index.ts",
     "test:server": "jest",
+    "test:ui": "yarn --cwd ui test --watchAll=false",
+    "test": "yarn test:server && yarn test:ui",
     "watch:server": "nodemon",
     "watch:ui": "yarn --cwd ui start",
     "watch": "concurrently \"yarn watch:server\" \"yarn watch:ui\"",
