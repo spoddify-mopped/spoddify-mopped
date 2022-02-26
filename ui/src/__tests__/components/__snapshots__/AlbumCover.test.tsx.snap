@@ -1,0 +1,51 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AlbumCover renders correctly with release date 1`] = `
+<div
+  className="cover "
+  onClick={[Function]}
+>
+  <img
+    alt="Thumb"
+    src="cover_replacement.png"
+  />
+  <span
+    className="title"
+    title="some name"
+  >
+    some name
+  </span>
+  <span
+    className="subtitle"
+  >
+    <span>
+      2014
+    </span>
+  </span>
+</div>
+`;
+
+exports[`AlbumCover renders correctly with release date and image 1`] = `
+<div
+  className="cover "
+  onClick={[Function]}
+>
+  <img
+    alt="Thumb"
+    src="some image url"
+  />
+  <span
+    className="title"
+    title="some name"
+  >
+    some name
+  </span>
+  <span
+    className="subtitle"
+  >
+    <span>
+      2014
+    </span>
+  </span>
+</div>
+`;
