@@ -1,0 +1,135 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Cover renders correctly with clickable subtitle 1`] = `
+<div
+  className="cover "
+  onClick={[Function]}
+>
+  <img
+    alt="Thumb"
+    src="cover_replacement.png"
+  />
+  <span
+    className="title"
+    title="some name"
+  >
+    some name
+  </span>
+  <span
+    className="subtitle"
+  >
+    <span>
+      'some subttle'
+    </span>
+  </span>
+</div>
+`;
+
+exports[`Cover renders correctly with custom class name 1`] = `
+<div
+  className="cover some class"
+  onClick={[Function]}
+>
+  <img
+    alt="Thumb"
+    src="cover_replacement.png"
+  />
+  <span
+    className="title"
+    title="some name"
+  >
+    some name
+  </span>
+  <span
+    className="subtitle"
+  />
+</div>
+`;
+
+exports[`Cover renders correctly with image 1`] = `
+<div
+  className="cover "
+  onClick={[Function]}
+>
+  <img
+    alt="Thumb"
+    src="some image url"
+  />
+  <span
+    className="title"
+    title="some name"
+  >
+    some name
+  </span>
+  <span
+    className="subtitle"
+  />
+</div>
+`;
+
+exports[`Cover renders correctly with image and onClick 1`] = `
+<div
+  className="cover "
+  onClick={[Function]}
+>
+  <img
+    alt="Thumb"
+    src="cover_replacement.png"
+  />
+  <span
+    className="title"
+    title="some name"
+  >
+    some name
+  </span>
+  <span
+    className="subtitle"
+  />
+</div>
+`;
+
+exports[`Cover renders correctly with required item properties 1`] = `
+<div
+  className="cover "
+  onClick={[Function]}
+>
+  <img
+    alt="Thumb"
+    src="cover_replacement.png"
+  />
+  <span
+    className="title"
+    title="some name"
+  >
+    some name
+  </span>
+  <span
+    className="subtitle"
+  />
+</div>
+`;
+
+exports[`Cover renders correctly with subtitle 1`] = `
+<div
+  className="cover "
+  onClick={[Function]}
+>
+  <img
+    alt="Thumb"
+    src="cover_replacement.png"
+  />
+  <span
+    className="title"
+    title="some name"
+  >
+    some name
+  </span>
+  <span
+    className="subtitle"
+  >
+    <span>
+      'some subttle'
+    </span>
+  </span>
+</div>
+`;
