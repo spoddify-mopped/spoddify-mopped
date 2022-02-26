@@ -9,7 +9,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import ApiClient from '../../clients/api';
 import ArtistsAlbumsPreview from '../../components/ArtistsAlbumsPreview/ArtistsAlbumsPreview';
 import { CoverReplacement } from '../../assets';
-import TopTracksView from '../../components/TopTracksView/TopTracksView';
+import TracksView from '../../components/TracksView/TracksView';
 import styles from './ArtistView.module.scss';
 
 const ALBUM_PREVIEW_LIMIT = 9;
@@ -63,8 +63,11 @@ const ArtistView = (): React.ReactElement => {
       </div>
       <div className={styles.innerContainer}>
         <h2>Popular</h2>
-        <TopTracksView
+        <TracksView
+          enableShowMore
+          maxWidth="50rem"
           tracks={artistTopTracks.tracks}
+          showNumbers
           onClick={async (id) => {
             await ApiClient.addTrack(id);
           }}

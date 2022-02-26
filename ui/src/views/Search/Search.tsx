@@ -7,7 +7,7 @@ import FullLoadingView from '../FullLoadingView/FullLoadingView';
 import SearchCoverView from '../../components/SearchCoverView/SearchCoverView';
 import SearchInput from '../../components/SearchInput/SearchInput';
 import { SearchResponse } from '../../clients/api.types';
-import SearchTrackView from '../../components/SearchTrackView/SearchTrackView';
+import TracksView from '../../components/TracksView/TracksView';
 import styles from './Search.module.scss';
 
 export const Search = (): ReactElement => {
@@ -63,6 +63,20 @@ export const Search = (): ReactElement => {
       <div>
         <div className={styles.category}>
           <div className={styles.categoryHeader}>
+            <h3>Tracks</h3>
+          </div>
+          <TracksView
+            tracks={result.tracks}
+            onArtistClick={(id) => navigate(`/artist/${id}`)}
+            onClick={async (id) => {
+              await ApiClient.addTrack(id);
+            }}
+            showArtists
+            maxWidth="69rem"
+          />
+        </div>
+        <div className={styles.category}>
+          <div className={styles.categoryHeader}>
             <h3>Artists</h3>
           </div>
           <SearchCoverView
@@ -84,17 +98,6 @@ export const Search = (): ReactElement => {
               navigate(`/artist/${id}`);
             }}
             items={result.albums}
-          />
-        </div>
-        <div className={styles.category}>
-          <div className={styles.categoryHeader}>
-            <h3>Tracks</h3>
-          </div>
-          <SearchTrackView
-            tracks={result.tracks}
-            onAddTrackClick={async (track) => {
-              await ApiClient.addTrack(track.id);
-            }}
           />
         </div>
       </div>

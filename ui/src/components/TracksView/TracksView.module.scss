@@ -1,7 +1,3 @@
-div.container {
-  max-width: 50rem;
-}
-
 div.track {
   padding: 0.5rem 0;
   display: flex;
@@ -39,11 +35,31 @@ div.track {
     }
   }
 
+  div.metaContainer {
+    display: flex;
+    flex-direction: column;
+  }
+
+  span.artists {
+    opacity: 0.5;
+    font-size: 0.9rem;
+
+    &.clickable {
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
   img.cover {
     width: 42px;
     height: 42px;
     margin-right: 1rem;
     border-radius: 2px;
+
+    &.coverMargin {
+      margin-left: 1rem;
+    }
   }
 
   span.title {
