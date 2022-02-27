@@ -20,13 +20,26 @@ But it can be run on any other machine as well.
 - Modern user interface
 - Secure Spotify login
 
-# Installation Instructions
+## Installation Instructions
 
 For detailed instructions on how to setup Node.js and SpoddifyMopped follow these guides:
 
 - [Setup manually](https://github.com/davidborzek/spoddify-mopped/wiki/Manual-Installation)
 
-# Contributing
+## Plugins
+
+Spoddify Mopped can be extended using plugins. Plugins are Node.js modules prefixed by `spoddify-mopped-`.
+They have direct access to the Spoddify Mopped API (e.g. controlling playback, listening to player events, ...).
+
+### Plugin Installation
+
+You can easily install plugins like, by installing the Node.js module globally:
+
+```bash
+npm i -g spoddify-mopped-gpio
+```
+
+## Contributing
 
 Contributing and pull requests are very welcome.
 
