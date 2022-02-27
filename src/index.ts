@@ -18,6 +18,8 @@ import config from 'nconf';
 import initializeConfig from './config/config';
 import { program } from 'commander';
 
+export type { PluginApi };
+
 const startTime = Date.now();
 
 initializeConfig();
