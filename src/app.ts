@@ -8,6 +8,7 @@ import Logger from './logger/logger';
 import PlayerController from './controllers/player';
 import PlaylistController from './controllers/playlist';
 import PlaylistService from './services/playlist';
+import PluginApi from './plugins/api';
 import RequestError from './error/request';
 import SearchController from './controllers/search';
 import { Server } from 'socket.io';
@@ -55,12 +56,13 @@ export default class App {
     spotifydService: SpotifydService,
     spotifyPlayerService: SpotifyPlayerService,
     spotifySearchService: SpotifySearchService,
-    systemService: SystemService
+    systemService: SystemService,
+    pluginApi: PluginApi
   ) {
     this.app = express();
     this.server = http.createServer(this.app);
 
-    this.initializeSocketIo(spotifyPlayerService, systemService);
+    this.initializeSocketIo(spotifyPlayerService, systemService, pluginApi);
 
     this.systemMiddleware = new SystemMiddleware(systemService);
 
@@ -164,7 +166,8 @@ export default class App {
 
   private initializeSocketIo(
     spotifyPlayerService: SpotifyPlayerService,
-    systemService: SystemService
+    systemService: SystemService,
+    pluginApi: PluginApi
   ): void {
     this.io = new Server(this.server, {
       cors: socketIoCors,
@@ -173,7 +176,8 @@ export default class App {
     this.websocketHandler = new WebsocketHandler(
       systemService,
       spotifyPlayerService,
-      this.io
+      this.io,
+      pluginApi
     );
 
     this.io.on('connection', (socket) => {

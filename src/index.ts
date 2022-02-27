@@ -4,6 +4,8 @@ import App from './app';
 import Logger from './logger/logger';
 import Playlist from './db/playlist';
 import PlaylistService from './services/playlist';
+import PluginApi from './plugins/api';
+import PluginManager from './plugins/manager';
 import SpotifyAuth from './db/spotify_auth';
 import SpotifyClient from './clients/spotify/spotify';
 import SpotifyPlayerService from './services/player';
@@ -83,14 +85,22 @@ const start = async () => {
     await spotifydService.start();
   }
 
+  const pluginApi = new PluginApi(spotifyPlayerService, playlistService);
+
   const app = new App(
     playlistService,
     spotifyClient,
     spotifydService,
     spotifyPlayerService,
     spotifySearchService,
-    systemService
+    systemService,
+    pluginApi
   );
+
+  const pluginManager = new PluginManager(pluginApi, {
+    customPluginPaths: config.get('customPluginPaths'),
+  });
+  await pluginManager.initializePlugins();
 
   app.listen(config.get('server:port'));
 };

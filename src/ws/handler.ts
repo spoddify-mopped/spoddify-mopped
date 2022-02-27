@@ -1,6 +1,7 @@
 import SpotifyPlayerService, { DeviceNotFoundError } from '../services/player';
 
 import Logger from '../logger/logger';
+import PluginApi from '../plugins/api';
 import SystemService from '../services/system';
 import io from 'socket.io';
 import { mapBaseSpotifyArtistToArtist } from './../models/artist';
@@ -23,7 +24,8 @@ export default class WebsocketHandler {
   public constructor(
     private readonly systemService: SystemService,
     private readonly spotifyPlayerService: SpotifyPlayerService,
-    private readonly io: io.Server
+    private readonly io: io.Server,
+    private readonly pluginApi: PluginApi
   ) {
     this.initializeHandlers();
   }
@@ -55,6 +57,8 @@ export default class WebsocketHandler {
         // TODO: Send empty player websocket
         return;
       }
+
+      this.pluginApi.emit('player', player);
 
       this.io.emit(WS_EVENT_NAME, {
         payload: {

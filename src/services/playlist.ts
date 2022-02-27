@@ -14,7 +14,7 @@ type PlaylistTracks = {
   track: FullTrack;
 }[];
 
-type FullPlaylist = {
+export type FullPlaylist = {
   id: number;
   name: string;
   updatedAt: number;

@@ -86,6 +86,7 @@ const initializeConfig = (): void => {
     app: {
       name: 'SpoddifyMopped',
     },
+    customPluginPaths: [],
     server: { dataPath: './', port: 8080 },
     spotify: {
       redirectBaseUri: 'http://localhost:8080',
