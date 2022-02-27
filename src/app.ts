@@ -93,6 +93,7 @@ export default class App {
             imgSrc: ['https://i.scdn.co', "'self'", 'data:'],
             scriptSrc: ["'self'", "'unsafe-inline'"],
             styleSrc: ["'self'", "'unsafe-inline'"],
+            upgradeInsecureRequests: null,
           },
         },
         crossOriginEmbedderPolicy: false,
