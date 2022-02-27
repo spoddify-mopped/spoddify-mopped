@@ -29,6 +29,7 @@ export default class PluginManager {
 
   public constructor(
     private readonly api: PluginApi,
+    private readonly pluginConfig: Record<string, Record<string, unknown>>,
     private readonly options?: PluginManagerOptions
   ) {
     if (options) {
@@ -88,7 +89,7 @@ export default class PluginManager {
     this.logger.info(`Loaded plugin: ${identifier}@${plugin.getVersion()}`);
 
     try {
-      await plugin.initialize(this.api);
+      await plugin.initialize(this.api, this.pluginConfig[identifier]);
     } catch (error) {
       this.logger.error(
         `Initializing plugin ${identifier} failed with: ${error}`

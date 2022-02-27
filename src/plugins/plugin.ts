@@ -2,7 +2,10 @@ import { PackageJSON } from './manager';
 import PluginApi from './api';
 import path from 'path';
 
-export type PluginInitializer = (api: PluginApi) => void | Promise<void>;
+export type PluginInitializer = (
+  api: PluginApi,
+  config?: Record<string, unknown>
+) => void | Promise<void>;
 
 export default class Plugin {
   private pluginInitializer: PluginInitializer;
@@ -43,13 +46,16 @@ export default class Plugin {
     }
   };
 
-  public initialize(api: PluginApi): void | Promise<void> {
+  public initialize(
+    api: PluginApi,
+    config?: Record<string, unknown>
+  ): void | Promise<void> {
     if (!this.pluginInitializer) {
       throw new Error(
         "Tried to initialize a plugin which hasn't been loaded yet!"
       );
     }
 
-    return this.pluginInitializer(api);
+    return this.pluginInitializer(api, config);
   }
 }

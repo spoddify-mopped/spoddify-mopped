@@ -99,7 +99,7 @@ const start = async () => {
     pluginApi
   );
 
-  const pluginManager = new PluginManager(pluginApi, {
+  const pluginManager = new PluginManager(pluginApi, config.get('plugins'), {
     customPluginPaths: config.get('customPluginPaths'),
   });
   await pluginManager.initializePlugins();
