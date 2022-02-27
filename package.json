@@ -42,7 +42,7 @@
     "watch:server": "nodemon",
     "watch:ui": "yarn --cwd ui start",
     "watch": "concurrently \"yarn watch:server\" \"yarn watch:ui\"",
-    "postinstall": "husky install"
+    "prepare": "husky install"
   },
   "dependencies": {
     "axios": "^0.26.0",
