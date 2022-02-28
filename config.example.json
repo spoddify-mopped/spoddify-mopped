@@ -2,6 +2,12 @@
   "app": {
     "name": "SpoddifyMopped"
   },
+  "customPluginPaths": ["/path/to/plugins"],
+  "plugins": {
+    "spoddify-mopped-someplugin": {
+      "key": "value"
+    }
+  },
   "server": {
     "port": 8080,
     "dataPath": "./"
