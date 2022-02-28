@@ -40,12 +40,13 @@ const spotifyClient = new SpotifyClient({
   redirectUri: `${config.get('spotify:redirectBaseUri')}/api/callback`,
 });
 
+const queueService = new QueueService();
+
 const spotifyPlayerService = new SpotifyPlayerService(
   spotifyClient,
+  queueService,
   config.get('app:name')
 );
-
-const queueService = new QueueService();
 
 const playlistService = new PlaylistService(
   spotifyClient,

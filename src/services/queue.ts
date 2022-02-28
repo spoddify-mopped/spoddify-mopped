@@ -6,6 +6,8 @@ type QueueItem = {
 };
 
 export default class QueueService {
+  private playing?: QueueItem;
+
   private queue: Array<QueueItem> = [];
 
   public add = (uri: string): QueueItem => {
@@ -20,9 +22,8 @@ export default class QueueService {
   };
 
   public next = (): QueueItem | undefined => {
-    this.queue.shift();
-
-    return this.queue[0];
+    this.playing = this.queue.shift();
+    return this.playing;
   };
 
   public remove = (id: string): void => {
@@ -32,6 +33,10 @@ export default class QueueService {
   public clear = (): void => {
     this.queue = [];
   };
+
+  public getNext = (): QueueItem | undefined => this.queue[0];
+
+  public getPlaying = (): QueueItem | undefined => this.playing;
 
   public getQueue = (): Array<QueueItem> => this.queue;
 }

@@ -1,5 +1,6 @@
 import { Device, Player } from '../clients/spotify/types/player';
 
+import QueueService from './queue';
 import SpotifyClient from '../clients/spotify/spotify';
 
 export class DeviceNotFoundError extends Error {}
@@ -11,6 +12,7 @@ export default class SpotifyPlayerService {
 
   public constructor(
     private readonly spotifyClient: SpotifyClient,
+    private readonly queueService: QueueService,
     private readonly deviceName: string
   ) {}
 
@@ -45,6 +47,15 @@ export default class SpotifyPlayerService {
       }
 
       return this.playerState;
+    }
+
+    const playing = this.queueService.getPlaying();
+    const next = this.queueService.getNext();
+
+    if (next?.uri === spotifyPlayerResponse.item.uri) {
+      this.queueService.next();
+    } else if (playing?.uri !== spotifyPlayerResponse.item.uri) {
+      this.queueService.clear();
     }
 
     this.playerState = spotifyPlayerResponse;
