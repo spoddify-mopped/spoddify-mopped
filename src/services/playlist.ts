@@ -104,6 +104,22 @@ export default class PlaylistService {
       .execute();
   };
 
+  public dislikeTrack = async (
+    trackId: string,
+    playlistId: number
+  ): Promise<void> => {
+    await TracksToPlaylists.createQueryBuilder('ttp')
+      .update()
+      .set({
+        likes: () => 'likes - 1',
+      })
+      .where('playlistId = :playlistId and trackId = :trackId', {
+        playlistId,
+        trackId,
+      })
+      .execute();
+  };
+
   public getPlaylists = async (): Promise<Playlist[]> => {
     return await Playlist.find();
   };

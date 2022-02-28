@@ -297,6 +297,54 @@ describe('likeTrack', () => {
   });
 });
 
+describe('dislikeTrack', () => {
+  beforeEach(async () => {
+    await connectDB();
+  });
+
+  afterEach(async () => {
+    await closeDB();
+  });
+
+  it('decrements the like counter of a track', async () => {
+    const playlistService = new PlaylistService(null, null);
+
+    const newTrack = new Track();
+    newTrack.id = 'some track id';
+    await newTrack.save();
+
+    const newPlaylist = new Playlist();
+    newPlaylist.id = 1;
+    newPlaylist.name = 'pop';
+    newPlaylist.createdAt = 1;
+    newPlaylist.updatedAt = 1;
+    await newPlaylist.save();
+
+    const tracksToPlaylists = new TracksToPlaylists();
+    tracksToPlaylists.playlist = newPlaylist;
+    tracksToPlaylists.track = newTrack;
+    tracksToPlaylists.createdAt = 1;
+    tracksToPlaylists.likes = 1;
+    await tracksToPlaylists.save();
+
+    newPlaylist.tracksToPlaylists = [tracksToPlaylists];
+    await newPlaylist.save();
+
+    await playlistService.dislikeTrack('some track id', 1);
+
+    const trackToPlaylistInDb = await TracksToPlaylists.createQueryBuilder(
+      'ttp'
+    )
+      .where('playlistId = :playlistId and trackId = :trackId', {
+        playlistId: 1,
+        trackId: 'some track id',
+      })
+      .getOne();
+
+    expect(trackToPlaylistInDb.likes).toBe(0);
+  });
+});
+
 describe('playPlaylist', () => {
   beforeEach(async () => {
     await connectDB();
