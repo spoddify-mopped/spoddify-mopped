@@ -222,6 +222,7 @@ describe('getPlaylist', () => {
     tracksToPlaylists.playlist = newPlaylist;
     tracksToPlaylists.track = newTrack;
     tracksToPlaylists.createdAt = 1;
+    tracksToPlaylists.likes = 0;
 
     await tracksToPlaylists.save();
 
@@ -288,12 +289,16 @@ describe('playPlaylist', () => {
     tracksToPlaylistsOne.playlist = newPlaylist;
     tracksToPlaylistsOne.track = newTrack;
     tracksToPlaylistsOne.createdAt = 1;
+    tracksToPlaylistsOne.likes = 0;
+
     await tracksToPlaylistsOne.save();
 
     const tracksToPlaylistsTwo = new TracksToPlaylists();
     tracksToPlaylistsTwo.playlist = newPlaylist;
     tracksToPlaylistsTwo.track = newTrack2;
     tracksToPlaylistsTwo.createdAt = 1;
+    tracksToPlaylistsTwo.likes = 0;
+
     await tracksToPlaylistsTwo.save();
 
     newPlaylist.tracksToPlaylists = [
