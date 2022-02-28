@@ -9,6 +9,8 @@ import PlayerController from './controllers/player';
 import PlaylistController from './controllers/playlist';
 import PlaylistService from './services/playlist';
 import PluginApi from './plugins/api';
+import QueueController from './controllers/queue';
+import QueueService from './services/queue';
 import RequestError from './error/request';
 import SearchController from './controllers/search';
 import { Server } from 'socket.io';
@@ -51,6 +53,7 @@ export default class App {
   private systemMiddleware: SystemMiddleware;
 
   public constructor(
+    queueService: QueueService,
     playlistService: PlaylistService,
     spotifyClient: SpotifyClient,
     spotifydService: SpotifydService,
@@ -68,6 +71,7 @@ export default class App {
 
     this.initializeMiddleware();
     this.initializeControllers(
+      queueService,
       playlistService,
       spotifyClient,
       spotifydService,
@@ -113,6 +117,7 @@ export default class App {
   }
 
   private initializeControllers(
+    queueService: QueueService,
     playlistService: PlaylistService,
     spotifyClient: SpotifyClient,
     spotifydService: SpotifydService,
@@ -128,6 +133,7 @@ export default class App {
     );
     this.app.use('/api', new EventController(this.websocketHandler).router);
     this.app.use('/api', new PlayerController(spotifyPlayerService).router);
+    this.app.use('/api', new QueueController(queueService).router);
     this.app.use('/api', new PlaylistController(playlistService).router);
     this.app.use('/api', new SearchController(spotifySearchService).router);
     this.app.use(

@@ -6,6 +6,7 @@ import Playlist from './db/playlist';
 import PlaylistService from './services/playlist';
 import PluginApi from './plugins/api';
 import PluginManager from './plugins/manager';
+import QueueService from './services/queue';
 import SpotifyAuth from './db/spotify_auth';
 import SpotifyClient from './clients/spotify/spotify';
 import SpotifyPlayerService from './services/player';
@@ -44,9 +45,12 @@ const spotifyPlayerService = new SpotifyPlayerService(
   config.get('app:name')
 );
 
+const queueService = new QueueService();
+
 const playlistService = new PlaylistService(
   spotifyClient,
-  spotifyPlayerService
+  spotifyPlayerService,
+  queueService
 );
 const spotifySearchService = new SpotifySearchService(spotifyClient);
 
@@ -90,6 +94,7 @@ const start = async () => {
   const pluginApi = new PluginApi(spotifyPlayerService, playlistService);
 
   const app = new App(
+    queueService,
     playlistService,
     spotifyClient,
     spotifydService,

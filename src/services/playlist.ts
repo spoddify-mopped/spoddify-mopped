@@ -1,6 +1,7 @@
 import DateUtils from '../utils/date';
 import { Track as FullTrack } from '../models/track';
 import Playlist from '../db/playlist';
+import QueueService from './queue';
 import SpotifyClient from '../clients/spotify/spotify';
 import SpotifyPlayerService from './player';
 import Track from '../db/track';
@@ -25,7 +26,8 @@ export type FullPlaylist = {
 export default class PlaylistService {
   public constructor(
     private readonly spotifyClient: SpotifyClient,
-    private readonly spotifyPlayerService: SpotifyPlayerService
+    private readonly spotifyPlayerService: SpotifyPlayerService,
+    private readonly queueService: QueueService
   ) {}
 
   public sortInTrack = async (spotifyTrackId: string): Promise<void> => {
@@ -177,7 +179,13 @@ export default class PlaylistService {
 
     const tracks = playlist.tracksToPlaylists
       .sort(() => Math.random() - 0.5)
-      .map((trackToPlaylist) => `spotify:track:${trackToPlaylist.track.id}`);
+      .map((trackToPlaylist) => {
+        const uri = `spotify:track:${trackToPlaylist.track.id}`;
+
+        this.queueService.add(uri);
+
+        return uri;
+      });
 
     await this.spotifyPlayerService.play(tracks);
   };
