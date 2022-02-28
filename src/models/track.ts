@@ -19,7 +19,7 @@ export const mapSpotifyTrackToTrack = (spotifyTrack: SpotifyTrack): Track => {
     artists: mapSpotifyArtistListToArtistList(spotifyTrack.artists),
     id: spotifyTrack.id,
     imageUrl: spotifyTrack.album
-      ? spotifyTrack.album.images?.[0].url
+      ? spotifyTrack.album.images?.[0]?.url
       : undefined,
     name: spotifyTrack.name,
   };

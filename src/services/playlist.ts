@@ -188,5 +188,6 @@ export default class PlaylistService {
       });
 
     await this.spotifyPlayerService.play(tracks);
+    this.queueService.next();
   };
 }
