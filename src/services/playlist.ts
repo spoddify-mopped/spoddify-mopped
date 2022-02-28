@@ -69,6 +69,7 @@ export default class PlaylistService {
       tracksToPlaylists.playlist = playlist;
       tracksToPlaylists.track = track;
       tracksToPlaylists.createdAt = DateUtils.now();
+      tracksToPlaylists.likes = 0;
 
       await tracksToPlaylists.save();
     }
@@ -85,6 +86,22 @@ export default class PlaylistService {
     for (const track of spotifyAlbumTracks.items) {
       await this.sortInTrack(track.id);
     }
+  };
+
+  public likeTrack = async (
+    trackId: string,
+    playlistId: number
+  ): Promise<void> => {
+    await TracksToPlaylists.createQueryBuilder('ttp')
+      .update()
+      .set({
+        likes: () => 'likes + 1',
+      })
+      .where('playlistId = :playlistId and trackId = :trackId', {
+        playlistId,
+        trackId,
+      })
+      .execute();
   };
 
   public getPlaylists = async (): Promise<Playlist[]> => {

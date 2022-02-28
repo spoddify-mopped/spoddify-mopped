@@ -17,6 +17,9 @@ export class TracksToPlaylists extends BaseEntity {
   @Column()
   createdAt: number;
 
+  @Column()
+  likes: number;
+
   @ManyToOne(() => Track, (track) => track.id)
   track: Track;
 
