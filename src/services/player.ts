@@ -40,7 +40,11 @@ export default class SpotifyPlayerService {
     }
 
     if (spotifyPlayerResponse.device.id !== this.targetDevice.id) {
-      throw new DeviceNotFoundError();
+      if (!this.playerState) {
+        return undefined;
+      }
+
+      return this.playerState;
     }
 
     this.playerState = spotifyPlayerResponse;
