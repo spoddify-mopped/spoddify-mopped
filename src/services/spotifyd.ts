@@ -82,7 +82,7 @@ export class SpotifydService {
             !row.includes("couldn't parse packet") &&
             !row.includes('error sending packet Os')
         )
-        .map((row) => this.logger.info(row));
+        .map((row) => this.logger.debug(row));
     });
 
     this.process.stderr.on('data', (data) => {
@@ -98,7 +98,7 @@ export class SpotifydService {
 
   public start = async (): Promise<void> => {
     if (!this.enabled) {
-      this.logger.warn('Spotfiyd will not start becausee it is disabled.');
+      this.logger.warn('Spotfiyd will not start because it is disabled.');
       return;
     }
 
