@@ -33,11 +33,11 @@ def action(data):
     global playerState, skipped_esps
     print("Received socket event.")
     responseJson = data['payload']
-    playerState['track'] = responseJson['track']
-    playerState['artist'] = responseJson['artists'][0]['name']
-    for artist in responseJson['artists'][1:]:
+    playerState['track'] = responseJson['item']['name']
+    playerState['artist'] = responseJson['item']['artists'][0]['name']
+    for artist in responseJson['item']['artists'][1:]:
         playerState['artist'] += ", " + artist['name']
-    playerState['album'] = responseJson['album']['name']
+    playerState['album'] = responseJson['item']['album']['name']
 
     print(responseJson)
 
