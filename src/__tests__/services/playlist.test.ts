@@ -6,11 +6,11 @@ import {
 } from '../../clients/spotify/responses';
 import { createConnection, getConnection } from 'typeorm';
 
+import Player from '../../player/player';
 import Playlist from '../../db/playlist';
 import { PlaylistNotFoundError } from './../../services/playlist';
 import PlaylistService from '../../services/playlist';
 import SpotifyClient from '../../clients/spotify/spotify';
-import SpotifyPlayerService from '../../services/player';
 import Track from '../../db/track';
 import { TracksToPlaylists } from '../../db/tracks_to_playlists';
 
@@ -99,7 +99,7 @@ describe('sortInTrack', () => {
     const getArtistSpy = jest.spyOn(spotifyClientMock, 'getArtist');
     getArtistSpy.mockResolvedValue(spotifyArtist);
 
-    const playlistService = new PlaylistService(spotifyClientMock, null, null);
+    const playlistService = new PlaylistService(spotifyClientMock, null);
 
     await playlistService.sortInTrack('some track id');
 
@@ -118,7 +118,7 @@ describe('sortInTrack', () => {
     const getArtistSpy = jest.spyOn(spotifyClientMock, 'getArtist');
     getArtistSpy.mockResolvedValue(spotifyArtist);
 
-    const playlistService = new PlaylistService(spotifyClientMock, null, null);
+    const playlistService = new PlaylistService(spotifyClientMock, null);
 
     const newPlaylist = new Playlist();
     newPlaylist.name = 'pop';
@@ -147,7 +147,7 @@ describe('sortInAlbum', () => {
     const getAlbumTracksSpy = jest.spyOn(spotifyClientMock, 'getAlbumTracks');
     getAlbumTracksSpy.mockResolvedValue(spotifyAlbumTracks);
 
-    const playlistService = new PlaylistService(spotifyClientMock, null, null);
+    const playlistService = new PlaylistService(spotifyClientMock, null);
 
     const sortInTrackSpy = jest
       .spyOn(playlistService, 'sortInTrack')
@@ -170,7 +170,7 @@ describe('getPlaylists', () => {
   });
 
   it('returns empty array', async () => {
-    const playlistService = new PlaylistService(spotifyClientMock, null, null);
+    const playlistService = new PlaylistService(spotifyClientMock, null);
 
     const playlists = await playlistService.getPlaylists();
 
@@ -178,7 +178,7 @@ describe('getPlaylists', () => {
   });
 
   it('returns array of playlists', async () => {
-    const playlistService = new PlaylistService(spotifyClientMock, null, null);
+    const playlistService = new PlaylistService(spotifyClientMock, null);
 
     const newPlaylist = new Playlist();
     newPlaylist.name = 'pop';
@@ -205,7 +205,7 @@ describe('getPlaylist', () => {
     const getAlbumTracksSpy = jest.spyOn(spotifyClientMock, 'getTracks');
     getAlbumTracksSpy.mockResolvedValue(spotifyTracks);
 
-    const playlistService = new PlaylistService(spotifyClientMock, null, null);
+    const playlistService = new PlaylistService(spotifyClientMock, null);
 
     const newTrack = new Track();
     newTrack.id = 'some track id';
@@ -241,7 +241,7 @@ describe('getPlaylist', () => {
     const getAlbumTracksSpy = jest.spyOn(spotifyClientMock, 'getTracks');
     getAlbumTracksSpy.mockResolvedValue(spotifyTracks);
 
-    const playlistService = new PlaylistService(spotifyClientMock, null, null);
+    const playlistService = new PlaylistService(spotifyClientMock, null);
 
     await expect(playlistService.getPlaylist(1)).rejects.toThrow(
       new PlaylistNotFoundError()
@@ -259,7 +259,7 @@ describe('likeTrack', () => {
   });
 
   it('increments the like counter of a track', async () => {
-    const playlistService = new PlaylistService(null, null, null);
+    const playlistService = new PlaylistService(null, null);
 
     const newTrack = new Track();
     newTrack.id = 'some track id';
@@ -307,7 +307,7 @@ describe('dislikeTrack', () => {
   });
 
   it('decrements the like counter of a track', async () => {
-    const playlistService = new PlaylistService(null, null, null);
+    const playlistService = new PlaylistService(null, null);
 
     const newTrack = new Track();
     newTrack.id = 'some track id';
@@ -355,20 +355,16 @@ describe('playPlaylist', () => {
   });
 
   it('plays a playlist', async () => {
-    const spotifyPlayerServiceMock = new SpotifyPlayerService(
-      spotifyClientMock,
-      'some device name'
+    const spotifyPlayerServiceMock = new Player(
+      'some device name',
+      spotifyClientMock
     );
 
     const playSpy = jest
       .spyOn(spotifyPlayerServiceMock, 'play')
       .mockResolvedValue();
 
-    const playlistService = new PlaylistService(
-      null,
-      spotifyPlayerServiceMock,
-      null
-    );
+    const playlistService = new PlaylistService(null, spotifyPlayerServiceMock);
 
     const newTrack = new Track();
     newTrack.id = 'some track id';
@@ -412,25 +408,22 @@ describe('playPlaylist', () => {
       expect.arrayContaining([
         'spotify:track:some track id',
         'spotify:track:some track id 2',
-      ])
+      ]),
+      1
     );
   });
 
   it('throws PlaylistNotFoundError when playlist could not be found', async () => {
-    const spotifyPlayerServiceMock = new SpotifyPlayerService(
-      spotifyClientMock,
-      'some device name'
+    const spotifyPlayerServiceMock = new Player(
+      'some device name',
+      spotifyClientMock
     );
 
     const playSpy = jest
       .spyOn(spotifyPlayerServiceMock, 'play')
       .mockResolvedValue();
 
-    const playlistService = new PlaylistService(
-      null,
-      spotifyPlayerServiceMock,
-      null
-    );
+    const playlistService = new PlaylistService(null, spotifyPlayerServiceMock);
 
     await expect(playlistService.playPlaylist(1)).rejects.toThrow(
       new PlaylistNotFoundError()
