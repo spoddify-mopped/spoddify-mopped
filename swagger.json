@@ -89,7 +89,21 @@
       "type": "object"
     },
     "Player": {
-      "properties": {},
+      "properties": {
+        "progress": {
+          "type": "integer"
+        },
+        "volume": {
+          "type": "integer"
+        },
+        "isPlaying": {
+          "type": "boolean"
+        },
+        "item": {
+          "type": "object",
+          "$ref": "#/definitions/Track"
+        }
+      },
       "type": "object"
     },
     "QueueItem": {
