@@ -1,4 +1,4 @@
-import { randomUUID } from 'crypto';
+import { v4 as uuidv4 } from 'uuid';
 
 export type QueueItem = {
   id: string;
@@ -14,7 +14,7 @@ export default class Queue {
 
   public add = (uri: string): QueueItem => {
     const item = {
-      id: randomUUID(),
+      id: uuidv4(),
       uri,
     };
 
