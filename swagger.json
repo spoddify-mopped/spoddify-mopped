@@ -92,6 +92,17 @@
       "properties": {},
       "type": "object"
     },
+    "QueueItem": {
+      "properties": {
+        "id": {
+          "type": "string"
+        },
+        "uri": {
+          "type": "string"
+        }
+      },
+      "type": "object"
+    },
     "SearchResponse": {
       "properties": {
         "artists": {
@@ -632,6 +643,22 @@
           }
         },
         "summary": "Queue",
+        "tags": ["player"]
+      },
+      "get": {
+        "operationId": "getQueue",
+        "responses": {
+          "200": {
+            "schema": {
+              "type": "array",
+              "items": {
+                "$ref": "#/definitions/QueueItem"
+              }
+            },
+            "description": "OK"
+          }
+        },
+        "summary": "Get queue",
         "tags": ["player"]
       }
     },
