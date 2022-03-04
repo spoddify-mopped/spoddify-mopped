@@ -27,6 +27,7 @@ export type AlbumWithTracks = Album & {
 export type Track = {
   id: string;
   name: string;
+  duration: number;
   artists: Artist[];
   album: Album;
   imageUrl?: string;

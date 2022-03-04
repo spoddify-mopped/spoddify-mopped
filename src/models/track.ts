@@ -9,6 +9,7 @@ export type Track = {
   artists: Artist[];
   album?: Album;
   imageUrl?: string;
+  duration: number;
 };
 
 export const mapSpotifyTrackToTrack = (spotifyTrack: SpotifyTrack): Track => {
@@ -17,6 +18,7 @@ export const mapSpotifyTrackToTrack = (spotifyTrack: SpotifyTrack): Track => {
       ? mapSpotifyAlbumToAlbum(spotifyTrack.album)
       : undefined,
     artists: mapSpotifyArtistListToArtistList(spotifyTrack.artists),
+    duration: spotifyTrack.duration_ms,
     id: spotifyTrack.id,
     imageUrl: spotifyTrack.album
       ? spotifyTrack.album.images?.[0]?.url

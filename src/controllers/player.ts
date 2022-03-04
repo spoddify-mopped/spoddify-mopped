@@ -1,4 +1,4 @@
-import SpotifyPlayerService, { DeviceNotFoundError } from '../services/player';
+import Player, { DeviceNotFoundError } from '../player/player';
 import { matchedData, query } from 'express-validator';
 
 import RequestError from '../error/request';
@@ -26,14 +26,13 @@ export default class PlayerController {
   public path = '/player';
   public router = express.Router();
 
-  public constructor(
-    private readonly spotifyPlayerService: SpotifyPlayerService
-  ) {
+  public constructor(private readonly player: Player) {
     this.initializeRoutes();
   }
 
   public initializeRoutes(): void {
     this.router.get(`${this.path}`, this.getPlayer);
+    this.router.get(`${this.path}/queue`, this.getQueue);
     this.router.post(`${this.path}/pause`, this.playPause);
     this.router.post(`${this.path}/forwards`, this.next);
     this.router.post(`${this.path}/previous`, this.previous);
@@ -80,7 +79,7 @@ export default class PlayerController {
     response: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
-    await this.spotifyPlayerService
+    await this.player
       .getPlayer()
       .then((player) => {
         if (player) {
@@ -92,12 +91,19 @@ export default class PlayerController {
       .catch((err) => next(this.handleError(err)));
   };
 
+  private getQueue = (
+    _request: express.Request,
+    response: express.Response
+  ): void => {
+    response.send(this.player.getQueue());
+  };
+
   private playPause = async (
     _request: express.Request,
     response: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
-    await this.spotifyPlayerService
+    await this.player
       .playPause()
       .then(() => response.sendStatus(StatusCodes.NO_CONTENT))
       .catch((err) => next(this.handleError(err)));
@@ -108,7 +114,7 @@ export default class PlayerController {
     response: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
-    await this.spotifyPlayerService
+    await this.player
       .next()
       .then(() => response.sendStatus(StatusCodes.NO_CONTENT))
       .catch((err) => next(this.handleError(err)));
@@ -119,7 +125,7 @@ export default class PlayerController {
     response: express.Response,
     next: express.NextFunction
   ): Promise<void> => {
-    await this.spotifyPlayerService
+    await this.player
       .previous()
       .then(() => response.sendStatus(StatusCodes.NO_CONTENT))
       .catch((err) => next(this.handleError(err)));
@@ -138,7 +144,7 @@ export default class PlayerController {
 
     const data = matchedData(request) as SeekQuery;
 
-    await this.spotifyPlayerService
+    await this.player
       .seek(data.position)
       .then(() => response.sendStatus(StatusCodes.NO_CONTENT))
       .catch((err) => next(this.handleError(err)));
@@ -157,7 +163,7 @@ export default class PlayerController {
 
     const data = matchedData(request) as VolumeQuery;
 
-    await this.spotifyPlayerService
+    await this.player
       .setVolume(data.volume)
       .then(() => response.sendStatus(StatusCodes.NO_CONTENT))
       .catch((err) => next(this.handleError(err)));
@@ -176,7 +182,7 @@ export default class PlayerController {
 
     const data = matchedData(request) as PlayQuery;
 
-    await this.spotifyPlayerService
+    await this.player
       .play(data.uri)
       .then(() => response.sendStatus(StatusCodes.NO_CONTENT))
       .catch((err) => next(this.handleError(err)));
@@ -195,7 +201,7 @@ export default class PlayerController {
 
     const data = matchedData(request) as AddQueueQuery;
 
-    await this.spotifyPlayerService
+    await this.player
       .addQueue(data.uri)
       .then(() => response.sendStatus(StatusCodes.NO_CONTENT))
       .catch((err) => next(this.handleError(err)));

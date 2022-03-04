@@ -1,26 +1,14 @@
+import Player, { PlayerState } from '../player/player';
 import PlaylistService, { FullPlaylist } from '../services/playlist';
 
-import { EventEmitter } from 'events';
 import Logger from '../logger/logger';
-import { Player } from '../clients/spotify/types/player';
 import Playlist from '../db/playlist';
-import SpotifyPlayerService from '../services/player';
 
-declare interface PluginApi {
-  /*
-    Player events
-  */
-  on(event: 'player', listener: (player: Player) => void): this;
-  emit(event: 'player', player: Player): boolean;
-}
-
-class PluginApi extends EventEmitter implements PluginApi {
+export default class PluginApi {
   public constructor(
-    private readonly spotifyPlayerService: SpotifyPlayerService,
+    private readonly player: Player,
     private readonly playlistService: PlaylistService
-  ) {
-    super();
-  }
+  ) {}
 
   /*
     Logger
@@ -34,36 +22,40 @@ class PluginApi extends EventEmitter implements PluginApi {
     Spotify player service api
   */
 
-  public getPlayer = async (): Promise<Player | undefined> => {
-    return await this.spotifyPlayerService.getPlayer();
+  public getPlayer = async (): Promise<PlayerState | undefined> => {
+    return await this.player.getPlayer();
   };
 
   public playPause = async (): Promise<void> => {
-    await this.spotifyPlayerService.playPause();
+    await this.player.playPause();
   };
 
   public next = async (): Promise<void> => {
-    await this.spotifyPlayerService.next();
+    await this.player.next();
   };
 
   public previous = async (): Promise<void> => {
-    await this.spotifyPlayerService.previous();
+    await this.player.previous();
   };
 
   public seek = async (position: number): Promise<void> => {
-    await this.spotifyPlayerService.seek(position);
+    await this.player.seek(position);
   };
 
   public play = async (uris?: string[]): Promise<void> => {
-    await this.spotifyPlayerService.play(uris);
+    await this.player.play(uris);
   };
 
   public pause = async (): Promise<void> => {
-    await this.spotifyPlayerService.pause();
+    await this.player.pause();
   };
 
   public setVolume = async (volume: number): Promise<void> => {
-    await this.spotifyPlayerService.setVolume(volume);
+    await this.player.setVolume(volume);
+  };
+
+  public onPlayerUpdate = (listener: (player: PlayerState) => void): void => {
+    this.player.onPlayerUpdate(listener);
   };
 
   /*
@@ -94,5 +86,3 @@ class PluginApi extends EventEmitter implements PluginApi {
     await this.playlistService.playPlaylist(id);
   };
 }
-
-export default PluginApi;

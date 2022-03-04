@@ -1,12 +1,14 @@
 import { randomUUID } from 'crypto';
 
-type QueueItem = {
+export type QueueItem = {
   id: string;
   uri: string;
 };
 
-export default class QueueService {
+export default class Queue {
   private playing?: QueueItem;
+
+  private history: Array<QueueItem> = [];
 
   private queue: Array<QueueItem> = [];
 
@@ -16,13 +18,35 @@ export default class QueueService {
       uri,
     };
 
+    if (!this.playing) {
+      this.playing = item;
+      return item;
+    }
+
     this.queue.push(item);
 
     return item;
   };
 
   public next = (): QueueItem | undefined => {
+    if (this.playing) {
+      this.history.push(this.playing);
+    }
+
     this.playing = this.queue.shift();
+    return this.playing;
+  };
+
+  public previous = (): QueueItem | undefined => {
+    if (this.history.length < 1) {
+      return;
+    }
+
+    if (this.playing) {
+      this.queue.unshift(this.playing);
+    }
+
+    this.playing = this.history.pop();
     return this.playing;
   };
 
@@ -32,7 +56,12 @@ export default class QueueService {
 
   public clear = (): void => {
     this.queue = [];
+    this.history = [];
+    this.playing = undefined;
   };
+
+  public getPrevious = (): QueueItem | undefined =>
+    this.history[this.history.length - 1];
 
   public getNext = (): QueueItem | undefined => this.queue[0];
 
