@@ -1,6 +1,6 @@
-import { BaseTrack } from './track';
 /* eslint-disable camelcase */
 import { ExternalUrls } from './common';
+import { Track } from './track';
 
 export type Device = {
   id: string;
@@ -32,10 +32,12 @@ export type Actions = {
   transferring_playback?: boolean;
 };
 
-export type Item = BaseTrack;
+export type Item = Track;
 
 export type Player = {
-  actions: Actions;
+  actions: {
+    disallows: Actions;
+  };
   context?: Context;
   currently_playing_type: 'track' | 'episode' | 'ad' | 'unknown';
   device: Device;

@@ -1,12 +1,12 @@
+import Player from '../player/player';
 import { StatusCodes } from 'http-status-codes';
-import WebsocketHandler from '../ws/handler';
 import express from 'express';
 
 export default class EventController {
   public path = '/event';
   public router = express.Router();
 
-  public constructor(private readonly websocketHandler: WebsocketHandler) {
+  public constructor(private readonly player: Player) {
     this.initializeRoutes();
   }
 
@@ -18,7 +18,7 @@ export default class EventController {
     _request: express.Request,
     response: express.Response
   ): void => {
-    this.websocketHandler.sendPlayerState();
+    this.player.updatePlayer();
     response.sendStatus(StatusCodes.NO_CONTENT);
   };
 }

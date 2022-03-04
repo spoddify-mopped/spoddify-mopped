@@ -2,14 +2,13 @@ import { ConnectionOptions, createConnection } from 'typeorm';
 
 import App from './app';
 import Logger from './logger/logger';
+import Player from './player/player';
 import Playlist from './db/playlist';
 import PlaylistService from './services/playlist';
 import PluginApi from './plugins/api';
 import PluginManager from './plugins/manager';
-import QueueService from './services/queue';
 import SpotifyAuth from './db/spotify_auth';
 import SpotifyClient from './clients/spotify/spotify';
-import SpotifyPlayerService from './services/player';
 import SpotifySearchService from './services/search';
 import { SpotifydService } from './services/spotifyd';
 import SystemService from './services/system';
@@ -40,19 +39,8 @@ const spotifyClient = new SpotifyClient({
   redirectUri: `${config.get('spotify:redirectBaseUri')}/api/callback`,
 });
 
-const queueService = new QueueService();
-
-const spotifyPlayerService = new SpotifyPlayerService(
-  spotifyClient,
-  queueService,
-  config.get('app:name')
-);
-
-const playlistService = new PlaylistService(
-  spotifyClient,
-  spotifyPlayerService,
-  queueService
-);
+const player = new Player(config.get('app:name'), spotifyClient);
+const playlistService = new PlaylistService(spotifyClient, player);
 const spotifySearchService = new SpotifySearchService(spotifyClient);
 
 const systemService = new SystemService(spotifyClient);
@@ -92,17 +80,15 @@ const start = async () => {
     await spotifydService.start();
   }
 
-  const pluginApi = new PluginApi(spotifyPlayerService, playlistService);
+  const pluginApi = new PluginApi(player, playlistService);
 
   const app = new App(
-    queueService,
     playlistService,
     spotifyClient,
     spotifydService,
-    spotifyPlayerService,
+    player,
     spotifySearchService,
-    systemService,
-    pluginApi
+    systemService
   );
 
   const pluginManager = new PluginManager(pluginApi, config.get('plugins'), {

@@ -1,7 +1,7 @@
 import PlaylistService, { PlaylistNotFoundError } from '../services/playlist';
 import { body, matchedData, param } from 'express-validator';
 
-import { DeviceNotFoundError } from '../services/player';
+import { DeviceNotFoundError } from '../player/player';
 import RequestError from '../error/request';
 import { StatusCodes } from 'http-status-codes';
 import express from 'express';

@@ -24,12 +24,12 @@ export default function Player(): ReactElement {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    if (player.artists && player.track) {
-      document.title = `${player.track} - ${player.artists
+    if (player.item && player.item.artists) {
+      document.title = `${player.item} - ${player.item.artists
         .map((artist) => artist.name)
         .join(',')}`;
     }
-  }, [player.artists, player.track]);
+  }, [player.item]);
 
   useEffect(() => {
     dispatch(playerActions.getPlayer());
@@ -58,9 +58,9 @@ export default function Player(): ReactElement {
   const sendVolume = async () => await ApiClient.setVolume(volume);
 
   const getPlayerBackgroundStyles = () => {
-    if (player.coverUrl) {
+    if (player.item?.imageUrl) {
       return {
-        backgroundImage: `url(${player.coverUrl})`,
+        backgroundImage: `url(${player.item?.imageUrl})`,
         backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
         backgroundSize: 'cover',
@@ -72,22 +72,22 @@ export default function Player(): ReactElement {
   };
 
   const renderAlbumAndArtist = () => {
-    if (!player.artists || !player.album) {
+    if (!player.item?.artists || !player.item.album) {
       return <></>;
     }
 
     return (
       <span className={styles.artistAlbum}>
         <ArtistsTitle
-          artists={player.artists || []}
+          artists={player.item.artists || []}
           onArtistClick={(id) => navigate(`/artist/${id}`)}
         />{' '}
         -{' '}
         <span
           className={styles.link}
-          onClick={() => navigate(`/album/${player.album?.id}`)}
+          onClick={() => navigate(`/album/${player.item?.album.id}`)}
         >
-          {player.album.name}
+          {player.item.album.name}
         </span>
       </span>
     );
@@ -108,19 +108,19 @@ export default function Player(): ReactElement {
         <div className={styles.coverContainer}>
           <img
             className={styles.cover}
-            src={player.coverUrl || CoverReplacement}
+            src={player.item?.imageUrl || CoverReplacement}
             alt="Cover"
           />
         </div>
         <div className={styles.metadata}>
-          <span className={styles.track}>{player.track}</span>
+          <span className={styles.track}>{player.item?.name}</span>
           {renderAlbumAndArtist()}
         </div>
       </div>
       <div className={styles.bottom}>
         <div className={styles.progress}>
           <ProgressBar
-            duration={player.duration}
+            duration={player.item?.duration}
             isPlaying={player.isPlaying}
             startProgress={player.progress}
           />

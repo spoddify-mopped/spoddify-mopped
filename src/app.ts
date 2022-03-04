@@ -5,17 +5,14 @@ import ArtistController from './controllers/artist';
 import AuthController from './controllers/auth';
 import EventController from './controllers/event';
 import Logger from './logger/logger';
+import Player from './player/player';
 import PlayerController from './controllers/player';
 import PlaylistController from './controllers/playlist';
 import PlaylistService from './services/playlist';
-import PluginApi from './plugins/api';
-import QueueController from './controllers/queue';
-import QueueService from './services/queue';
 import RequestError from './error/request';
 import SearchController from './controllers/search';
 import { Server } from 'socket.io';
 import SpotifyClient from './clients/spotify/spotify';
-import SpotifyPlayerService from './services/player';
 import SpotifySearchService from './services/search';
 import { SpotifydService } from './services/spotifyd';
 import SystemController from './controllers/system';
@@ -48,34 +45,29 @@ export default class App {
   private server: http.Server;
   private io: Server;
 
-  private websocketHandler: WebsocketHandler;
-
   private systemMiddleware: SystemMiddleware;
 
   public constructor(
-    queueService: QueueService,
     playlistService: PlaylistService,
     spotifyClient: SpotifyClient,
     spotifydService: SpotifydService,
-    spotifyPlayerService: SpotifyPlayerService,
+    player: Player,
     spotifySearchService: SpotifySearchService,
-    systemService: SystemService,
-    pluginApi: PluginApi
+    systemService: SystemService
   ) {
     this.app = express();
     this.server = http.createServer(this.app);
 
-    this.initializeSocketIo(spotifyPlayerService, systemService, pluginApi);
+    this.initializeSocketIo(player, systemService);
 
     this.systemMiddleware = new SystemMiddleware(systemService);
 
     this.initializeMiddleware();
     this.initializeControllers(
-      queueService,
       playlistService,
       spotifyClient,
       spotifydService,
-      spotifyPlayerService,
+      player,
       spotifySearchService,
       systemService
     );
@@ -117,11 +109,10 @@ export default class App {
   }
 
   private initializeControllers(
-    queueService: QueueService,
     playlistService: PlaylistService,
     spotifyClient: SpotifyClient,
     spotifydService: SpotifydService,
-    spotifyPlayerService: SpotifyPlayerService,
+    player: Player,
     spotifySearchService: SpotifySearchService,
     systemService: SystemService
   ): void {
@@ -131,9 +122,8 @@ export default class App {
       '/api',
       new AuthController(spotifyClient, spotifydService).router
     );
-    this.app.use('/api', new EventController(this.websocketHandler).router);
-    this.app.use('/api', new PlayerController(spotifyPlayerService).router);
-    this.app.use('/api', new QueueController(queueService).router);
+    this.app.use('/api', new EventController(player).router);
+    this.app.use('/api', new PlayerController(player).router);
     this.app.use('/api', new PlaylistController(playlistService).router);
     this.app.use('/api', new SearchController(spotifySearchService).router);
     this.app.use(
@@ -172,26 +162,24 @@ export default class App {
   }
 
   private initializeSocketIo(
-    spotifyPlayerService: SpotifyPlayerService,
-    systemService: SystemService,
-    pluginApi: PluginApi
+    player: Player,
+    systemService: SystemService
   ): void {
     this.io = new Server(this.server, {
       cors: socketIoCors,
     });
 
-    this.websocketHandler = new WebsocketHandler(
+    const websocketHandler = new WebsocketHandler(
       systemService,
-      spotifyPlayerService,
-      this.io,
-      pluginApi
+      player,
+      this.io
     );
 
     this.io.on('connection', (socket) => {
       this.logger.debug(
         `New socket.io connection with id: ${socket.id} from ${socket.handshake.address}`
       );
-      socket.on('action', this.websocketHandler.handle);
+      socket.on('action', websocketHandler.handle);
     });
   }
 
