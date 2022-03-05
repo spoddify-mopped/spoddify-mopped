@@ -40,15 +40,14 @@ BLECharacteristic *cArtist;
 BLECharacteristic *cAlbum;
 BLECharacteristic *cID;
 BLECharacteristic *cVote;
-BLECharacteristic *cUpdate;
 BLECharacteristic *cQr;
 
 //Variablen
-RTC_DATA_ATTR char songName[100];
-RTC_DATA_ATTR char artistName[100];
-RTC_DATA_ATTR char albumName[100];
-RTC_DATA_ATTR char idName[100];
-RTC_DATA_ATTR char qrCode[23];
+char songName[100];
+char artistName[100];
+char albumName[100];
+char idName[100];
+char qrCode[23];
 bool button1, button2, timeout;
 
 void drawSongInfos();
@@ -89,12 +88,6 @@ class QrCallback: public BLECharacteristicCallbacks {
   };
 };
 
-class UpdateCallback: public BLECharacteristicCallbacks  {
-    void onWrite(BLECharacteristic* cVote) {
-      // should be removed
-    };
-};
-
 void setup() {
   button1 = false;
   button2 = false;
@@ -119,10 +112,7 @@ void setup() {
   display.setTextColor(GxEPD_BLACK);
 
   blesetup();
-
-  if (songName[0] == 0) {
-    drawLoading();
-  }
+  drawLoading();
 }
 
 
@@ -208,20 +198,13 @@ void blesetup(){
   cAlbum = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130002",BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
   cID = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130003",BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
   cVote = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130004",BLECharacteristic::PROPERTY_READ);
-  cUpdate = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130005", BLECharacteristic::PROPERTY_WRITE);
   cQr = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130006", BLECharacteristic::PROPERTY_WRITE);
 
   cSongInfos-> setCallbacks(new SongCallback());
   cArtist-> setCallbacks(new ArtistCallback());
   cAlbum-> setCallbacks(new AlbumCallback());
   cID->setCallbacks(new IDCallback());
-  cUpdate->setCallbacks(new UpdateCallback());
   cQr->setCallbacks(new QrCallback());
-
-  cSongInfos->setValue(songName);
-  cArtist->setValue(artistName);
-  cAlbum->setValue(albumName);
-  cID->setValue(idName);
 
   pService->start();
   BLEAdvertising *pAdvertising = BLEDevice::getAdvertising();

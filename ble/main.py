@@ -28,7 +28,6 @@ spotify_mopped_characteristic_list = {
     '6354e3a8-53ac-11ec-bf63-0242ac130002': 'albumName',
     '6354e3a8-53ac-11ec-bf63-0242ac130003': 'id',
     '6354e3a8-53ac-11ec-bf63-0242ac130004': 'vote',
-    '6354e3a8-53ac-11ec-bf63-0242ac130005': 'update',
     '6354e3a8-53ac-11ec-bf63-0242ac130006': 'qr'
 }
 
@@ -84,7 +83,6 @@ async def refreshBle(device: BLEDevice):
                     await client.write_gatt_char(characteristicMap['songInfo'], playerState['track'].encode('utf-8'))
                 else:
                     print("Esp already has current songinfo. Disconnecting")
-                await client.write_gatt_char(characteristicMap['update'], bytes(1));
                 await client.disconnect()
 
                 #await client.write_gatt_char(characteristicMap['songInfo'], playerState['track'].encode('utf-8'))
