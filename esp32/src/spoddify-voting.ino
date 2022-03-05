@@ -41,12 +41,14 @@ BLECharacteristic *cAlbum;
 BLECharacteristic *cID;
 BLECharacteristic *cVote;
 BLECharacteristic *cUpdate;
+BLECharacteristic *cQr;
 
 //Variablen
 RTC_DATA_ATTR char songName[100];
 RTC_DATA_ATTR char artistName[100];
 RTC_DATA_ATTR char albumName[100];
 RTC_DATA_ATTR char idName[100];
+RTC_DATA_ATTR char qrCode[23];
 bool button1, button2, timeout;
 
 void drawSongInfos();
@@ -80,15 +82,16 @@ class IDCallback: public BLECharacteristicCallbacks  {
     };
 };
 
+class QrCallback: public BLECharacteristicCallbacks {
+  void onWrite(BLECharacteristic* cQr) {
+    const void* data = cQr->getData();
+    memcpy(qrCode, data, 23);
+  };
+};
+
 class UpdateCallback: public BLECharacteristicCallbacks  {
     void onWrite(BLECharacteristic* cVote) {
-      Serial.println("Going to sleep.");
-      //esp_sleep_enable_ext1_wakeup(0x6000000,ESP_EXT1_WAKEUP_ANY_HIGH);
-      //esp_sleep_enable_ext0_wakeup(GPIO_NUM_25, 0);
-      //esp_sleep_enable_ext0_wakeup(GPIO_NUM_26, 0);
-      //esp_sleep_enable_touchpad_wakeup();
-      esp_sleep_enable_timer_wakeup(20*1000000);
-      esp_deep_sleep_start();
+      // should be removed
     };
 };
 
@@ -98,8 +101,7 @@ void setup() {
   Serial.begin(115200);
 
   //Button Setup
-  pinMode(BUTTON1PIN, INPUT_PULLUP);
-  pinMode(BUTTON2PIN, INPUT_PULLUP);
+  delay(1000);
   
   //Interupts
   //attachInterrupt(Button1Pin, button1pressed, RISING);
@@ -121,19 +123,11 @@ void setup() {
   if (songName[0] == 0) {
     drawLoading();
   }
-  upvoteSong();
 }
 
 
 void loop() {
-  if (millis() > TIMEOUT * 1000 && !timeout) {
-    timeout = true;
-    cSongInfos->setValue("");
-    cAlbum->setValue("");
-    cArtist->setValue("");
-    cID->setValue("");
-    drawTimeout();
-  }
+  delay(1000);
 }
   
 void drawSongInfos() {
@@ -149,6 +143,10 @@ void drawSongInfos() {
     display.print(artistName);
     display.setCursor(18, 54);
     display.print(albumName);
+    display.drawInvertedBitmap(5, 76, icon_spotify, 40, 40, GxEPD_BLACK);
+    for (int i = 0; i < 23; i++) {
+      display.fillRect(55+i*8, 95-(qrCode[i]) / 20.0 * 4, 5, (qrCode[i]) / 20.0 * 8.1, GxEPD_BLACK);
+    }
   } while(display.nextPage());
   Serial.println("Songdrawing done.");
 }
@@ -211,12 +209,14 @@ void blesetup(){
   cID = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130003",BLECharacteristic::PROPERTY_READ | BLECharacteristic::PROPERTY_WRITE);
   cVote = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130004",BLECharacteristic::PROPERTY_READ);
   cUpdate = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130005", BLECharacteristic::PROPERTY_WRITE);
+  cQr = pService->createCharacteristic("6354e3a8-53ac-11ec-bf63-0242ac130006", BLECharacteristic::PROPERTY_WRITE);
 
   cSongInfos-> setCallbacks(new SongCallback());
   cArtist-> setCallbacks(new ArtistCallback());
   cAlbum-> setCallbacks(new AlbumCallback());
   cID->setCallbacks(new IDCallback());
   cUpdate->setCallbacks(new UpdateCallback());
+  cQr->setCallbacks(new QrCallback());
 
   cSongInfos->setValue(songName);
   cArtist->setValue(artistName);

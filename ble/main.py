@@ -7,6 +7,7 @@ import socketio
 import json
 from bleak import BleakScanner, BleakClient
 import asyncio
+import xml.etree.ElementTree as ET
 
 sio = socketio.AsyncClient()
 playerState = {
@@ -14,6 +15,8 @@ playerState = {
     'artist': 'MineCraft Awesome Parodys',
     'track': 'MINE DIAMONDS | miNECRAFT PARODY OF TAKE ON ME'
 }
+url = 'https://www.spotifycodes.com/downloadCode.php?uri=svg%2F000000%2Fwhite%2F640%2Fspotify%3Atrack%3A'
+qrHeight = list()
 esp_device_name = 'SMVS'
 skipped_esps: set[str] = set()
 total_esps: set[str] = set()
@@ -25,23 +28,30 @@ spotify_mopped_characteristic_list = {
     '6354e3a8-53ac-11ec-bf63-0242ac130002': 'albumName',
     '6354e3a8-53ac-11ec-bf63-0242ac130003': 'id',
     '6354e3a8-53ac-11ec-bf63-0242ac130004': 'vote',
-    '6354e3a8-53ac-11ec-bf63-0242ac130005': 'update'
+    '6354e3a8-53ac-11ec-bf63-0242ac130005': 'update',
+    '6354e3a8-53ac-11ec-bf63-0242ac130006': 'qr'
 }
 
 @sio.event
 def action(data):
-    global playerState, skipped_esps
-    print("Received socket event.")
+    global playerState, skipped_esps, qrHeight
     responseJson = data['payload']
-    playerState['track'] = responseJson['item']['name']
-    playerState['artist'] = responseJson['item']['artists'][0]['name']
-    for artist in responseJson['item']['artists'][1:]:
+    playerState['track'] = responseJson['track']
+    playerState['artist'] = responseJson['artists'][0]['name']
+    for artist in responseJson['artists'][1:]:
         playerState['artist'] += ", " + artist['name']
-    playerState['album'] = responseJson['item']['album']['name']
-
-    print(responseJson)
-
+    playerState['album'] = responseJson['album']['name']
+    qrHeight = generate_qr(responseJson['trackId'])
     skipped_esps = set()
+
+def generate_qr(reference):
+    r = requests.get(url + reference)
+    root = ET.fromstring(r.text)
+    heights = list()
+    for child in root:
+        if child.tag == "{http://www.w3.org/2000/svg}rect" and float(child.attrib['x']) >= 100:
+            heights.append(int(float(child.attrib['height']) / 60.0 * 100))
+    return heights
 
 
 async def sockets():
@@ -70,6 +80,7 @@ async def refreshBle(device: BLEDevice):
                     print("Sending new Song data to esp")
                     await client.write_gatt_char(characteristicMap['artistName'], playerState['artist'].encode('utf-8'))
                     await client.write_gatt_char(characteristicMap['albumName'], playerState['album'].encode('utf-8'))
+                    await client.write_gatt_char(characteristicMap['qr'], bytearray(qrHeight))
                     await client.write_gatt_char(characteristicMap['songInfo'], playerState['track'].encode('utf-8'))
                 else:
                     print("Esp already has current songinfo. Disconnecting")
@@ -102,7 +113,7 @@ async def scan():
             updateSkips()
 
 def refreshPlayerState():
-    global playerState
+    global playerState, qrHeight
     response = requests.get('http://localhost:8080/api/player')
     responseJson = json.loads(response.text)
     print("Init: " + response.text)
@@ -111,6 +122,7 @@ def refreshPlayerState():
     for artist in responseJson['item']['artists'][1:]:
         playerState['artist'] += ", " + artist['name']
     playerState['album'] = responseJson['item']['album']['name']
+    qrHeight = generate_qr(responseJson['item']['id'])
 
 
 async def main():
