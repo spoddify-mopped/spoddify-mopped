@@ -17,6 +17,7 @@ import { TracksToPlaylists } from './db/tracks_to_playlists';
 import config from 'nconf';
 import initializeConfig from './config/config';
 import { program } from 'commander';
+import startMdnsAdvertisement from './discovery';
 
 export type { PluginApi };
 
@@ -95,6 +96,8 @@ const start = async () => {
     customPluginPaths: config.get('customPluginPaths'),
   });
   await pluginManager.initializePlugins();
+
+  startMdnsAdvertisement(config.get('server:port'));
 
   app.listen(config.get('server:port'));
 };
