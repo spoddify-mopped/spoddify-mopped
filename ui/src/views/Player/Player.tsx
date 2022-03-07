@@ -25,7 +25,7 @@ export default function Player(): ReactElement {
 
   useEffect(() => {
     if (player.item && player.item.artists) {
-      document.title = `${player.item} - ${player.item.artists
+      document.title = `${player.item.name} - ${player.item.artists
         .map((artist) => artist.name)
         .join(',')}`;
     }
