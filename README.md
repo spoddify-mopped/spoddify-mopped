@@ -39,6 +39,15 @@ You can easily install plugins like, by installing the Node.js module globally:
 npm i -g spoddify-mopped-gpio
 ```
 
+## Screenshots
+
+![Player](https://user-images.githubusercontent.com/36125892/159121237-03c6723d-be22-44a8-8e1b-f34bc9abff46.png)
+![Search](https://user-images.githubusercontent.com/36125892/159121281-33175177-a8a0-442e-943d-90f9542c5e0d.png)
+![Album](https://user-images.githubusercontent.com/36125892/159121333-00fbc16d-be00-4fad-88f9-406ea65e37ad.png)
+![Artist](https://user-images.githubusercontent.com/36125892/159121335-377d436a-efa7-4644-83fc-e029c1bff591.png)
+![Playlist](https://user-images.githubusercontent.com/36125892/159121337-0b66f6f9-c977-4c5e-be24-afd21c3d1a88.png)
+
+
 ## Contributing
 
 Contributing and pull requests are very welcome.
