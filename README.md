@@ -19,6 +19,8 @@ Spoddify Mopped is a Spotify player for office use, with a voting system to sele
 It is intended to run on a Raspberry Pi and some esp32 boards for remote controlling and voting.
 But it can be run on any other machine as well.
 
+![Overview](https://user-images.githubusercontent.com/36125892/159121882-7d1a191c-c29d-4297-9e5e-297353c08bb8.png)
+
 ## Features
 
 - Play playlists based on votes
