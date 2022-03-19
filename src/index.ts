@@ -105,3 +105,36 @@ const start = async () => {
 start().finally(() =>
   logger.debug(`SpoddifyMopped started in ${Date.now() - startTime}ms`)
 );
+
+const shutdown = (signal: string, err?: Error) => {
+  spotifydService.stop();
+
+  if (err) {
+    logger.error(`Shutting down due to error: ${err.message}`);
+
+    if (err.stack) {
+      logger.error(err.stack);
+    }
+
+    process.exit(1);
+  }
+
+  logger.info(`Received ${signal}. Shutting down.`);
+
+  process.exit(0);
+};
+
+[
+  'SIGHUP',
+  'SIGINT',
+  'SIGQUIT',
+  'SIGILL',
+  'SIGTRAP',
+  'SIGABRT',
+  'SIGBUS',
+  'SIGFPE',
+  'SIGUSR1',
+  'SIGSEGV',
+  'SIGUSR2',
+  'SIGTERM',
+].map((signal) => process.on(signal, () => shutdown(signal)));
