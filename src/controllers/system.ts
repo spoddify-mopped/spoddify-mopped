@@ -16,6 +16,8 @@ export default class SystemController {
 
   public initializeRoutes(): void {
     this.router.get(`${this.path}/status`, this.getStatus);
+    this.router.post(`${this.path}/restart`, this.restart);
+    this.router.post(`${this.path}/stop`, this.stop);
     this.router.get(`${this.path}/spotifyd/status`, this.getSpotifydStatus);
     this.router.post(`${this.path}/spotifyd/restart`, this.restartSpotifyd);
   }
@@ -27,6 +29,16 @@ export default class SystemController {
     response.send({
       ready: this.systemService.isReady(),
     });
+  };
+
+  private restart = async (_: express.Request, response: express.Response) => {
+    response.sendStatus(StatusCodes.NO_CONTENT);
+    this.systemService.restart();
+  };
+
+  private stop = async (_: express.Request, response: express.Response) => {
+    response.sendStatus(StatusCodes.NO_CONTENT);
+    this.systemService.stop();
   };
 
   private getSpotifydStatus = async (

@@ -35,7 +35,7 @@
     "lint:server": "eslint --fix src",
     "lint:ui": "yarn --cwd ui lint",
     "lint": "yarn lint:server && yarn lint:ui",
-    "start": "node --inspect=5858 -r ts-node/register ./src/index.ts",
+    "start": "node --inspect=5858 -r ts-node/register ./src/bin/spoddify-mopped.ts",
     "test:server": "jest",
     "test:ui": "yarn --cwd ui test --watchAll=false",
     "test": "yarn test:server && yarn test:ui",
@@ -99,7 +99,7 @@
     "watch": [
       "src"
     ],
-    "exec": "npm start",
+    "exec": "yarn start",
     "ext": "ts"
   },
   "lint-staged": {
