@@ -2,6 +2,12 @@
   <img src="https://user-images.githubusercontent.com/36125892/155200580-ac94b87c-8992-40ff-b506-9cdcd244aae7.png" alt="Spoddify Mopped" height="300px" />
 </p>
 <span align="center">
+  
+<p align="center">
+  <a href="#features">Features</a> | 
+  <a href="#installation-instructions">Installation</a> | 
+  <a href="#screenshots">Screenshots</a>
+</p>
 
 [![npm Version](https://badgen.net/npm/v/spoddify-mopped)](https://www.npmjs.com/package/spoddify-mopped)
 [![Test](https://github.com/spoddify-mopped/spoddify-mopped/actions/workflows/test.yml/badge.svg)](https://github.com/spoddify-mopped/spoddify-mopped/actions/workflows/test.yml)
@@ -12,6 +18,8 @@
 Spoddify Mopped is a Spotify player for office use, with a voting system to select music and automatic song sorting.
 It is intended to run on a Raspberry Pi and some esp32 boards for remote controlling and voting.
 But it can be run on any other machine as well.
+
+## Features
 
 - Play playlists based on votes
 - Discover new music and insert songs to automatically sorted playlists
