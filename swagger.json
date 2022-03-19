@@ -751,6 +751,30 @@
         "tags": ["system"]
       }
     },
+    "/system/restart": {
+      "post": {
+        "operationId": "restart",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "summary": "Restart server",
+        "tags": ["system"]
+      }
+    },
+    "/system/stop": {
+      "post": {
+        "operationId": "stop",
+        "responses": {
+          "204": {
+            "description": "No Content"
+          }
+        },
+        "summary": "Stop server",
+        "tags": ["system"]
+      }
+    },
     "/system/spotifyd/status": {
       "get": {
         "operationId": "getSpotifydStatus",
