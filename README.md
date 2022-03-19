@@ -43,7 +43,7 @@ They have direct access to the Spoddify Mopped API (e.g. controlling playback, l
 
 ### Plugin Installation
 
-You can easily install plugins like, by installing the Node.js module globally:
+You can easily install plugins, by installing the associated Node.js module globally:
 
 ```bash
 npm i -g spoddify-mopped-gpio
