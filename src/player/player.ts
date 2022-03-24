@@ -1,14 +1,17 @@
+import { ElementNode, parse } from 'svg-parser';
 import Queue, { QueueItem } from './queue';
 import { Track, mapSpotifyTrackToTrack } from '../models/track';
 
 import { EventEmitter } from 'events';
 import SpotifyClient from '../clients/spotify/spotify';
+import axios from 'axios';
 
 export type PlayerState = {
   progress?: number;
   volume: number;
   isPlaying: boolean;
   item: Track;
+  heights: number[];
 };
 
 export class DeviceNotFoundError extends Error {}
@@ -31,6 +34,25 @@ class Player {
     private readonly name: string,
     private readonly spotifyClient: SpotifyClient
   ) {}
+
+  private generateQr = async (referenceId: string): Promise<number[]> => {
+    const { data } = await axios.get<string>(
+      `https://www.spotifycodes.com/downloadCode.php?uri=svg%2F000000%2Fwhite%2F640%2Fspotify%3Atrack%3A${referenceId}`
+    );
+    const doc = parse(data).children[0] as ElementNode;
+    const heights: number[] = new Array<number>();
+    for (const child of doc.children as ElementNode[]) {
+      if (
+        child.type === 'element' &&
+        child.tagName === 'rect' &&
+        (child.properties['x'] as number) >= 100
+      ) {
+        heights.push(((child.properties['height'] as number) / 60.0) * 100);
+      }
+    }
+
+    return heights;
+  };
 
   private findTargetDevice = async (): Promise<string> => {
     const spotifyDeviceResponse = await this.spotifyClient.getMyDevices();
@@ -77,7 +99,10 @@ class Player {
     this.disallowsSkippingPrev = response.actions.disallows.skipping_prev;
     this.disallowsSkippingNext = response.actions.disallows.skipping_next;
 
+    const heights = await this.generateQr(response.item.id);
+
     this.player = {
+      heights: heights,
       isPlaying: response.is_playing,
       item: mapSpotifyTrackToTrack(response.item),
       progress: response.progress_ms,
