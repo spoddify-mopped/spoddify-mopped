@@ -54,6 +54,7 @@ export type Playlist = {
 
 export type PlaylistTracks = {
   addedAt: number;
+  likes: number;
   track: Track;
 }[];
 

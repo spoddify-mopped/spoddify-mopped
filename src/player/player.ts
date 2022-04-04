@@ -115,6 +115,8 @@ class Player {
     return this.player;
   };
 
+  public getPlaylistId = (): number | undefined => this.playlistId;
+
   public getQueue = (): Array<QueueItem> => this.queue.getQueue();
 
   public updatePlayer = async (): Promise<boolean> => {

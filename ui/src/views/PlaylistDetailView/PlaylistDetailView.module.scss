@@ -81,9 +81,18 @@ div.trackTitle {
 }
 
 td.album,
-td.addedAt {
+td.addedAt,
+td.likes {
   opacity: 0.6;
   font-size: 0.9rem;
+}
+
+td.likes,
+th.likes {
+  display: flex;
+  justify-content: flex-end;
+  max-width: 1rem;
+  opacity: 0.5;
 }
 
 span.album {
@@ -95,7 +104,9 @@ span.album {
 
 @media screen and (max-width: 1200px) {
   th.addedAt,
-  td.addedAt {
+  td.addedAt,
+  td.likes,
+  th.likes {
     display: none !important;
   }
 }

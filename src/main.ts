@@ -14,6 +14,7 @@ import { SpotifydService } from './services/spotifyd';
 import SystemService from './services/system';
 import Track from './db/track';
 import { TracksToPlaylists } from './db/tracks_to_playlists';
+import VotingService from './services/voting';
 import config from 'nconf';
 import initializeConfig from './config/config';
 import { program } from 'commander';
@@ -41,6 +42,7 @@ const spotifyClient = new SpotifyClient({
 const player = new Player(config.get('app:name'), spotifyClient);
 const playlistService = new PlaylistService(spotifyClient, player);
 const spotifySearchService = new SpotifySearchService(spotifyClient);
+const votingService = new VotingService(player, playlistService);
 
 const systemService = new SystemService(spotifyClient);
 
@@ -87,7 +89,8 @@ const start = async () => {
     spotifydService,
     player,
     spotifySearchService,
-    systemService
+    systemService,
+    votingService
   );
 
   const pluginManager = new PluginManager(pluginApi, config.get('plugins'), {

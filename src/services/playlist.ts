@@ -11,6 +11,7 @@ export class PlaylistNotFoundError extends Error {}
 
 type PlaylistTracks = {
   addedAt: number;
+  likes: number;
   track: FullTrack;
 }[];
 
@@ -113,7 +114,7 @@ export default class PlaylistService {
       .set({
         likes: () => 'likes - 1',
       })
-      .where('playlistId = :playlistId and trackId = :trackId', {
+      .where('playlistId = :playlistId and trackId = :trackId and likes > 0', {
         playlistId,
         trackId,
       })
@@ -157,6 +158,7 @@ export default class PlaylistService {
       name: playlist.name,
       tracks: tracks.map((track, index) => ({
         addedAt: playlist.tracksToPlaylists[index].createdAt,
+        likes: playlist.tracksToPlaylists[index].likes,
         track: mapSpotifyTrackToTrack(track),
       })),
       updatedAt: playlist.updatedAt,
@@ -176,8 +178,15 @@ export default class PlaylistService {
     }
 
     const tracks = playlist.tracksToPlaylists
-      .sort(() => Math.random() - 0.5)
-      .map((trackToPlaylist) => `spotify:track:${trackToPlaylist.track.id}`);
+      .flatMap((trackToPlaylist) => {
+        const ids: Array<string> = [];
+        for (let i = 0; i <= trackToPlaylist.likes; i++) {
+          ids.push(`spotify:track:${trackToPlaylist.track.id}`);
+        }
+
+        return ids;
+      })
+      .sort(() => Math.random() - 0.5);
 
     await this.player.play(tracks, id);
   };

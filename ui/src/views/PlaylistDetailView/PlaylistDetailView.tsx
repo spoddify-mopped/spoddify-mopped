@@ -132,7 +132,8 @@ const PlaylistDetailView = (): React.ReactElement => {
           <TableHead>TITLE</TableHead>
           <TableHead className={styles.album}>ALBUM</TableHead>
           <TableHead className={styles.addedAt}>ADDED AT</TableHead>
-          {tracks.map(({ track, addedAt }, index) => (
+          <TableHead className={styles.likes}>LIKES</TableHead>
+          {tracks.map(({ track, addedAt, likes }, index) => (
             <TableRow key={`table_row_${track.name}_${index}`}>
               <TableData className={styles.index} dataLabel="#">
                 {++index}
@@ -158,6 +159,9 @@ const PlaylistDetailView = (): React.ReactElement => {
               </TableData>
               <TableData className={styles.addedAt} data-label="ADDED AT">
                 {new Date(addedAt * 1000).toLocaleDateString()}
+              </TableData>
+              <TableData className={styles.likes} data-label="LIKES">
+                {likes}
               </TableData>
             </TableRow>
           ))}
