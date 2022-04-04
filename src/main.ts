@@ -107,7 +107,7 @@ start().finally(() =>
   logger.debug(`SpoddifyMopped started in ${Date.now() - startTime}ms`)
 );
 
-const shutdown = (signal: string, err?: Error) => {
+const shutdown = (signal?: string, err?: Error) => {
   spotifydService.stop();
 
   if (err) {
@@ -139,3 +139,7 @@ const shutdown = (signal: string, err?: Error) => {
   'SIGUSR2',
   'SIGTERM',
 ].map((signal) => process.on(signal, () => shutdown(signal)));
+
+['unhandledRejection', 'uncaughtException'].map((event) =>
+  process.on(event, (error: Error) => shutdown(undefined, error))
+);
