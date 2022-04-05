@@ -193,6 +193,14 @@
         }
       },
       "type": "object"
+    },
+    "VotingRequest": {
+      "properties": {
+        "mac": {
+          "type": "string"
+        }
+      },
+      "type": "object"
     }
   },
   "info": {
@@ -800,6 +808,66 @@
         },
         "summary": "Restart spotifyd",
         "tags": ["system"]
+      }
+    },
+    "/voting/like": {
+      "post": {
+        "operationId": "votingLike",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/VotingRequest"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Invalid value for parameter 'mac'"
+          },
+          "403": {
+            "description": "The mac has already voted for this song"
+          },
+          "404": {
+            "description": "No playlist is playing."
+          }
+        },
+        "summary": "Like the current track",
+        "tags": ["voting"]
+      }
+    },
+    "/voting/dislike": {
+      "post": {
+        "operationId": "votingDislike",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "$ref": "#/definitions/VotingRequest"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content"
+          },
+          "400": {
+            "description": "Invalid value for parameter 'mac'"
+          },
+          "403": {
+            "description": "The mac has already voted for this song"
+          },
+          "404": {
+            "description": "No playlist is playing."
+          }
+        },
+        "summary": "Dislike the current track",
+        "tags": ["voting"]
       }
     }
   },
