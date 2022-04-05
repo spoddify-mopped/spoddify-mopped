@@ -12,7 +12,7 @@ export default class VotingService {
 
   private history: Map<string, string> = new Map();
 
-  public like = async (uuid: string) => {
+  public like = async (macAddress: string) => {
     const playlistId = this.player.getPlaylistId();
 
     if (!playlistId) {
@@ -21,7 +21,7 @@ export default class VotingService {
 
     const player = await this.player.getPlayer();
 
-    const history = this.history.get(uuid);
+    const history = this.history.get(macAddress);
 
     if (history === player.item.id) {
       throw new AlreadyVotedError();
@@ -29,10 +29,10 @@ export default class VotingService {
 
     await this.playlistService.likeTrack(player.item.id, playlistId);
 
-    this.history.set(uuid, player.item.id);
+    this.history.set(macAddress, player.item.id);
   };
 
-  public dislike = async (uuid: string) => {
+  public dislike = async (macAddress: string) => {
     const playlistId = this.player.getPlaylistId();
 
     if (!playlistId) {
@@ -41,7 +41,7 @@ export default class VotingService {
 
     const player = await this.player.getPlayer();
 
-    const history = this.history.get(uuid);
+    const history = this.history.get(macAddress);
 
     if (history === player.item.id) {
       throw new AlreadyVotedError();
@@ -49,6 +49,6 @@ export default class VotingService {
 
     await this.playlistService.dislikeTrack(player.item.id, playlistId);
 
-    this.history.set(uuid, player.item.id);
+    this.history.set(macAddress, player.item.id);
   };
 }

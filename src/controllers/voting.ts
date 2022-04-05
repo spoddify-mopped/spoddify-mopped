@@ -10,7 +10,7 @@ import VotingService from '../services/voting';
 import express from 'express';
 
 type VotingRequest = {
-  uuid: string;
+  mac: string;
 };
 
 export default class VotingController {
@@ -22,17 +22,21 @@ export default class VotingController {
   }
 
   public initializeRoutes(): void {
-    this.router.post(`${this.path}/like`, body('uuid').isUUID('4'), this.like);
+    this.router.post(
+      `${this.path}/like`,
+      body('mac').isMACAddress(),
+      this.like
+    );
     this.router.post(
       `${this.path}/dislike`,
-      body('uuid').isUUID('4'),
+      body('mac').isMACAddress(),
       this.dislike
     );
   }
 
   private handleError = (error: Error): Error => {
     if (error instanceof AlreadyVotedError) {
-      return new RequestError('The id has already voted for this song.', 400);
+      return new RequestError('The mac has already voted for this song.', 403);
     }
 
     if (error instanceof NoPlaylistPlayingError) {
@@ -56,7 +60,7 @@ export default class VotingController {
     const data = matchedData(request) as VotingRequest;
 
     await this.votingService
-      .like(data.uuid)
+      .like(data.mac)
       .then(() => response.sendStatus(StatusCodes.NO_CONTENT))
       .catch((error) => next(this.handleError(error)));
   };
@@ -75,7 +79,7 @@ export default class VotingController {
     const data = matchedData(request) as VotingRequest;
 
     await this.votingService
-      .dislike(data.uuid)
+      .dislike(data.mac)
       .then(() => response.sendStatus(StatusCodes.NO_CONTENT))
       .catch((error) => next(this.handleError(error)));
   };
