@@ -2,7 +2,7 @@
   "name": "spoddify-mopped",
   "displayName": "Spoddify Mopped",
   "description": "A spotify player for office use with a voting system to select music and automatic song sorting.",
-  "version": "0.0.0",
+  "version": "0.0.5",
   "repository": {
     "type": "git",
     "url": "git://github.com/spoddify-mopped/spoddify-mopped.git"
